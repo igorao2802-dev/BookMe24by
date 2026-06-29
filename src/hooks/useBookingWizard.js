@@ -48,9 +48,15 @@ const INITIAL_DRAFT = {
  *   services: Array,
  *   specialists: Array,
  *   onCreateBooking: Function,
+ *   confirm: Function,
  * }} params
  */
-export function useBookingWizard({ services, specialists, onCreateBooking }) {
+export function useBookingWizard({
+  services,
+  specialists,
+  onCreateBooking,
+  confirm,
+}) {
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useLanguage();
@@ -429,23 +435,23 @@ export function useBookingWizard({ services, specialists, onCreateBooking }) {
     showNavigationBlockedToast,
   ]);
 
-  const handleClearForm = useCallback(() => {
+  const handleClearForm = useCallback(async () => {
     const limitResult = checkNavigationLimit();
     if (!limitResult.allowed) {
       showNavigationBlockedToast(limitResult);
       return;
     }
 
-    const confirmed = window.confirm(
-      t("booking.clearFormConfirm") ||
-        "Вы уверены, что хотите очистить форму? Все введённые данные будут потеряны.",
-    );
-    if (confirmed) {
-      clearDraft();
-      setCurrentStep(BOOKING_STEPS.SERVICE);
-      Toast.info(t("booking.formCleared"), { duration: 3000 });
-    }
-  }, [clearDraft, t, checkNavigationLimit, showNavigationBlockedToast]);
+    const confirmed = await confirm({
+      message: t("booking.clearFormConfirm"),
+      variant: "warning",
+    });
+    if (!confirmed) return;
+
+    clearDraft();
+    setCurrentStep(BOOKING_STEPS.SERVICE);
+    Toast.info(t("booking.formCleared"), { duration: 3000 });
+  }, [clearDraft, t, checkNavigationLimit, showNavigationBlockedToast, confirm]);
 
   const handleConfirm = useCallback(async () => {
     if (isSubmitting) return;
