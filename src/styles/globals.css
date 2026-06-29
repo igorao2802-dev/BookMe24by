@@ -401,6 +401,28 @@ ol {
 }
 
 /* ═══════════════════════════════════════════════
+   🚀 BOOTSTRAP / ОШИБКА СТАРТА
+   Полноэкранное состояние при сбое загрузки seed-JSON
+   ═══════════════════════════════════════════════ */
+
+.app-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  background-color: var(--color-bg);
+}
+
+.app-error__message {
+  max-width: 32rem;
+  margin-bottom: 0;
+  text-align: center;
+  color: var(--color-error-dark);
+  word-wrap: break-word;
+}
+
+/* ═══════════════════════════════════════════════
    📱 АДАПТИВНОСТЬ
    ═══════════════════════════════════════════════ */
 

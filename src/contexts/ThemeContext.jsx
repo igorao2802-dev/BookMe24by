@@ -6,6 +6,7 @@
 
 import { createContext, useContext, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { STORAGE_KEYS, STORAGE_DEBOUNCE_MS } from '../utils/constants';
 
 // === СОЗДАНИЕ КОНТЕКСТА ===
 const ThemeContext = createContext({
@@ -17,7 +18,9 @@ const ThemeContext = createContext({
 // === ПРОВАЙДЕР ТЕМЫ ===
 export function ThemeProvider({ children }) {
   // === СОСТОЯНИЕ ТЕМЫ ===
-  const [theme, setTheme] = useLocalStorage('bookme24_theme', 'light');
+  const [theme, setTheme] = useLocalStorage(STORAGE_KEYS.THEME, 'light', {
+    debounceMs: STORAGE_DEBOUNCE_MS.DEFAULT,
+  });
 
   // 🔥 ИСПРАВЛЕНО: Простое переключение light ↔ dark
   const toggleTheme = () => {

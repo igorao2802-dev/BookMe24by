@@ -1,0 +1,36 @@
+/**
+ * AppLoading.css — полноэкранный экран холодного старта SPA
+ *
+ * ПОЧЕМУ отдельные стили, если есть Spinner--fullscreen?
+ * Обёртка задаёт фон страницы из палитры проекта и min-height viewport,
+ * чтобы при bootstrap не мелькал пустой root до монтирования Layout.
+ */
+
+.app-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-bg);
+}
+
+.app-loading__spinner {
+  /* Spinner внутри уже центрирует иконку; класс для точечной кастомизации */
+}
+
+.app-load-error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  background-color: var(--color-bg);
+}
+
+.app-load-error__message {
+  max-width: 32rem;
+  margin: 0;
+  text-align: center;
+  color: var(--color-error-dark);
+  word-wrap: break-word;
+}
