@@ -24,12 +24,12 @@ import SpecialistCard from './SpecialistCard';
 import FavoritesList from './FavoritesList';
 
 // === ХУКИ ===
-import { useLocalStorage } from '../../hooks/useLocalStorage';
+import { useFavorites } from '../../hooks/useFavorites';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useLanguage } from '../../hooks/useLanguage'; // 🔥 ЭТАП 7.5
 
 // === КОНСТАНТЫ ===
-import { STORAGE_KEYS, BOOKING_STEPS } from '../../utils/constants';
+import { BOOKING_STEPS } from '../../utils/constants';
 import './CatalogPage.css';
 
 // === НАЧАЛЬНЫЕ ФИЛЬТРЫ ===
@@ -58,30 +58,18 @@ export default function CatalogPage({ services, specialists }) {
   // === СОРТИРОВКА ===
   const [sortBy, setSortBy] = useState('popular');
 
-  // === ИЗБРАННОЕ ===
-  const [favorites, setFavorites] = useLocalStorage(STORAGE_KEYS.FAVORITES, []);
+  const { favorites, toggle: toggleFavorite, isFavorite } = useFavorites();
 
-  // === ОБНОВЛЕНИЕ ФИЛЬТРОВ ===
   const handleFilterChange = (filterName, value) => {
     setFilters((prev) => ({ ...prev, [filterName]: value }));
   };
 
-  // === СБРОС ФИЛЬТРОВ ===
-  // 🔥 ЭТАП 3.1: Сброс возвращает minPrice к 0, так как используется INITIAL_FILTERS
   const handleResetFilters = () => {
     setFilters(INITIAL_FILTERS);
     setSearchQuery('');
     setSortBy('popular');
   };
 
-  // === ПЕРЕКЛЮЧЕНИЕ ИЗБРАННОГО ===
-  const toggleFavorite = (id) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
-    );
-  };
-
-  // === ПЕРЕХОД К ЗАПИСИ ===
   const handleBookService = (serviceId) => {
     navigate('/', {
       state: {
@@ -288,7 +276,7 @@ const filteredAndSortedServices = useMemo(() => {
                 <ServiceCard
                   key={service.id}
                   service={service}
-                  isFavorite={favorites.includes(service.id)}
+                  isFavorite={isFavorite(service.id)}
                   onToggleFavorite={() => toggleFavorite(service.id)}
                   onBook={() => handleBookService(service.id)}
                 />
@@ -322,7 +310,7 @@ const filteredAndSortedServices = useMemo(() => {
                   key={specialist.id}
                   specialist={specialist}
                   services={services}
-                  isFavorite={favorites.includes(specialist.id)}
+                  isFavorite={isFavorite(specialist.id)}
                   onToggleFavorite={() => toggleFavorite(specialist.id)}
                   onBook={() => handleBookSpecialist(specialist.id)}
                 />
