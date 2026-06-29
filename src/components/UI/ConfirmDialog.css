@@ -1,0 +1,28 @@
+.confirm-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 24px);
+}
+
+.confirm-dialog__message {
+  margin: 0;
+  color: var(--color-neutral-700, #4f4339);
+  font-size: var(--font-size-md, 1rem);
+  line-height: 1.5;
+  word-wrap: break-word;
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--spacing-sm, 8px);
+}
+
+.confirm-dialog--warning .confirm-dialog__message {
+  color: var(--color-neutral-800, #3d2f26);
+}
+
+.confirm-dialog--danger .confirm-dialog__message {
+  color: var(--color-error-dark, #9e4539);
+}
