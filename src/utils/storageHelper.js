@@ -8,6 +8,7 @@
  * - Централизованное логирование ошибок
  */
 
+import { STORAGE_KEYS, STORAGE_SCHEMA_VERSION } from "./constants";
 /**
  * Безопасное чтение из localStorage
  * @param {string} key
@@ -119,4 +120,64 @@ export function initializeStorage(key, initialData) {
  */
 export function createStateInitializer(key, fallback) {
   return safeGetItem(key, fallback);
+}
+
+/**
+ * Миграция схемы localStorage при холодном старте приложения.
+ *
+ * ПОЧЕМУ версия в отдельном ключе?
+ * При изменении структуры данных (переименование ключей, формат массивов)
+ * можно пошагово обновлять storage без потери данных пользователя.
+ *
+ * @param {number} [targetVersion=STORAGE_SCHEMA_VERSION]
+ * @returns {{ migrated: boolean, fromVersion: number|null, toVersion: number }}
+ */
+export function migrateStorage(targetVersion = STORAGE_SCHEMA_VERSION) {
+  if (typeof window === "undefined" || !window.localStorage) {
+    return {
+      migrated: false,
+      fromVersion: null,
+      toVersion: targetVersion,
+    };
+  }
+
+  try {
+    const storedVersion = safeGetItem(STORAGE_KEYS.SCHEMA_VERSION, null);
+
+    if (storedVersion === null) {
+      safeSetItem(STORAGE_KEYS.SCHEMA_VERSION, targetVersion);
+      return {
+        migrated: true,
+        fromVersion: null,
+        toVersion: targetVersion,
+      };
+    }
+
+    const fromVersion = Number(storedVersion);
+
+    if (fromVersion === targetVersion) {
+      return {
+        migrated: false,
+        fromVersion,
+        toVersion: targetVersion,
+      };
+    }
+
+    // Здесь будут пошаговые миграции при росте STORAGE_SCHEMA_VERSION:
+    // if (fromVersion < 2) { ... rename keys, normalize arrays ... }
+
+    safeSetItem(STORAGE_KEYS.SCHEMA_VERSION, targetVersion);
+    return {
+      migrated: true,
+      fromVersion,
+      toVersion: targetVersion,
+    };
+  } catch (error) {
+    console.error("[storageHelper] Ошибка migrateStorage:", error);
+    return {
+      migrated: false,
+      fromVersion: null,
+      toVersion: targetVersion,
+    };
+  }
 }

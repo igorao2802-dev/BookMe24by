@@ -72,14 +72,28 @@ const INVALID_EMAIL_CHARS_REGEX = /[^a-zA-Z0-9._%+-@]/;
 
 /**
  * Валидация телефона Республики Беларусь
+ *
+ * @param {string} phone - номер телефона
+ * @param {Object} [options]
+ * @param {boolean} [options.required=false] - обязательно ли поле (true для формы записи)
  */
-export function validatePhone(phone) {
+export function validatePhone(phone, options = {}) {
+  const { required = false } = options;
+
   if (!phone || typeof phone !== "string" || phone.trim() === "") {
-    return { isValid: true, errorKey: null };
+    // ПОЧЕМУ required отдельным параметром?
+    // В настройках профиля телефон может быть пустым при первом входе,
+    // но в форме записи телефон обязателен (замечание по обходу валидации).
+    return required
+      ? { isValid: false, errorKey: "validation.phone.required" }
+      : { isValid: true, errorKey: null };
   }
+
   const cleaned = phone.replace(/\D/g, "");
   if (cleaned.length === 0) {
-    return { isValid: true, errorKey: null };
+    return required
+      ? { isValid: false, errorKey: "validation.phone.required" }
+      : { isValid: true, errorKey: null };
   }
   if (cleaned.length !== 12) {
     return { isValid: false, errorKey: "validation.phone.tooShort" };
@@ -222,7 +236,7 @@ export function validateBookingForm(formData) {
   const errors = {};
   const nameResult = validateName(formData.clientName);
   if (!nameResult.isValid) errors.clientName = nameResult.errorKey;
-  const phoneResult = validatePhone(formData.clientPhone);
+  const phoneResult = validatePhone(formData.clientPhone, { required: true });
   if (!phoneResult.isValid) errors.clientPhone = phoneResult.errorKey;
   const emailResult = validateEmail(formData.clientEmail);
   if (!emailResult.isValid) errors.clientEmail = emailResult.errorKey;
