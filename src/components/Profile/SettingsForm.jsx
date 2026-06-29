@@ -19,6 +19,8 @@ import { validatePhone, validateEmail } from '../../utils/validators';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 import Toast from '../UI/Toast';
+import ConfirmDialog from '../UI/ConfirmDialog';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
 import './SettingsForm.css';
 
 export default function SettingsForm({ 
@@ -32,6 +34,7 @@ export default function SettingsForm({
   onLogout 
 }) {
   const { t } = useLanguage(); // 🔥 ЭТАП 7.8
+  const { confirm, dialogProps } = useConfirmDialog();
 
   // 🔥 ЭТАП 22: Локальное состояние для редактирования
   const [localEditData, setLocalEditData] = useState({
@@ -81,24 +84,26 @@ export default function SettingsForm({
   };
 
   // === ОЧИСТКА ИСТОРИИ ===
-  const handleClearHistory = () => {
-    const confirmed = window.confirm(
-      `${t('profile.settings.clearHistoryConfirm')}\n\n${t('profile.settings.clearHistoryWarning')}`
-    );
-    if (confirmed) {
-      onClearHistory();
-      Toast.success(t('profile.settings.clearHistorySuccess'));
-    }
+  const handleClearHistory = async () => {
+    const confirmed = await confirm({
+      message: `${t('profile.settings.clearHistoryConfirm')}\n\n${t('profile.settings.clearHistoryWarning')}`,
+      variant: 'warning',
+    });
+    if (!confirmed) return;
+
+    onClearHistory();
+    Toast.success(t('profile.settings.clearHistorySuccess'));
   };
 
   // === ВЫХОД ИЗ АККАУНТА ===
-  const handleLogout = () => {
-    const confirmed = window.confirm(
-      `${t('profile.settings.logoutConfirm')}\n\n${t('profile.settings.logoutWarning')}`
-    );
-    if (confirmed) {
-      onLogout();
-    }
+  const handleLogout = async () => {
+    const confirmed = await confirm({
+      message: `${t('profile.settings.logoutConfirm')}\n\n${t('profile.settings.logoutWarning')}`,
+      variant: 'danger',
+    });
+    if (!confirmed) return;
+
+    onLogout();
   };
 
   return (
@@ -182,6 +187,8 @@ export default function SettingsForm({
           </Button>
         </div>
       </section>
+
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

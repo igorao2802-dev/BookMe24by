@@ -14,9 +14,11 @@ import ConfirmationModal from './ConfirmationModal';
 import BookingList from './BookingList';
 
 import Button from '../UI/Button';
+import ConfirmDialog from '../UI/ConfirmDialog';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useBookingWizard } from '../../hooks/useBookingWizard';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
 import { BOOKING_STEPS, STORAGE_KEYS, STORAGE_DEBOUNCE_MS } from '../../utils/constants';
 import './BookingWizard.css';
 
@@ -35,6 +37,7 @@ export default function BookingWizard({
   onCreateBooking,
 }) {
   const { t } = useLanguage();
+  const { confirm, dialogProps } = useConfirmDialog();
 
   const [lastClientPhone] = useLocalStorage(
     STORAGE_KEYS.LAST_CLIENT_PHONE,
@@ -68,7 +71,7 @@ export default function BookingWizard({
       showMyBookings,
       handleNewBooking,
     },
-  } = useBookingWizard({ services, specialists, onCreateBooking });
+  } = useBookingWizard({ services, specialists, onCreateBooking, confirm });
 
   const progressPercent =
     ((currentStep - 1) / (BOOKING_STEPS.CONFIRM - 1)) * 100;
@@ -244,6 +247,8 @@ export default function BookingWizard({
         service={selectedService}
         specialist={selectedSpecialist}
       />
+
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

@@ -10,6 +10,8 @@ import { calculateEndTime } from '../../utils/timeHelpers';
 import { useLanguage } from '../../hooks/useLanguage';
 import Badge from '../UI/Badge';
 import Button from '../UI/Button';
+import ConfirmDialog from '../UI/ConfirmDialog';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
 import './HistoryCard.css';
 
 export default function HistoryCard({
@@ -20,6 +22,7 @@ export default function HistoryCard({
   onRebook,
 }) {
   const { t } = useLanguage();
+  const { confirm, dialogProps } = useConfirmDialog();
 
   const endTime = useMemo(() => {
     if (!booking.startTime || !booking.duration) return null;
@@ -34,12 +37,14 @@ export default function HistoryCard({
     booking.status === BOOKING_STATUS.COMPLETED ||
     booking.status === BOOKING_STATUS.CANCELLED;
 
-  const handleCancel = () => {
-    const confirmed = window.confirm(
-      `${t('profile.bookings.confirmCancel')}\n\n` +
-      `${t('booking.confirmation.service')} ${service?.name || t('common.unknown')}\n` +
-      `${t('booking.confirmation.date')} ${formatDateShort(booking.date)} ${t('booking.confirmation.time')} ${booking.startTime || '—'}`
-    );
+  const handleCancel = async () => {
+    const confirmed = await confirm({
+      title: t('profile.bookings.confirmCancel'),
+      message:
+        `${t('booking.confirmation.service')} ${service?.name || t('common.unknown')}\n` +
+        `${t('booking.confirmation.date')} ${formatDateShort(booking.date)} ${t('booking.confirmation.time')} ${booking.startTime || '—'}`,
+      variant: 'danger',
+    });
     if (confirmed && onCancel) {
       onCancel(booking.id);
     }
@@ -52,6 +57,7 @@ export default function HistoryCard({
   };
 
   return (
+    <>
     <article className={`history-card history-card--${booking.status}`}>
       <div className="history-card__header">
         {/* 🔥 ЭТАП 5.5: Fallback для названия услуги */}
@@ -122,5 +128,7 @@ export default function HistoryCard({
         </div>
       )}
     </article>
+    <ConfirmDialog {...dialogProps} />
+  </>
   );
 }
