@@ -1,0 +1,165 @@
+/**
+ * BookingList.css — стили для списка записей
+ * BEM-методология + адаптивность + поддержка тёмной темы
+ * 
+ * 🔥 ЗАМЕЧАНИЕ №2: Увеличены вертикальные отступы между элементами
+ * - Отступ между заголовком и кнопкой: 24px
+ * - Отступ между секциями: 32px
+ * - Отступ между карточками: 16px
+ * - Внутренние отступы карточки: 24px
+ */
+
+/* === ОСНОВНОЙ КОНТЕЙНЕР === */
+.booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl, 32px); /* Увеличено с 24px до 32px */
+}
+
+/* === ЗАГОЛОВОК СПИСКА === */
+.booking-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-lg, 24px); /* 🔥 Увеличено с 16px до 24px */
+  flex-wrap: wrap;
+}
+
+.booking-list__title {
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 600;
+  color: var(--color-text, #2d2419);
+  margin: 0;
+}
+
+.booking-list__new-btn {
+  flex-shrink: 0;
+}
+
+/* === БАННЕР УСПЕШНОГО СОЗДАНИЯ === */
+.booking-list__success-banner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+  padding: var(--spacing-lg, 24px);
+  background: linear-gradient(
+    135deg,
+    var(--color-success-light, #e6f0e9) 0%,
+    var(--color-surface, #ffffff) 100%
+  );
+  border: 1px solid var(--color-success, #5f8c6d);
+  border-radius: var(--radius-lg, 12px);
+  color: var(--color-success-dark, #3e6b4c);
+}
+
+.booking-list__success-banner strong {
+  display: block;
+  font-size: var(--font-size-base, 1rem);
+  margin-bottom: var(--spacing-xs, 4px);
+}
+
+.booking-list__success-banner p {
+  font-size: var(--font-size-sm, 0.875rem);
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* === СЕКЦИЯ (Предстоящие/История) === */
+.booking-list__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 16px); /* Увеличено с 12px до 16px */
+}
+
+.booking-list__section-title {
+  font-size: var(--font-size-lg, 1.125rem);
+  font-weight: 600;
+  color: var(--color-text, #2d2419);
+  margin: 0;
+  margin-bottom: var(--spacing-md, 16px); /* Увеличено с 8px до 16px */
+}
+
+/* === СЕТКА КАРТОЧЕК === */
+.booking-list__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--spacing-md, 16px); /*  Увеличено с 12px до 16px */
+}
+
+/* === ПУСТОЕ СОСТОЯНИЕ === */
+.booking-list__empty {
+  text-align: center;
+  padding: var(--spacing-2xl, 48px);
+  background: var(--color-surface-alt, #f2ebe0);
+  border-radius: var(--radius-lg, 12px);
+}
+
+/* ══════════════════════════════════════════════
+   ПОДДЕРЖКА ТЁМНОЙ ТЕМЫ
+   ═══════════════════════════════════════════════ */
+[data-theme="dark"] .booking-list__title,
+[data-theme="dark"] .booking-list__section-title {
+  color: var(--color-text, #f2ebe0);
+}
+
+[data-theme="dark"] .booking-list__success-banner {
+  background: linear-gradient(
+    135deg,
+    var(--color-success-light, #2d3d2e) 0%,
+    var(--color-surface, #2d2419) 100%
+  );
+  border-color: var(--color-success, #5f8c6d);
+  color: var(--color-success-light, #a8d5b5);
+}
+
+[data-theme="dark"] .booking-list__empty {
+  background: var(--color-surface-alt, #3d2f26);
+}
+
+/* ═══════════════════════════════════════════════
+   АДАПТИВНОСТЬ
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .booking-list {
+    gap: var(--spacing-lg, 24px);
+  }
+
+  .booking-list__header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md, 16px);
+  }
+
+  .booking-list__new-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .booking-list__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .booking-list__title {
+    font-size: var(--font-size-lg, 1.25rem);
+  }
+
+  .booking-list__section-title {
+    font-size: var(--font-size-base, 1rem);
+  }
+
+  .booking-list__success-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm, 8px);
+    padding: var(--spacing-md, 16px);
+  }
+}
+
+/* === ДОСТУПНОСТЬ: prefers-reduced-motion === */
+@media (prefers-reduced-motion: reduce) {
+  .booking-list__success-banner {
+    transition: none;
+  }
+}

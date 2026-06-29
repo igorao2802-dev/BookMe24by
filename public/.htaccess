@@ -1,0 +1,112 @@
+# ═══════════════════════════════════════════════════════
+# .htaccess для bookme24.by
+# React SPA + Client-side Routing
+# ═══════════════════════════════════════════════════════
+
+# === ВКЛЮЧЕНИЕ MOD_REWRITE ===
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Если запрошенный файл существует — отдать его
+  RewriteCond %{REQUEST_FILENAME} !-f
+  
+  # Если запрошенная директория существует — отдать её
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # Если запрошенный файл не существует — перенаправить в index.html
+  RewriteRule . /index.html [L]
+</IfModule>
+
+# ═══════════════════════════════════════════════════════
+# КЭШИРОВАНИЕ (ускорение загрузки)
+# ═══════════════════════════════════════════════════════
+<IfModule mod_expires.c>
+  ExpiresActive On
+  
+  # Картинки и шрифты — кэш на 1 год
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+  ExpiresByType font/woff "access plus 1 year"
+  ExpiresByType application/font-woff2 "access plus 1 year"
+  
+  # CSS и JS — кэш на 1 месяц
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType text/javascript "access plus 1 month"
+  
+  # HTML — без кэша (всегда актуальный)
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# ═══════════════════════════════════════════════════════
+# СЖАТИЕ (уменьшение трафика)
+# ═══════════════════════════════════════════════════════
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE text/javascript
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/json
+  AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ═══════════════════════════════════════════════════════
+# БЕЗОПАСНОСТЬ (заголовки)
+# ═══════════════════════════════════════════════════════
+<IfModule mod_headers.c>
+  # Защита от XSS-атак
+  Header set X-XSS-Protection "1; mode=block"
+  
+  # Запрет встраивания в iframe (кликджекинг)
+  Header set X-Frame-Options "SAMEORIGIN"
+  
+  # Защита MIME-типов
+  Header set X-Content-Type-Options "nosniff"
+  
+  # Политика безопасности контента (CSP)
+  Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self';"
+  
+  # Referrer Policy
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  
+  # Permissions Policy
+  Header set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+</IfModule>
+
+# ═══════════════════════════════════════════════════════
+# ЗАПРЕТ ДОСТУПА К СЛУЖЕБНЫМ ФАЙЛАМ
+# ═══════════════════════════════════════════════════════
+<FilesMatch "^\.">
+  Order allow,deny
+  Deny from all
+</FilesMatch>
+
+# Запрет доступа к .htaccess
+<Files ".htaccess">
+  Order allow,deny
+  Deny from all
+</Files>
+
+# Запрет просмотра директорий
+Options -Indexes
+
+# ═══════════════════════════════════════════════════════
+# КОДИРОВКА UTF-8
+# ═══════════════════════════════════════════════════════
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+  AddCharset UTF-8 .html .css .js .xml .json .rss .atom
+</IfModule>
+
+# ═══════════════════════════════════════════════════════
+# ЗАЩИТА ОТ СКАЧИВАНИЯ ФАЙЛОВ
+# ═══════════════════════════════════════════════════════
+<FilesMatch "\.(env|log|ini|sh|sql)$">
+  Order allow,deny
+  Deny from all
+</FilesMatch>

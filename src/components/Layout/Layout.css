@@ -1,0 +1,312 @@
+/**
+ * Layout.css — стили для Layout (шапка, навигация, подвал)
+ * BEM-методология + адаптивность + поддержка тёмной темы
+ * 
+ * 🔥 ЭТАП 2.1: Подвал теперь имеет градиент, идентичный шапке
+ * 🔥 ЭТАП 4.1: Hover/Active/Focus-visible для навигации
+ * 🔥 ЭТАП 7.2: Группа переключателей (тема + язык + роль)
+ * 🔥 ЭТАП 7.3: Полная интеграция с локализацией
+ */
+
+/* === ОСНОВНОЙ КОНТЕЙНЕР === */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.layout__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--spacing-md, 16px);
+  width: 100%;
+}
+
+/* ═══════════════════════════════════════════════
+   🔝 ШАПКА
+   Тёплый терракотовый градиент — премиальный вид
+   ═══════════════════════════════════════════════ */
+.layout__header {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600, #9c7558) 0%,
+    var(--color-primary-700, #7f5e44) 100%
+  );
+  color: var(--color-text-inverse, #ffffff);
+  padding: var(--spacing-md, 16px) 0;
+  box-shadow: var(--shadow-md);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.layout__header .layout__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+  flex-wrap: wrap;
+}
+
+/* === ЛОГОТИП === */
+.layout__logo {
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 700;
+  color: var(--color-text-inverse, #ffffff);
+  text-decoration: none;
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  transition: opacity var(--transition-fast, 150ms ease);
+}
+
+.layout__logo:hover {
+  color: var(--color-text-inverse, #ffffff);
+  opacity: 0.9;
+  border-bottom: none;
+}
+
+/* === НАВИГАЦИЯ === */
+.layout__nav {
+  display: flex;
+  gap: var(--spacing-sm, 8px);
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.layout__nav-link {
+  color: var(--color-text-inverse, #ffffff);
+  text-decoration: none;
+  border-bottom: none;
+  padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+  border-radius: var(--radius-md, 8px);
+  font-weight: 500;
+  background-color: transparent;
+  white-space: nowrap;
+  transition:
+    background-color var(--transition-fast, 150ms ease),
+    transform var(--transition-fast, 150ms ease),
+    outline var(--transition-fast, 150ms ease);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs, 4px);
+}
+
+.layout__nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--color-text-inverse, #ffffff);
+  border-bottom: none;
+}
+
+.layout__nav-link:active {
+  transform: scale(0.97);
+  background-color: rgba(255, 255, 255, 0.25);
+  color: var(--color-text-inverse, #ffffff);
+  border-bottom: none;
+}
+
+.layout__nav-link:focus-visible {
+  outline: 2px solid var(--color-text-inverse, #ffffff);
+  outline-offset: 2px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.layout__nav-link--active {
+  background-color: rgba(255, 255, 255, 0.25);
+  font-weight: 600;
+}
+
+/* ══════════════════════════════════════════════
+   🔥 ГРУППА ПЕРЕКЛЮЧАТЕЛЕЙ (ЭТАП 7.2 + 7.3)
+   ═══════════════════════════════════════════════ */
+.layout__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  margin-left: auto;
+}
+
+/* === ПЕРЕКЛЮЧАТЕЛЬ РОЛИ === */
+.layout__role-switcher {
+  display: flex;
+  align-items: center;
+}
+
+.layout__role-label {
+  color: var(--color-text-inverse, #ffffff);
+  font-size: var(--font-size-sm, 0.875rem);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs, 4px);
+  white-space: nowrap;
+}
+
+.layout__role-select {
+  padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.95);
+  color: var(--color-text, #2d2419);
+  font-size: var(--font-size-sm, 0.875rem);
+  cursor: pointer;
+  transition: border-color var(--transition-fast, 150ms ease);
+}
+
+.layout__role-select:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+}
+
+.layout__role-select:focus-visible {
+  outline: 2px solid var(--color-text-inverse, #ffffff);
+  outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   📄 ОСНОВНОЙ КОНТЕНТ
+   ═══════════════════════════════════════════════ */
+.layout__main {
+  flex: 1;
+  padding: var(--spacing-xl, 32px) 0;
+}
+
+/* ═══════════════════════════════════════════════
+    ПОДВАЛ
+   🔥 ЭТАП 2.1: Градиент, идентичный шапке, для визуальной целостности
+   ═══════════════════════════════════════════════ */
+.layout__footer {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600, #9c7558) 0%,
+    var(--color-primary-700, #7f5e44) 100%
+  );
+  color: var(--color-text-inverse, #ffffff);
+  padding: var(--spacing-2xl, 48px) 0 var(--spacing-xl, 32px);
+  margin-top: auto;
+}
+
+.layout__footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-lg, 24px);
+}
+
+.layout__footer-col h4 {
+  margin-bottom: var(--spacing-sm, 8px);
+  font-size: var(--font-size-lg, 1.125rem);
+  color: var(--color-text-inverse, #ffffff);
+}
+
+.layout__footer-col p {
+  color: var(--color-neutral-100, #f2ebe0);
+  font-size: var(--font-size-sm, 0.875rem);
+  margin-bottom: var(--spacing-xs, 4px);
+  opacity: 0.9;
+}
+
+.layout__footer-col a {
+  color: var(--color-primary-200, #eacfb5);
+  border-bottom: none;
+  text-decoration: none;
+  transition: color var(--transition-fast, 150ms ease);
+}
+
+.layout__footer-col a:hover {
+  color: var(--color-text-inverse, #ffffff);
+  border-bottom: 1px solid var(--color-text-inverse, #ffffff);
+}
+
+/* ═══════════════════════════════════════════════
+    ПОДДЕРЖКА ТЁМНОЙ ТЕМЫ (ЭТАП 2.5)
+   ═══════════════════════════════════════════════ */
+
+[data-theme="dark"] .layout__role-select {
+  background-color: var(--color-surface, #2d2419);
+  color: var(--color-text, #f2ebe0);
+  border-color: var(--color-border, #4a3a2a);
+}
+
+[data-theme="dark"] .layout__role-select:hover {
+  border-color: var(--color-primary-400, #c9a88c);
+}
+
+[data-theme="dark"] .layout__role-select:focus-visible {
+  outline-color: var(--color-primary-400, #c9a88c);
+}
+
+/* ═══════════════════════════════════════════════
+    АДАПТИВНОСТЬ
+   ══════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .layout__header .layout__container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .layout__brand {
+    text-align: center;
+    margin-bottom: var(--spacing-sm, 8px);
+  }
+
+  .layout__logo {
+    justify-content: center;
+  }
+
+  .layout__nav {
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--spacing-sm, 8px);
+  }
+
+  .layout__controls {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0;
+    margin-top: var(--spacing-sm, 8px);
+    padding-top: var(--spacing-sm, 8px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (max-width: 480px) {
+  .layout__nav-link {
+    padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+
+  .layout__controls {
+    flex-wrap: wrap;
+    gap: var(--spacing-xs, 4px);
+  }
+
+  .layout__role-switcher {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .layout__role-label {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .layout__footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
+
+/* === ДОСТУПНОСТЬ: prefers-reduced-motion === */
+@media (prefers-reduced-motion: reduce) {
+  .layout__nav-link,
+  .layout__logo,
+  .layout__role-select,
+  .layout__footer-col a {
+    transition: none;
+  }
+
+  .layout__nav-link:active {
+    transform: none;
+  }
+}

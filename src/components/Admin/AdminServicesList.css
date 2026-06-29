@@ -1,0 +1,281 @@
+/**
+ * AdminServicesList.css — стили для таблицы услуг в админке
+ * 🔥 ИСПРАВЛЕНО: Улучшена контрастность в тёмной теме
+ */
+
+/* === КОНТЕЙНЕР === */
+.admin-services-list {
+  width: 100%;
+}
+
+.admin-services-list__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl, 32px);
+  flex-wrap: wrap;
+  gap: var(--spacing-md, 16px);
+}
+
+.admin-services-list__header h2 {
+  font-size: var(--font-size-xl, 1.5rem);
+  color: var(--color-text, #2d2419);
+  margin: 0;
+}
+
+[data-theme="dark"] .admin-services-list__header h2 {
+  color: var(--color-text, #f5f5f5);
+}
+
+/* === ТАБЛИЦА === */
+.admin-services-list__table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-sm);
+}
+
+.admin-services-list__table {
+  width: 100%;
+  background: var(--color-surface, #fff);
+  border: 1px solid var(--color-border, #e8dcc4);
+  border-collapse: collapse;
+  border-radius: var(--radius-lg, 12px);
+  overflow: hidden;
+}
+
+[data-theme="dark"] .admin-services-list__table {
+  background: var(--color-surface, #2d2d2d);
+  border-color: var(--color-border, #404040);
+}
+
+/* Заголовки таблицы */
+.admin-services-list__table thead {
+  background: var(--color-bg, #fdfaf6);
+  border-bottom: 2px solid var(--color-border, #e8dcc4);
+}
+
+[data-theme="dark"] .admin-services-list__table thead {
+  background: var(--color-bg, #1a1a1a);
+  border-bottom-color: var(--color-border, #404040);
+}
+
+.admin-services-list__table thead th {
+  color: var(--color-text, #2d2419);
+  font-weight: 600;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: var(--font-size-sm, 0.875rem);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+[data-theme="dark"] .admin-services-list__table thead th {
+  color: var(--color-text, #f5f5f5);
+}
+
+/* Строки таблицы */
+.admin-services-list__table tbody tr {
+  border-bottom: 1px solid var(--color-border, #e8dcc4);
+  transition: background-color 0.2s ease;
+}
+
+[data-theme="dark"] .admin-services-list__table tbody tr {
+  border-bottom-color: var(--color-border, #404040);
+}
+
+.admin-services-list__table tbody tr:last-child {
+  border-bottom: none;
+}
+
+/* Наведение на строку — улучшенная контрастность */
+.admin-services-list__table tbody tr:hover {
+  background: var(--color-table-row-hover, #f5f0e8);
+}
+
+[data-theme="dark"] .admin-services-list__table tbody tr:hover {
+  background: var(--color-table-row-hover, #3d3d3d);
+}
+
+.admin-services-list__table tbody td {
+  color: var(--color-table-cell-text, #2d2419);
+  padding: 12px 16px;
+  font-size: var(--font-size-base, 1rem);
+  vertical-align: middle;
+}
+
+[data-theme="dark"] .admin-services-list__table tbody td {
+  color: var(--color-table-cell-text, #f5f5f5);
+}
+
+/* Название услуги */
+.admin-services-list__name {
+  color: var(--color-service-name-text, #2d2419);
+  font-weight: 500;
+}
+
+[data-theme="dark"] .admin-services-list__name {
+  color: var(--color-service-name-text, #f5f5f5);
+}
+
+/* Категория — бейдж с хорошей контрастностью */
+.admin-services-list__table .badge {
+  background: var(--color-category-badge-bg, #4a4a4a);
+  color: var(--color-category-badge-text, #ffffff);
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+}
+
+[data-theme="dark"] .admin-services-list__table .badge {
+  background: var(--color-category-badge-bg, #5a5a5a);
+  color: var(--color-category-badge-text, #ffffff);
+}
+
+/* Цена */
+.admin-services-list__price {
+  color: var(--color-primary-dark, #b89060);
+  font-weight: 600;
+  font-size: var(--font-size-base, 1rem);
+}
+
+[data-theme="dark"] .admin-services-list__price {
+  color: var(--color-primary-light, #e6b88a);
+}
+
+/* Рейтинг */
+.admin-services-list__rating {
+  color: #ffc107;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Кнопки действий */
+.admin-services-list__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-services-list__action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+[data-theme="dark"] .admin-services-list__action-btn {
+  border-color: var(--color-border, #404040);
+  color: var(--color-text-muted, #b0b0b0);
+}
+
+.admin-services-list__action-btn:hover:not(:disabled) {
+  background: var(--color-primary, #d4a574);
+  color: var(--color-bg, #fdfaf6);
+  border-color: var(--color-primary, #d4a574);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .admin-services-list__action-btn:hover:not(:disabled) {
+  background: var(--color-primary, #d4a574);
+  color: var(--color-bg, #1a1a1a);
+}
+
+.admin-services-list__action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.admin-services-list__action-btn--danger:hover:not(:disabled) {
+  background: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 768px) {
+  .admin-services-list__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-services-list__table-wrapper {
+    overflow-x: scroll;
+  }
+
+  .admin-services-list__table {
+    min-width: 600px;
+  }
+
+  .admin-services-list__table th,
+  .admin-services-list__table td {
+    padding: 8px 12px;
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   ТЁМНАЯ ТЕМА
+   ═══════════════════════════════════════════════ */
+[data-theme="dark"] .admin-services-list__header h2 {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .admin-services-list__table-wrapper {
+  background: var(--color-surface, #2a211b);
+  border-color: var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .admin-services-list__table th {
+  background: var(--color-bg, #1c1613);
+  color: var(--color-text-muted, #c9b89f);
+  border-bottom-color: var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .admin-services-list__table td {
+  color: var(--color-text, #f5ede4);
+  border-bottom-color: var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .admin-services-list__table tbody tr:hover {
+  background: var(--color-primary-soft, #3d2f26);
+}
+
+[data-theme="dark"] .admin-services-list__name {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .admin-services-list__price {
+  color: var(--color-primary-400, #c9a88c);
+}
+
+[data-theme="dark"] .admin-services-list__action-btn {
+  border-color: var(--color-border, #44362b);
+  color: var(--color-text-muted, #c9b89f);
+}
+
+[data-theme="dark"] .admin-services-list__action-btn:hover:not(:disabled) {
+  background: var(--color-primary-soft, #3d2f26);
+  border-color: var(--color-primary-400, #c9a88c);
+  color: var(--color-primary-400, #c9a88c);
+}
+
+[data-theme="dark"]
+  .admin-services-list__action-btn--danger:hover:not(:disabled) {
+  background: var(--color-error-light, #3d2419);
+  border-color: var(--color-error-light, #fca5a5);
+  color: var(--color-error-light, #fca5a5);
+}

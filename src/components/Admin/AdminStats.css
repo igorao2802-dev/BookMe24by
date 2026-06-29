@@ -1,0 +1,244 @@
+/**
+ * Стили для блока статистики (Admin Stats)
+ * Сетка карточек KPI
+ * 
+ * 🔥 ЭТАП 3.6: Замена эффекта "подпрыгивания" на мягкий градиент
+ * - Убран transform: translateY(-2px)
+ * - Добавлен плавный градиент фона при наведении
+ * - Для карточки "Выручка" — усиление градиента (более контрастный)
+ * - Transition расширен для всех свойств (300ms ease)
+ */
+
+/* ═══════════════════════════════════════════════
+   СЕТКА СТАТИСТИКИ
+   ═══════════════════════════════════════════════ */
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md, 16px);
+  margin-bottom: var(--spacing-lg, 24px);
+}
+
+/* ═══════════════════════════════════════════════
+   КАРТОЧКА СТАТИСТИКИ
+   ═══════════════════════════════════════════════ */
+
+.admin-stats__card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+  padding: var(--spacing-lg, 24px);
+  background: var(--color-surface, #ffffff);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid transparent;
+
+  /* 🔥 ЭТАП 3.6: Расширенный transition для всех свойств */
+  /* ПОЧЕМУ 300ms, а не 250ms?
+     Чуть более медленная анимация выглядит "премиальнее" и спокойнее.
+     Быстрые анимации (<200ms) создают ощущение "дёрганности". */
+  transition:
+    background 300ms ease,
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+}
+
+/* 🔥 ЭТАП 3.6: Мягкий градиент вместо "подпрыгивания" */
+/* ПОЧЕМУ градиент, а не просто смена цвета?
+   Градиент создаёт эффект "освещения" — карточка как будто 
+   слегка подсвечивается изнутри. Это выглядит дорого и спокойно. */
+.admin-stats__card:hover {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface, #ffffff) 0%,
+    var(--color-primary-soft, #fbf5ef) 100%
+  );
+  box-shadow: var(--shadow-md);
+}
+
+/* ══════════════════════════════════════════════
+   ВАРИАНТЫ КАРТОЧЕК
+   ═══════════════════════════════════════════════ */
+
+.admin-stats__card--default {
+  border-left-color: var(--color-primary, #b8957a);
+}
+
+.admin-stats__card--info {
+  border-left-color: var(--color-info, #5b8ba6);
+}
+
+.admin-stats__card--success {
+  border-left-color: var(--color-success, #5f8c6d);
+}
+
+.admin-stats__card--danger {
+  border-left-color: var(--color-error, #c65d52);
+}
+
+/* ═══════════════════════════════════════════════
+   КАРТОЧКА "ВЫРУЧКА" (highlight)
+   ═══════════════════════════════════════════════ */
+.admin-stats__card--highlight {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600, #9c7558) 0%,
+    var(--color-primary-700, #7f5e44) 100%
+  );
+  color: white;
+  border-left-color: transparent;
+  /* 🔥 ДОБАВЛЕНО: достаточный padding для отступа от границ */
+  padding: var(--spacing-lg, 24px);
+  overflow: hidden; /* Защита от переполнения */
+}
+
+/*  ИСПРАВЛЕНО: уменьшен шрифт значения для карточки "Выручка" */
+.admin-stats__card--highlight .admin-stats__value {
+  color: white;
+  font-size: var(--font-size-lg, 1.125rem); /* Было 1.5rem, стало 1.125rem */
+  font-weight: 700;
+  line-height: 1.3;
+  word-break: break-word; /* Перенос длинных значений */
+  overflow-wrap: break-word;
+  white-space: normal; /* Разрешаем перенос */
+}
+
+.admin-stats__card--highlight .admin-stats__label {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.admin-stats__card--highlight .admin-stats__icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  width: 40px; /* Уменьшена иконка для баланса */
+  height: 40px;
+}
+
+/*  Усиление градиента при наведении */
+.admin-stats__card--highlight:hover {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-700, #7f5e44) 0%,
+    var(--color-primary-900, #3d2f26) 100%
+  );
+  box-shadow: var(--shadow-lg);
+}
+
+/* ═══════════════════════════════════════════════
+   ИКОНКА
+   ═══════════════════════════════════════════════ */
+
+.admin-stats__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--color-primary-light, #f0d9bc);
+  color: var(--color-primary-dark, #b8895a);
+  border-radius: var(--radius-md, 8px);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════
+   КОНТЕНТ
+   ═══════════════════════════════════════════════ */
+
+.admin-stats__content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.admin-stats__label {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+.admin-stats__value {
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 700;
+  color: var(--color-text, #3d2f26);
+}
+
+/* ══════════════════════════════════════════════
+   АДАПТИВНОСТЬ
+   ═══════════════════════════════════════════════ */
+
+@media (max-width: 640px) {
+  .admin-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-stats__card {
+    padding: var(--spacing-md, 16px);
+  }
+
+  .admin-stats__value {
+    font-size: var(--font-size-lg, 1.125rem);
+  }
+
+  /* 🔥 Для карточки "Выручка" на мобильных — ещё меньше */
+  .admin-stats__card--highlight .admin-stats__value {
+    font-size: var(--font-size-base, 1rem);
+  }
+
+  .admin-stats__icon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+@media (max-width: 400px) {
+  .admin-stats__card--highlight .admin-stats__value {
+    font-size: var(--font-size-sm, 0.875rem);
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   ТЁМНАЯ ТЕМА
+   ═══════════════════════════════════════════════ */
+[data-theme="dark"] .admin-stats__card {
+  background: var(--color-surface, #2a211b);
+  border: 1px solid var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .admin-stats__card:hover {
+  background: linear-gradient(
+    135deg,
+    var(--color-surface, #2a211b) 0%,
+    var(--color-primary-soft, #3d2f26) 100%
+  );
+}
+
+[data-theme="dark"] .admin-stats__label {
+  color: var(--color-text-muted, #c9b89f);
+}
+
+[data-theme="dark"] .admin-stats__value {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .admin-stats__icon {
+  background: var(--color-primary-soft, #3d2f26);
+  color: var(--color-primary-400, #c9a88c);
+}
+
+[data-theme="dark"] .admin-stats__card--highlight {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-700, #7f5e44) 0%,
+    var(--color-primary-900, #3d2f26) 100%
+  );
+}
+
+[data-theme="dark"] .admin-stats__card--highlight:hover {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-800, #5e4532) 0%,
+    var(--color-primary-900, #3d2f26) 100%
+  );
+}

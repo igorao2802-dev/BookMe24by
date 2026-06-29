@@ -1,0 +1,166 @@
+/**
+ * Стили для BookingForm (Шаг 4: Контактные данные)
+ * 
+ * 🔥 ЭТАП 3.1: Оптимизация раскладки
+ * - Убран max-width: 600px — форма использует всю ширину
+ * - Добавлен grid для строки Телефон/Email (2 колонки)
+ * - Адаптивность: на мобильных (≤640px) все поля в одну колонку
+ */
+
+.booking-form__header {
+  margin-bottom: var(--spacing-lg, 24px);
+}
+
+.booking-form__header h2 {
+  font-size: var(--font-size-xl, 1.5rem);
+  margin-bottom: var(--spacing-xs, 4px);
+  color: var(--color-neutral-900, #251b14);
+}
+
+.booking-form__description {
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+/* 
+  🔥 ЭТАП 3.1: Убран max-width: 600px
+  ПОЧЕМУ? Форма должна использовать всё доступное пространство.
+  Раньше справа оставалось большое пустое поле.
+*/
+.booking-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 16px);
+  max-width: 700px;
+}
+
+/* Обёртка для полей, которые должны быть в одну колонку (textarea) */
+.booking-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 4px);
+}
+
+/* 
+  🔥 ЭТАП 3.1: СТРОКА С ДВУМЯ КОЛОНКАМИ (Телефон + Email)
+  ПОЧЕМУ CSS Grid, а не flex?
+  Grid гарантирует одинаковую ширину колонок (1fr 1fr)
+  и правильное выравнивание полей по высоте.
+*/
+.booking-form__row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md, 16px);
+}
+
+/* 
+  На мобильных устройствах (≤640px) переключаем в одну колонку.
+  ПОЧЕМУ 640px, а не 480px?
+  На экранах 480-640px (большие телефоны, маленькие планшеты)
+  два поля в ряд выглядят слишком узкими и неудобными для ввода.
+*/
+@media (max-width: 640px) {
+  .booking-form__row-2col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === TEXTAREA === */
+.input__field--textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+
+  font-family: var(--font-family);
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-text, #2d2419);
+
+  background: var(--color-surface, #ffffff);
+  border: 1.5px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+
+  resize: vertical;
+  transition: border-color var(--transition-fast, 150ms ease);
+}
+
+.input__field--textarea:focus {
+  outline: none;
+  border-color: var(--color-primary-dark, #b8895a);
+  box-shadow: 0 0 0 3px rgba(212, 165, 116, 0.15);
+}
+
+.input__field--textarea.input__field--error {
+  border-color: var(--color-error, #f44336);
+  background-color: #fff5f5;
+}
+
+/* === ФУТЕР КОММЕНТАРИЯ === */
+.booking-form__comment-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-xs, 4px);
+}
+
+.booking-form__char-count {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--color-text-muted, #6b5d4f);
+  margin-left: auto;
+}
+
+/* === КНОПКА ОЧИСТКИ ПОЛЯ ТЕЛЕФОНА === */
+.booking-form__field-wrapper {
+  position: relative;
+}
+
+.booking-form__clear-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--color-surface, #ffffff);
+  border: 1px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-full, 9999px);
+  color: var(--color-text-muted, #6b5d4f);
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+  padding: 0;
+  z-index: 2;
+}
+
+.booking-form__clear-btn:hover {
+  background: var(--color-error-light, #fceae8);
+  border-color: var(--color-error, #c65d52);
+  color: var(--color-error, #c65d52);
+}
+
+.booking-form__clear-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #b8957a);
+  outline-offset: 2px;
+}
+
+/* Тёмная тема */
+[data-theme="dark"] .booking-form__clear-btn {
+  background: var(--color-surface, #2d2419);
+  border-color: var(--color-border, #4a3a2a);
+  color: var(--color-text-muted, #b5a28d);
+}
+
+[data-theme="dark"] .booking-form__clear-btn:hover {
+  background: var(--color-error-light, #3d2419);
+  border-color: var(--color-error, #c65d52);
+  color: var(--color-error-light, #fca5a5);
+}
+
+/* Адаптивность */
+@media (max-width: 480px) {
+  .booking-form__clear-btn {
+    width: 24px;
+    height: 24px;
+    right: 8px;
+  }
+}

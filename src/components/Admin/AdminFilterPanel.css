@@ -1,0 +1,419 @@
+/**
+ * Стили для AdminFilterPanel
+ * BEM-методология + адаптивность
+ * 
+ * 🔥 ЭТАП 3.2: Разделение на три секции
+ * 🔥 ЭТАП 3.3: Достаточные размеры полей
+ * 🔥 ЭТАП 3.4: Заголовок "Сортировка"
+ * 🔥 ЭТАП 3.5: Лейблы для всех полей фильтров
+ */
+
+/* === ОСНОВНОЙ КОНТЕЙНЕР === */
+.admin-filter-panel {
+  background: var(--color-surface, #fff);
+  padding: var(--spacing-lg, 24px);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg, 24px);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 24px);
+
+  overflow-x: auto;
+}
+
+/* === ЗАГОЛОВОК ПАНЕЛИ === */
+.admin-filter-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md, 16px);
+  gap: var(--spacing-sm, 8px);
+  flex-shrink: 0;
+}
+
+.admin-filter-panel__title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  font-size: var(--font-size-lg, 1.125rem);
+  margin: 0;
+  color: var(--color-text, #3d2f26);
+  white-space: nowrap;
+}
+
+.admin-filter-panel__reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted, #6b5d4f);
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.admin-filter-panel__reset:hover {
+  border-color: var(--color-error, #f44336);
+  color: var(--color-error, #f44336);
+}
+
+/* ══════════════════════════════════════════════
+   СЕКЦИИ (ЭТАП 3.2)
+   ═══════════════════════════════════════════════ */
+
+.admin-filter-panel__section {
+  background: var(--color-bg, #fdfaf6);
+  border: 1px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+  padding: var(--spacing-md, 16px);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 16px);
+
+  min-width: 280px;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════
+   ЗАГОЛОВКИ СЕКЦИЙ (ЭТАП 3.4)
+   ПОЧЕМУ uppercase + letter-spacing?
+   Это создаёт визуальную иерархию: заголовки секций
+   выглядят как "метки", а не как обычный текст.
+   ═══════════════════════════════════════════════ */
+
+.admin-filter-panel__section-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs, 8px);
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 600;
+  color: var(--color-text-muted, #6b5d4f);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+/* ═════════════════════════════════════════════
+   СЕКЦИЯ ПОИСКА
+   ═══════════════════════════════════════════════ */
+
+.admin-filter-panel__section--search {
+  background: var(--color-primary-soft, #fbf5ef);
+  border-color: var(--color-primary-200, #eacfb5);
+  min-width: 320px;
+}
+
+.admin-filter-panel__section--search .admin-filter-panel__section-title {
+  color: var(--color-primary-700, #7f5e44);
+}
+
+/* ══════════════════════════════════════════════
+   СЕКЦИЯ СОРТИРОВКИ (ЭТАП 3.4)
+   ═══════════════════════════════════════════════ */
+
+.admin-filter-panel__section--sort {
+  background: var(--color-secondary-50, #f2f5f0);
+  border-color: var(--color-secondary-200, #bfd0b7);
+  min-width: 240px;
+}
+
+.admin-filter-panel__section--sort .admin-filter-panel__section-title {
+  color: var(--color-secondary-700, #404d3d);
+}
+
+/* ══════════════════════════════════════════════
+   СЕКЦИЯ ФИЛЬТРОВ (ЭТАП 3.5)
+   ═══════════════════════════════════════════════ */
+
+.admin-filter-panel__section--filters {
+  background: var(--color-surface, #ffffff);
+  border-color: var(--color-border, #e8dcc4);
+  min-width: 720px;
+}
+
+.admin-filter-panel__section--filters .admin-filter-panel__section-title {
+  color: var(--color-text, #3d2f26);
+}
+
+/* Сетка для полей фильтров */
+.admin-filter-panel__filters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md, 16px);
+}
+
+/* ══════════════════════════════════════════════
+   ЛЕЙБЛЫ ПОЛЕЙ (ЭТАП 3.5)
+   ПОЧЕМУ эти стили здесь, а не в Input.css/Select.css?
+   - Input.css и Select.css содержат базовые стили лейблов
+   - Здесь мы переопределяем их для контекста админки
+   - Это позволяет иметь разные стили лейблов в разных частях приложения
+   ═══════════════════════════════════════════════ */
+
+/* Лейблы внутри секции фильтров */
+.admin-filter-panel__section--filters .input__label,
+.admin-filter-panel__section--filters .select__label {
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 500;
+  color: var(--color-text, #3d2f26);
+  margin-bottom: var(--spacing-xs, 4px);
+  display: block;
+}
+
+/* Лейбл внутри секции сортировки (если нужен) */
+.admin-filter-panel__section--sort .select__label {
+  font-size: var(--font-size-sm, 0.875rem);
+  font-weight: 500;
+  color: var(--color-secondary-700, #404d3d);
+  margin-bottom: var(--spacing-xs, 4px);
+  display: block;
+}
+
+/* ══════════════════════════════════════════════
+   АДАПТИВНОСТЬ
+   ═══════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .admin-filter-panel {
+    padding: var(--spacing-md, 16px);
+  }
+
+  .admin-filter-panel__section {
+    min-width: 100%;
+  }
+
+  .admin-filter-panel__section--filters {
+    min-width: 100%;
+  }
+
+  .admin-filter-panel__filters-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-filter-panel__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-filter-panel__reset {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   ТЁМНАЯ ТЕМА
+   ═══════════════════════════════════════════════ */
+[data-theme="dark"] .admin-filter-panel {
+  background: var(--color-surface, #2a211b);
+  border: 1px solid var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .admin-filter-panel__title {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .admin-filter-panel__reset {
+  border-color: var(--color-border, #44362b);
+  color: var(--color-text-muted, #c9b89f);
+}
+
+[data-theme="dark"] .admin-filter-panel__reset:hover {
+  border-color: var(--color-error-light, #fca5a5);
+  color: var(--color-error-light, #fca5a5);
+}
+
+[data-theme="dark"] .admin-filter-panel__section {
+  background: var(--color-bg, #1c1613);
+  border-color: var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .admin-filter-panel__section-title {
+  color: var(--color-text-muted, #c9b89f);
+}
+
+[data-theme="dark"] .admin-filter-panel__section--search {
+  background: var(--color-primary-soft, #3d2f26);
+  border-color: var(--color-primary-600, #9c7558);
+}
+
+[data-theme="dark"]
+  .admin-filter-panel__section--search
+  .admin-filter-panel__section-title {
+  color: var(--color-primary-400, #c9a88c);
+}
+
+[data-theme="dark"] .admin-filter-panel__section--sort {
+  background: var(--color-secondary-800, #2a3328);
+  border-color: var(--color-secondary-600, #576853);
+}
+
+[data-theme="dark"]
+  .admin-filter-panel__section--sort
+  .admin-filter-panel__section-title {
+  color: var(--color-secondary-300, #a2b997);
+}
+
+[data-theme="dark"] .admin-filter-panel__section--filters {
+  background: var(--color-surface, #2a211b);
+  border-color: var(--color-border, #44362b);
+}
+
+[data-theme="dark"]
+  .admin-filter-panel__section--filters
+  .admin-filter-panel__section-title {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .admin-filter-panel__section--filters .input__label,
+[data-theme="dark"] .admin-filter-panel__section--filters .select__label {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .admin-filter-panel__section--sort .select__label {
+  color: var(--color-secondary-300, #a2b997);
+}
+
+/* === СТИЛИ ДЛЯ DATEPICKER === */
+.admin-filter-panel__date-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 4px);
+}
+
+.admin-filter-panel__date-field .react-datepicker-wrapper {
+  width: 100%;
+}
+
+.admin-filter-panel__date-field .react-datepicker__input-container input {
+  width: 100%;
+  padding: var(--spacing-sm, 8px) var(--spacing-md, 12px);
+  border: 1.5px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-text, #3d2f26);
+  background: var(--color-surface, #ffffff);
+  transition: border-color var(--transition-fast, 150ms ease);
+}
+
+.admin-filter-panel__date-field .react-datepicker__input-container input:focus {
+  outline: none;
+  border-color: var(--color-primary, #d4a574);
+}
+
+.admin-filter-panel__date-field
+  .react-datepicker__input-container
+  input::placeholder {
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+/* Тёмная тема для DatePicker */
+[data-theme="dark"]
+  .admin-filter-panel__date-field
+  .react-datepicker__input-container
+  input {
+  background: var(--color-surface, #2a211b);
+  border-color: var(--color-border, #44362b);
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .react-datepicker {
+  background: var(--color-surface, #2a211b);
+  border-color: var(--color-border, #44362b);
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .react-datepicker__header {
+  background: var(--color-bg, #1c1613);
+  border-color: var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .react-datepicker__day {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .react-datepicker__day:hover {
+  background: var(--color-primary-soft, #3d2f26);
+}
+
+[data-theme="dark"] .react-datepicker__day--selected {
+  background: var(--color-primary, #d4a574);
+  color: white;
+}
+/* === СТИЛИ ДЛЯ DATEPICKER === */
+.admin-filter-panel__date-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 4px);
+}
+
+.admin-filter-panel__date-field .react-datepicker-wrapper {
+  width: 100%;
+}
+
+.admin-filter-panel__date-field .react-datepicker__input-container input {
+  width: 100%;
+  padding: var(--spacing-sm, 8px) var(--spacing-md, 12px);
+  border: 1.5px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-text, #3d2f26);
+  background: var(--color-surface, #ffffff);
+  transition: border-color var(--transition-fast, 150ms ease);
+}
+
+.admin-filter-panel__date-field .react-datepicker__input-container input:focus {
+  outline: none;
+  border-color: var(--color-primary, #d4a574);
+}
+
+.admin-filter-panel__date-field
+  .react-datepicker__input-container
+  input::placeholder {
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+/* Тёмная тема для DatePicker */
+[data-theme="dark"]
+  .admin-filter-panel__date-field
+  .react-datepicker__input-container
+  input {
+  background: var(--color-surface, #2a211b);
+  border-color: var(--color-border, #44362b);
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .react-datepicker {
+  background: var(--color-surface, #2a211b);
+  border-color: var(--color-border, #44362b);
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .react-datepicker__header {
+  background: var(--color-bg, #1c1613);
+  border-color: var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .react-datepicker__day {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .react-datepicker__day:hover {
+  background: var(--color-primary-soft, #3d2f26);
+}
+
+[data-theme="dark"] .react-datepicker__day--selected {
+  background: var(--color-primary, #d4a574);
+  color: white;
+}
