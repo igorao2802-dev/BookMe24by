@@ -45,11 +45,22 @@ export function formatPrice(price) {
 }
 
 /**
+ * Оставляет только цифры телефона (для сравнения и фильтрации).
+ *
+ * @param {string} phone
+ * @returns {string}
+ */
+export function normalizePhone(phone) {
+  if (!phone || typeof phone !== "string") return "";
+  return phone.replace(/\D/g, "");
+}
+
+/**
  * Форматирует телефон РБ: "+375291234567" → "+375 (29) 123-45-67"
  */
 export function formatPhone(phone) {
   if (!phone || typeof phone !== "string") return "";
-  const cleaned = phone.replace(/\D/g, "");
+  const cleaned = normalizePhone(phone);
   if (cleaned.length !== 12) return phone;
   return `+${cleaned.slice(0, 3)} (${cleaned.slice(3, 5)}) ${cleaned.slice(5, 8)}-${cleaned.slice(8, 10)}-${cleaned.slice(10, 12)}`;
 }
@@ -104,7 +115,7 @@ export function formatDuration(minutes, t) {
  */
 export function maskPhone(phone) {
   if (!phone || typeof phone !== "string") return "";
-  const cleaned = phone.replace(/\D/g, "");
+  const cleaned = normalizePhone(phone);
   if (cleaned.length !== 12) return phone;
   return `+${cleaned.slice(0, 3)} (${cleaned.slice(3, 5)}) ***-**-${cleaned.slice(10, 12)}`;
 }
