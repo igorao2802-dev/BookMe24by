@@ -12,8 +12,10 @@ import AdminSpecialistsList from './AdminSpecialistsList';
 import ServiceModal from './ServiceModal';
 import SpecialistModal from './SpecialistModal';
 import BookingEditModal from './BookingEditModal';
+import ConfirmDialog from '../UI/ConfirmDialog';
 import { useLanguage } from '../../hooks/useLanguage';
 import { useAdminDashboard } from '../../hooks/useAdminDashboard';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
 import './AdminDashboard.css';
 
 export default function AdminDashboard({
@@ -31,6 +33,7 @@ export default function AdminDashboard({
   onDeleteSpecialist,
 }) {
   const { t } = useLanguage();
+  const { confirm, dialogProps } = useConfirmDialog();
 
   const {
     activeTab,
@@ -72,7 +75,34 @@ export default function AdminDashboard({
     onAddSpecialist,
     onUpdateSpecialist,
     onDeleteSpecialist,
+    confirm,
   });
+
+  const handleRequestDeleteService = async (serviceId) => {
+    const service = services.find((item) => item.id === serviceId);
+    if (!service) return;
+
+    const confirmed = await confirm({
+      message: t('admin.services.confirmDelete', { name: service.name }),
+      variant: 'danger',
+    });
+    if (!confirmed) return;
+
+    handleDeleteService(serviceId);
+  };
+
+  const handleRequestDeleteSpecialist = async (specialistId) => {
+    const specialist = specialists.find((item) => item.id === specialistId);
+    if (!specialist) return;
+
+    const confirmed = await confirm({
+      message: t('admin.specialists.confirmDelete', { name: specialist.fullName }),
+      variant: 'danger',
+    });
+    if (!confirmed) return;
+
+    handleDeleteSpecialist(specialistId);
+  };
 
   const ADMIN_TABS = [
     { id: 'bookings', label: t('admin.tabs.bookings'), icon: Calendar },
@@ -129,7 +159,7 @@ export default function AdminDashboard({
             services={services}
             onOpenAdd={handleOpenAddService}
             onOpenEdit={handleOpenEditService}
-            onDelete={handleDeleteService}
+            onRequestDelete={handleRequestDeleteService}
           />
         )}
 
@@ -139,7 +169,7 @@ export default function AdminDashboard({
             services={services}
             onOpenAdd={handleOpenAddSpecialist}
             onOpenEdit={handleOpenEditSpecialist}
-            onDelete={handleDeleteSpecialist}
+            onRequestDelete={handleRequestDeleteSpecialist}
           />
         )}
       </div>
@@ -173,6 +203,8 @@ export default function AdminDashboard({
         onClose={handleCloseEditBookingModal}
         onSave={handleSaveBooking}
       />
+
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

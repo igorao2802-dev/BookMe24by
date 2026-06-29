@@ -5,8 +5,10 @@
  */
 import { useRef } from 'react';
 import Modal from '../UI/Modal';
+import ConfirmDialog from '../UI/ConfirmDialog';
 import ServiceForm from './ServiceForm';
 import { useLanguage } from '../../hooks/useLanguage';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
 
 export default function ServiceModal({
   isOpen,
@@ -18,6 +20,7 @@ export default function ServiceModal({
   onClose,
 }) {
   const { t } = useLanguage();
+  const { confirm, dialogProps } = useConfirmDialog();
   const isDirtyRef = useRef(false);
 
   const handleSave = (serviceData) => {
@@ -31,9 +34,12 @@ export default function ServiceModal({
     }
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     if (isDirtyRef.current) {
-      const confirmed = window.confirm(t('admin.services.form.unsavedChanges'));
+      const confirmed = await confirm({
+        message: t('admin.services.form.unsavedChanges'),
+        variant: 'warning',
+      });
       if (!confirmed) return;
     }
     isDirtyRef.current = false;
@@ -50,17 +56,20 @@ export default function ServiceModal({
       : t('admin.services.form.addTitle');
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title={title} size="lg">
-      <div onChange={handleFormChange}>
-        <ServiceForm
-          mode={mode}
-          service={service}
-          specialists={specialists}
-          existingServices={existingServices}
-          onSave={handleSave}
-          onCancel={handleClose}
-        />
-      </div>
-    </Modal>
+    <>
+      <Modal isOpen={isOpen} onClose={handleClose} title={title} size="lg">
+        <div onChange={handleFormChange}>
+          <ServiceForm
+            mode={mode}
+            service={service}
+            specialists={specialists}
+            existingServices={existingServices}
+            onSave={handleSave}
+            onCancel={handleClose}
+          />
+        </div>
+      </Modal>
+      <ConfirmDialog {...dialogProps} />
+    </>
   );
 }

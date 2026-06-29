@@ -16,18 +16,9 @@ export default function AdminSpecialistsList({
   services,
   onOpenAdd,
   onOpenEdit,
-  onDelete,
+  onRequestDelete,
 }) {
   const { t } = useLanguage();
-
-  const handleDelete = (specialist) => {
-    const confirmed = window.confirm(
-      t('admin.specialists.confirmDelete', { name: specialist.fullName }),
-    );
-    if (confirmed) {
-      onDelete(specialist.id);
-    }
-  };
 
   const canEdit = () => true;
 
@@ -146,7 +137,7 @@ export default function AdminSpecialistsList({
                       <button
                         type="button"
                         className="admin-specialists-list__action-btn admin-specialists-list__action-btn--danger"
-                        onClick={() => handleDelete(specialist)}
+                        onClick={() => onRequestDelete(specialist.id)}
                         disabled={!isDeletable}
                         title={
                           isDeletable

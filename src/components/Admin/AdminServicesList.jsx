@@ -22,18 +22,9 @@ export default function AdminServicesList({
   services,
   onOpenAdd,
   onOpenEdit,
-  onDelete,
+  onRequestDelete,
 }) {
   const { t } = useLanguage();
-
-  const handleDelete = (service) => {
-    const confirmed = window.confirm(
-      t('admin.services.confirmDelete', { name: service.name }),
-    );
-    if (confirmed) {
-      onDelete(service.id);
-    }
-  };
 
   const canEdit = () => true;
 
@@ -121,7 +112,7 @@ export default function AdminServicesList({
                       <button
                         type="button"
                         className="admin-services-list__action-btn admin-services-list__action-btn--danger"
-                        onClick={() => handleDelete(service)}
+                        onClick={() => onRequestDelete(service.id)}
                         disabled={!isDeletable}
                         title={
                           isDeletable

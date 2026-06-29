@@ -54,6 +54,7 @@ const TOAST_DURATION = {
  *   onAddSpecialist: Function,
  *   onUpdateSpecialist: Function,
  *   onDeleteSpecialist: Function,
+ *   confirm: Function,
  * }} params
  */
 export function useAdminDashboard({
@@ -68,6 +69,7 @@ export function useAdminDashboard({
   onAddSpecialist,
   onUpdateSpecialist,
   onDeleteSpecialist,
+  confirm,
 }) {
   const { t } = useLanguage();
 
@@ -305,8 +307,11 @@ export function useAdminDashboard({
   );
 
   const handleCancelBooking = useCallback(
-    (bookingId) => {
-      const confirmed = window.confirm(t("admin.bookings.confirmCancel"));
+    async (bookingId) => {
+      const confirmed = await confirm({
+        message: t("admin.bookings.confirmCancel"),
+        variant: "danger",
+      });
       if (!confirmed) return;
 
       const result = onCancelBooking(bookingId);
@@ -320,7 +325,7 @@ export function useAdminDashboard({
         notifyError(result);
       }
     },
-    [onCancelBooking, t, notifyError],
+    [onCancelBooking, t, notifyError, confirm],
   );
 
   return {
