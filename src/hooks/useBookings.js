@@ -9,7 +9,7 @@
  *
  * ЗАВИСИМОСТИ:
  * - useLocalStorage для persistence
- * - checkTimeOverlap для валидации
+ * - validateBookingBeforeSave для валидации слота
  * - generateId для генерации ID
  *
  * ВОЗВРАЩАЕТ:
@@ -24,14 +24,15 @@
 
 import { useCallback, useMemo } from "react";
 import { useLocalStorage } from "./useLocalStorage.js";
-import { checkTimeOverlap } from "../utils/checkTimeOverlap.js";
 import { generateId } from "../utils/generateId.js";
-import { STORAGE_KEYS, BOOKING_STATUS } from "../utils/constants.js";
+import { validateBookingBeforeSave } from "../utils/validateBookingPipeline.js";
+import { STORAGE_KEYS, BOOKING_STATUS, STORAGE_DEBOUNCE_MS } from "../utils/constants.js";
 
 export function useBookings() {
   const [bookings, setBookings, clearBookings] = useLocalStorage(
     STORAGE_KEYS.BOOKINGS,
     [],
+    { debounceMs: STORAGE_DEBOUNCE_MS.DEFAULT },
   );
 
   /**
@@ -48,13 +49,9 @@ export function useBookings() {
         ...bookingData,
       };
 
-      // Проверка на пересечения
-      const overlap = checkTimeOverlap(newBooking, bookings);
-      if (overlap.hasOverlap) {
-        return {
-          success: false,
-          error: overlap.message || "Время пересекается с существующей записью",
-        };
+      const validation = validateBookingBeforeSave(newBooking, bookings);
+      if (!validation.isValid) {
+        return { success: false, error: validation.error };
       }
 
       setBookings((prev) => [...prev, newBooking]);
@@ -82,14 +79,11 @@ export function useBookings() {
         updatedAt: new Date().toISOString(),
       };
 
-      // Проверка на пересечения (исключая саму запись)
-      const bookingsWithoutCurrent = bookings.filter((b) => b.id !== bookingId);
-      const overlap = checkTimeOverlap(updatedBooking, bookingsWithoutCurrent);
-      if (overlap.hasOverlap) {
-        return {
-          success: false,
-          error: overlap.message || "Время пересекается с существующей записью",
-        };
+      const validation = validateBookingBeforeSave(updatedBooking, bookings, {
+        excludeBookingId: bookingId,
+      });
+      if (!validation.isValid) {
+        return { success: false, error: validation.error };
       }
 
       const newBookings = [...bookings];

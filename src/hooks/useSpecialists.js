@@ -13,106 +13,21 @@
  * 🔥 ИСПРАВЛЕНО: Все опечатки в строках валидации (убраны пробелы)
  */
 import { useMemo, useCallback } from "react";
-import { useLocalStorage } from "./useLocalStorage";
 import { useLanguage } from "./useLanguage";
-import { STORAGE_KEYS } from "../utils/constants";
 import Toast from "../components/UI/Toast";
+import { validateSpecialistData } from "../utils/validateSpecialist";
+import { generateSpecialistId } from "../utils/generateId";
 
-// === ГЕНЕРАЦИЯ УНИКАЛЬНОГО ID ===
-function generateSpecialistId() {
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 7);
-  return `custom_spec_${timestamp}_${random}`;
-}
-
-// === ВАЛИДАЦИЯ ДАННЫХ СПЕЦИАЛИСТА ===
-function validateSpecialistData(
-  data,
-  existingSpecialists = [],
-  currentId = null,
-) {
-  const errors = {};
-
-  if (!data.fullName || typeof data.fullName !== "string") {
-    errors.fullName = "validation.specialist.nameRequired";
-  } else {
-    const trimmedName = data.fullName.trim();
-    if (trimmedName.length === 0) {
-      errors.fullName = "validation.specialist.nameRequired";
-    } else if (trimmedName.length > 100) {
-      errors.fullName = "validation.specialist.nameTooLong";
-    } else {
-      const wordsCount = trimmedName.split(/\s+/).length;
-      if (wordsCount < 2) {
-        errors.fullName = "validation.specialist.nameMinTwoWords";
-      }
-      const isDuplicate = existingSpecialists.some(
-        (spec) =>
-          spec.id !== currentId &&
-          spec.fullName.toLowerCase() === trimmedName.toLowerCase(),
-      );
-      if (isDuplicate) {
-        errors.fullName = "validation.specialist.nameDuplicate";
-      }
-    }
-  }
-
-  if (!data.position || typeof data.position !== "string") {
-    errors.position = "validation.specialist.positionRequired";
-  } else {
-    const trimmedPosition = data.position.trim();
-    if (trimmedPosition.length === 0) {
-      errors.position = "validation.specialist.positionRequired";
-    } else if (trimmedPosition.length > 50) {
-      errors.position = "validation.specialist.positionTooLong";
-    }
-  }
-
-  if (
-    data.experience === undefined ||
-    data.experience === null ||
-    data.experience === ""
-  ) {
-    errors.experience = "validation.specialist.experienceRequired";
-  } else {
-    const experience = Number(data.experience);
-    if (isNaN(experience)) {
-      errors.experience = "validation.specialist.experienceInvalid";
-    } else if (experience < 0) {
-      errors.experience = "validation.specialist.experienceNegative";
-    } else if (experience > 50) {
-      errors.experience = "validation.specialist.experienceTooHigh";
-    }
-  }
-
-  // 🔥 ЭТАП 12: Валидация rating УДАЛЕНА — рейтинг рассчитывается автоматически
-
-  if (
-    !data.serviceIds ||
-    !Array.isArray(data.serviceIds) ||
-    data.serviceIds.length === 0
-  ) {
-    errors.serviceIds = "validation.specialist.servicesEmpty";
-  }
-
-  // 🔥 ЭТАП 5.3: Валидация EN-полей
-  if (data.fullNameEn && data.fullNameEn.trim().length > 100) {
-    errors.fullNameEn = "validation.specialist.nameTooLong";
-  }
-  if (data.positionEn && data.positionEn.trim().length > 50) {
-    errors.positionEn = "validation.specialist.positionTooLong";
-  }
-
-  return { isValid: Object.keys(errors).length === 0, errors };
-}
-
-// === ОСНОВНОЙ ХУК ===
-export function useSpecialists(jsonSpecialists = []) {
+export function useSpecialists({
+  jsonSpecialists = [],
+  customSpecialists,
+  setCustomSpecialists,
+}) {
   const { t } = useLanguage();
-  const [customSpecialists, setCustomSpecialists] = useLocalStorage(
-    STORAGE_KEYS.CUSTOM_SPECIALISTS,
-    [],
-  );
+
+  // ПОЧЕМУ setCustomSpecialists приходит из useSalonData?
+  // Чтобы useServices и useSpecialists делили один React-state на ключ
+  // CUSTOM_SPECIALISTS — иначе sync serviceIds ↔ specialistIds ломается.
 
   const specialists = useMemo(
     () => [...customSpecialists, ...jsonSpecialists],
@@ -251,7 +166,6 @@ export function useSpecialists(jsonSpecialists = []) {
 
   return {
     specialists,
-    customSpecialists,
     addSpecialist,
     updateSpecialist,
     deleteSpecialist,
