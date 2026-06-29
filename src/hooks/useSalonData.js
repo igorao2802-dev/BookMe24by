@@ -100,7 +100,7 @@ export function useSalonData(jsonServices = [], jsonSpecialists = []) {
     clearAllBookings,
   } = useBookings();
 
-  // === ПРОИЗВОДНЫЕ ДАННЫЕ ===
+  // ПОЧЕМУ useMemo: mergeSpecialistsWithServiceIds обогащает JSON-мастеров serviceIds из услуг
   const specialistsWithServices = useMemo(
     () => mergeSpecialistsWithServiceIds(specialists, services),
     [specialists, services],

@@ -1,7 +1,7 @@
 /**
  * ServiceModal.jsx — модальное окно для формы услуги
  *
- * 🔥 ИСПРАВЛЕНО: Корректная передача specialists в форму
+  * ПОЧЕМУ: корректная передача specialists в форму
  */
 import { useRef } from 'react';
 import Modal from '../UI/Modal';

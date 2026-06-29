@@ -32,8 +32,7 @@ export function safeGetItem(key, fallback = null) {
     // JSON.parse может вернуть null, если в хранилище строка "null"
     const parsed = JSON.parse(raw);
 
-    // 🔥 ИСПРАВЛЕНО: Number.isNaN вместо self-compare (parsed !== parsed)
-    // ESLint ругался на no-self-compare
+    // ПОЧЕМУ Number.isNaN: ESLint no-self-compare для parsed !== parsed
     if (Number.isNaN(parsed)) {
       console.warn(`[storageHelper] NaN при чтении "${key}", возврат fallback`);
       return fallback;

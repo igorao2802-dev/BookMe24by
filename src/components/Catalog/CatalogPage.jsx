@@ -1,9 +1,9 @@
 /**
  * CatalogPage.jsx — Вкладка №2: Каталог услуг и специалистов
  * 
- * 🔥 ЭТАП 3.1: Добавлена фильтрация по цене "от" и "до"
- * 🔥 ЭТАП 7.5: Полная локализация всех пользовательских текстов
- * 🔥 ИСПРАВЛЕНО: Опечатки (service.price, localeCompare, viewMode, onBookSpecialist, resetFilters)
+ * ПОЧЕМУ фильтрация по диапазону цен?
+ * Пользователь задаёт «от» и «до» — minPrice по умолчанию 0, чтобы не скрывать
+ * бесплатные или дешёвые услуги при сбросе фильтров.
  */
 
 import { useState, useMemo } from 'react';
@@ -26,14 +26,13 @@ import FavoritesList from './FavoritesList';
 // === ХУКИ ===
 import { useFavorites } from '../../hooks/useFavorites';
 import { useDebounce } from '../../hooks/useDebounce';
-import { useLanguage } from '../../hooks/useLanguage'; // 🔥 ЭТАП 7.5
+import { useLanguage } from '../../hooks/useLanguage';
 
 // === КОНСТАНТЫ ===
 import { BOOKING_STEPS } from '../../utils/constants';
 import './CatalogPage.css';
 
 // === НАЧАЛЬНЫЕ ФИЛЬТРЫ ===
-// 🔥 ЭТАП 3.1: minPrice явно установлен в 0
 const INITIAL_FILTERS = {
   category: 'all',
   minPrice: 0,
@@ -43,7 +42,7 @@ const INITIAL_FILTERS = {
 
 export default function CatalogPage({ services, specialists }) {
   const navigate = useNavigate();
-  const { t } = useLanguage(); // 🔥 ЭТАП 7.5
+  const { t } = useLanguage();
 
   // === РЕЖИМ ОТОБРАЖЕНИЯ ===
   const [viewMode, setViewMode] = useState('services');
@@ -83,56 +82,58 @@ export default function CatalogPage({ services, specialists }) {
     navigate('/', {
       state: {
         preselectedSpecialistId: specialistId,
-        startStep: BOOKING_STEPS.SERVICE, // Начинаем с выбора услуги этого мастера
+        startStep: BOOKING_STEPS.SERVICE,
       },
     });
   };
 
- // === 🔥 ФИЛЬТРАЦИЯ И СОРТИРОВКА УСЛУГ ===
-const filteredAndSortedServices = useMemo(() => {
-  let result = services.filter((service) => {
-    const matchesSearch =
-      !debouncedQuery ||
-      service.name.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
-      service.description.toLowerCase().includes(debouncedQuery.toLowerCase());
+  // ПОЧЕМУ useMemo: фильтрация + сортировка всего каталога при debounced поиске
+  const filteredAndSortedServices = useMemo(() => {
+    let result = services.filter((service) => {
+      const matchesSearch =
+        !debouncedQuery ||
+        service.name.toLowerCase().includes(debouncedQuery.toLowerCase()) ||
+        service.description.toLowerCase().includes(debouncedQuery.toLowerCase());
 
-    const matchesCategory =
-      filters.category === 'all' || service.category === filters.category;
+      const matchesCategory =
+        filters.category === 'all' || service.category === filters.category;
 
-    // 🔥 ИСПРАВЛЕНО: Проверка на undefined перед сравнением цены
-    const matchesPrice =
-      service.price !== undefined &&
-      service.price !== null &&
-      service.price >= filters.minPrice &&
-      service.price <= filters.maxPrice;
+      // ПОЧЕМУ проверка price на undefined/null?
+      // В мок-данных цена может отсутствовать — без guard сравнение даст NaN.
+      const matchesPrice =
+        service.price !== undefined &&
+        service.price !== null &&
+        service.price >= filters.minPrice &&
+        service.price <= filters.maxPrice;
 
-    // 🔥 ИСПРАВЛЕНО: Если rating отсутствует — считаем как 0 (показывается всегда)
-    const serviceRating = service.rating ?? 0;
-    const matchesRating = serviceRating >= filters.minRating;
+      // ПОЧЕМУ rating ?? 0?
+      // Услуги без рейтинга не должны выпадать из выборки при minRating = 0.
+      const serviceRating = service.rating ?? 0;
+      const matchesRating = serviceRating >= filters.minRating;
 
-    return matchesSearch && matchesCategory && matchesPrice && matchesRating;
-  });
+      return matchesSearch && matchesCategory && matchesPrice && matchesRating;
+    });
 
-  result = [...result].sort((a, b) => {
-    switch (sortBy) {
-      case 'price-asc':
-        return a.price - b.price;
-      case 'price-desc':
-        return b.price - a.price;
-      case 'name':
-        return a.name.localeCompare(b.name, 'ru');
-      case 'rating':
-        return (b.rating ?? 0) - (a.rating ?? 0);
-      case 'popular':
-      default:
-        return (b.rating ?? 0) - (a.rating ?? 0);
-    }
-  });
+    result = [...result].sort((a, b) => {
+      switch (sortBy) {
+        case 'price-asc':
+          return a.price - b.price;
+        case 'price-desc':
+          return b.price - a.price;
+        case 'name':
+          return a.name.localeCompare(b.name, 'ru');
+        case 'rating':
+          return (b.rating ?? 0) - (a.rating ?? 0);
+        case 'popular':
+        default:
+          return (b.rating ?? 0) - (a.rating ?? 0);
+      }
+    });
 
-  return result;
-}, [services, debouncedQuery, filters, sortBy]);
+    return result;
+  }, [services, debouncedQuery, filters, sortBy]);
 
-  // === АНАЛОГИЧНО ДЛЯ МАСТЕРОВ ===
+  // ПОЧЕМУ useMemo: та же логика фильтрации для вкладки «Мастера»
   const filteredAndSortedSpecialists = useMemo(() => {
     let result = specialists.filter((spec) => {
       const matchesSearch =
@@ -166,7 +167,8 @@ const filteredAndSortedServices = useMemo(() => {
   const favoriteSpecialists = specialists.filter((s) => favorites.includes(s.id));
 
   // === КОЛИЧЕСТВО АКТИВНЫХ ФИЛЬТРОВ ===
-  // 🔥 ЭТАП 3.1: minPrice считается активным, если он не равен 0
+  // ПОЧЕМУ minPrice считается активным только при отличии от 0?
+  // Значение 0 — это дефолт «без нижней границы», а не выбранный фильтр.
   const activeFiltersCount = Object.entries(filters).filter(([key, value]) => {
     if (key === 'category') return value !== 'all';
     if (key === 'minPrice') return value !== INITIAL_FILTERS.minPrice;

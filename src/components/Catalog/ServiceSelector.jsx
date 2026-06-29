@@ -1,6 +1,6 @@
 /**
  * ServiceSelector.jsx — Шаг 1 многошаговой формы
- * 🔥 ИСПРАВЛЕНО: Добавлены короткие метки для мобильных устройств
+  * ПОЧЕМУ: добавлены короткие метки для мобильных устройств
  */
 import { useState, useMemo } from 'react';
 import { Clock, Star, Check, ArrowUp, ArrowDown } from 'lucide-react';
@@ -13,7 +13,7 @@ import EmptyState from '../UI/EmptyState';
 import './ServiceSelector.css';
 
 // === КОНФИГУРАЦИЯ СОРТИРОВКИ ===
-// 🔥 ИСПРАВЛЕНО: Добавлены короткие метки для мобильных (shortLabel)
+// ПОЧЕМУ: добавлены короткие метки для мобильных (shortLabel)
 const SORT_OPTIONS = [
   { 
     field: 'popular', 
@@ -205,7 +205,7 @@ export default function ServiceSelector({
               onClick={() => handleSortClick(option.field)}
               aria-pressed={sort.field === option.field}
               aria-label={`${t('catalog.sort.title')} ${t(option.labelKey).toLowerCase()}`}
-              // 🔥 Добавляем data-атрибут для короткой метки
+              // ПОЧЕМУ: добавляем data-атрибут для короткой метки
               data-short-label={option.shortLabel}
             >
               <span className="service-selector__sort-text">

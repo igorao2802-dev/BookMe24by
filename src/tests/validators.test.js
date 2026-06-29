@@ -71,6 +71,19 @@ describe("Валидация форм", () => {
   });
 
   describe("validatePhone", () => {
+    test("должен отклонить пустой телефон при required=true", () => {
+      const result = validatePhone("", { required: true });
+
+      expect(result.isValid).toBe(false);
+      expect(result.errorKey).toBe("validation.phone.required");
+    });
+
+    test("должен принять пустой телефон при required=false (профиль)", () => {
+      const result = validatePhone("", { required: false });
+
+      expect(result.isValid).toBe(true);
+    });
+
     test("должен принять корректный белорусский номер", () => {
       const result = validatePhone("+375291234567");
 

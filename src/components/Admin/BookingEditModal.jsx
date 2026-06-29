@@ -1,7 +1,6 @@
 /**
  * BookingEditModal.jsx — модальное окно редактирования записи
  * 
- * 🔥 ИСПРАВЛЕНО:
  * - Полная локализация через t()
  * - Корректная интеграция с AdminDashboard
  * - Проверка слота через validateBookingBeforeSave (duration + overlap)
@@ -54,11 +53,10 @@ export default function BookingEditModal({
     (s) => s.id === editData?.specialistId,
   );
 
-  // === АВТОПЕРЕСЧЁТ ВРЕМЕНИ ОКОНЧАНИЯ ===
-  const computedEndTime = useMemo(() => {
-    if (!editData?.startTime || !editData?.duration) return null;
-    return calculateEndTime(editData.startTime, editData.duration);
-  }, [editData?.startTime, editData?.duration]);
+  const computedEndTime =
+    editData?.startTime && editData?.duration
+      ? calculateEndTime(editData.startTime, editData.duration)
+      : null;
 
   // === ОПЦИИ СТАТУСОВ ===
   const statusOptions = Object.values(BOOKING_STATUS).map((status) => ({
@@ -66,7 +64,7 @@ export default function BookingEditModal({
     label: t(`status.${status}`),
   }));
 
-  // === ОПЦИИ МАСТЕРОВ ===
+  // ПОЧЕМУ useMemo: фильтрация мастеров по serviceIds текущей услуги при каждом ререндере формы
   const specialistOptions = useMemo(() => {
     if (!currentService) return [];
     return specialists

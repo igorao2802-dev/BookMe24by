@@ -9,7 +9,7 @@
  * 5. Защита от типовых проблем (длинные тексты, переполнение)
  */
 
-@import "./variables.css";
+/* tokens.css подключается в index.js ДО globals.css */
 
 /* ═══════════════════════════════════════════════
    🧹 RESET
@@ -115,7 +115,7 @@ button {
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.5;
+  color: var(--color-text-disabled);
 }
 
 input,
@@ -184,8 +184,7 @@ ol {
 
 /* ═══════════════════════════════════════════════
    🛡 ЗАЩИТА ОТ ДЛИННЫХ ТЕКСТОВ
-   ПОЧЕМУ? Замечание В.В. из ПР-07: длинные комментарии
-   и описания не должны ломать вёрстку.
+   ПОЧЕМУ: длинные комментарии и описания не должны ломать вёрстку.
    ═══════════════════════════════════════════════ */
 
 .text-break {
@@ -470,6 +469,63 @@ ol {
 
 /* Усиленный фокус для клавиатурной навигации */
 :focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-primary-700);
   outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════
+   🌗 ПЕРЕХОДЫ МЕЖДУ ТЕМАМИ (из бывшего themes.css)
+   ═══════════════════════════════════════════════ */
+
+body {
+  transition:
+    background-color var(--transition-slow),
+    color var(--transition-slow);
+}
+
+*,
+*::before,
+*::after {
+  transition-property:
+    background-color, border-color, color, fill, stroke, box-shadow;
+  transition-duration: var(--transition-slow);
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+input,
+textarea,
+select,
+option,
+::-webkit-scrollbar,
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb,
+::selection {
+  transition: none !important;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 6px;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-dark);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

@@ -15,8 +15,6 @@
  * - Интерполяция параметров: t('greeting', { name: 'Анна' }) → "Привет, Анна"
  * - Fallback на ключ если перевод не найден (защита от ошибок)
  * - Централизованная логика форматирования
- * 
- * 🔥 ЭТАП 7.1: Инфраструктура локализации
  */
 
 import { createContext, useContext, useMemo } from 'react';
@@ -124,5 +122,5 @@ export function useLanguage() {
   return context;
 }
 
-// 🔥 КРИТИЧЕСКИ ВАЖНО: Default export для корректного импорта в useLanguage.js
+// ПОЧЕМУ default export: useLanguage.js импортирует LanguageProvider как default
 export default LanguageContext;

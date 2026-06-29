@@ -1,0 +1,54 @@
+ * _card-dark.css — общие dark-theme overrides для каталоговых карточек
+ * ПОЧЕМУ вынесен?
+ * ServiceCard.css и SpecialistCard.css дублировали surface, border, shadow,
+ * hover и типографику в тёмной теме. Единый источник — консистентность и −~100 строк.
+[data-theme="dark"] .service-card,
+[data-theme="dark"] .specialist-card {
+  background: var(--color-surface);
+  border-color: var(--color-border);
+}
+[data-theme="dark"] .service-card:hover,
+[data-theme="dark"] .specialist-card:hover {
+  background: var(--color-card-hover);
+  border-color: var(--color-primary-400);
+}
+[data-theme="dark"] .service-card__title,
+[data-theme="dark"] .specialist-card__name {
+  color: var(--color-text);
+}
+[data-theme="dark"] .service-card__description,
+[data-theme="dark"] .specialist-card__position {
+  color: var(--color-text-muted);
+}
+[data-theme="dark"] .service-card__meta,
+[data-theme="dark"] .specialist-card__meta {
+  color: var(--color-text-muted);
+}
+[data-theme="dark"] .service-card__meta-item,
+[data-theme="dark"] .specialist-card__meta-item {
+  color: var(--color-text-muted);
+}
+[data-theme="dark"] .service-card__price {
+  color: var(--color-primary-400);
+}
+[data-theme="dark"] .service-card__favorite,
+[data-theme="dark"] .specialist-card__favorite {
+  color: var(--color-text-subtle);
+}
+[data-theme="dark"] .service-card__favorite:hover,
+[data-theme="dark"] .specialist-card__favorite:hover {
+  color: var(--color-favorite-hover);
+}
+[data-theme="dark"] .service-card__favorite--active,
+[data-theme="dark"] .specialist-card__favorite--active {
+  color: var(--color-favorite);
+}
+[data-theme="dark"] .specialist-card__services {
+  border-top-color: var(--color-border);
+}
+[data-theme="dark"] .specialist-card__services-title {
+  color: var(--color-text-muted);
+}
+[data-theme="dark"] .specialist-card__avatar {
+  color: var(--color-text-inverse);
+}

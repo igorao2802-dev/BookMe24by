@@ -2,7 +2,7 @@
  * Стили для ProfileStats (статистика клиента)
  * BEM-методология + адаптивность
  * 
- * 🔥 ЭТАП 5.2: Сетка карточек KPI клиента
+  * ПОЧЕМУ: сетка карточек KPI клиента
  * Архитектурно аналогична AdminStats.css
  */
 
@@ -29,7 +29,7 @@
     box-shadow 300ms ease;
 }
 
-/* Мягкий hover-эффект (как в админке — Этап 3.6) */
+/* ПОЧЕМУ: мягкий hover-эффект (как в админке — ) */
 .profile-stats__card:hover {
   background: linear-gradient(
     135deg,
@@ -76,7 +76,7 @@
   color: white;
 }
 
-/* Усиление градиента при наведении (Этап 3.6) */
+/* ПОЧЕМУ: усиление градиента при наведении () */
 .profile-stats__card--highlight:hover {
   background: linear-gradient(
     135deg,

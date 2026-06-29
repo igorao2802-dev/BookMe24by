@@ -8,10 +8,9 @@
  * - Очистка истории
  * - Выход из аккаунта
  * 
- * 🔥 ЭТАП 5.5: Настройки профиля
- * 🔥 ЭТАП 7.8: Локализация всех текстов и ошибок валидации
- * 🔥 ЭТАП 20: Удалён блок "Способ уведомлений"
- * 🔥 ЭТАП 22: Добавлена поддержка редактирования телефона/email
+ * ПОЧЕМУ локальное состояние editData?
+ * Телефон и email редактируются в отдельном режиме — изменения не должны
+ * попадать в родительский state до успешной валидации и сохранения.
  */
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
@@ -33,10 +32,9 @@ export default function SettingsForm({
   onClearHistory,
   onLogout 
 }) {
-  const { t } = useLanguage(); // 🔥 ЭТАП 7.8
+  const { t } = useLanguage();
   const { confirm, dialogProps } = useConfirmDialog();
 
-  // 🔥 ЭТАП 22: Локальное состояние для редактирования
   const [localEditData, setLocalEditData] = useState({
     phone: '',
     email: '',
@@ -44,7 +42,8 @@ export default function SettingsForm({
   
   const [errors, setErrors] = useState({});
 
-  // 🔥 ЭТАП 22: Синхронизация с props при изменении editData
+  // ПОЧЕМУ синхронизация с editData через useEffect?
+  // Родитель передаёт актуальные данные при входе в режим редактирования.
   useEffect(() => {
     setLocalEditData(editData);
   }, [editData]);
@@ -114,7 +113,6 @@ export default function SettingsForm({
           {t('profile.settings.contacts')}
         </h3>
 
-        {/* 🔥 ЭТАП 22: Условный рендеринг для режима редактирования */}
         <Input
           label={t('profile.settings.phone')}
           name="phone"
@@ -139,11 +137,8 @@ export default function SettingsForm({
         />
       </section>
 
-      {/* 🔥 ЭТАП 20: Блок "Способ уведомлений" УДАЛЁН */}
-
       {/* === СЕКЦИЯ 2: КНОПКИ ДЕЙСТВИЙ === */}
       <section className="settings-form__section settings-form__actions">
-        {/* 🔥 ЭТАП 22: Условный рендеринг кнопок */}
         {isEditing ? (
           <>
             <Button

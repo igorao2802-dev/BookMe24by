@@ -14,11 +14,10 @@
  * handleUpdatePhone, handleUpdateEmail, resolvedPhone
  */
 
-import { useState, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 
 import { useLocalStorage } from "./useLocalStorage";
 import { useLanguage } from "./useLanguage";
-import Toast from "../components/UI/Toast";
 import { STORAGE_KEYS, STORAGE_DEBOUNCE_MS } from "../utils/constants";
 import { validatePhone, validateEmail } from "../utils/validators";
 import {
@@ -77,11 +76,9 @@ export function useClientProfile({
   const [isEditing, setIsEditing] = useState(false);
   const [editDraft, setEditDraft] = useState({ phone: "", email: "" });
 
-  const resolvedPhone = useMemo(
-    () => lastClientPhone || userSettings?.phone || "",
-    [lastClientPhone, userSettings?.phone],
-  );
+  const resolvedPhone = lastClientPhone || userSettings?.phone || "";
 
+  // ПОЧЕМУ useMemo: filterClientBookings проходит весь массив bookings
   const clientBookings = useMemo(
     () => filterClientBookings(bookings, lastClientPhone),
     [bookings, lastClientPhone],
@@ -102,38 +99,37 @@ export function useClientProfile({
     [baseProfileData, userSettings],
   );
 
-  const toggleEdit = useCallback(() => {
+  const toggleEdit = () => {
     setEditDraft({
       phone: profile?.phone || userSettings?.phone || "",
       email: profile?.email || userSettings?.email || "",
     });
     setIsEditing(true);
-  }, [profile, userSettings]);
+  };
 
-  const cancelEdit = useCallback(() => {
+  const cancelEdit = () => {
     setIsEditing(false);
     setEditDraft({ phone: "", email: "" });
-  }, []);
+  };
 
-  const handleUpdatePhone = useCallback((phone) => {
+  const handleUpdatePhone = (phone) => {
     setEditDraft((prev) => ({ ...prev, phone }));
-  }, []);
+  };
 
-  const handleUpdateEmail = useCallback((email) => {
+  const handleUpdateEmail = (email) => {
     setEditDraft((prev) => ({ ...prev, email }));
-  }, []);
+  };
 
-  const saveSettings = useCallback(
-    ({ phone, email }) => {
+  const saveSettings = ({ phone, email }) => {
+      // ПОЧЕМУ без Toast?
+      // Валидация и уведомления — ответственность SettingsForm (UI-слой).
       const phoneResult = validatePhone(phone);
       if (!phoneResult.isValid) {
-        Toast.error(t("profile.settings.validationError"));
         return { success: false, errors: { phone: phoneResult.errorKey } };
       }
 
       const emailResult = validateEmail(email);
       if (!emailResult.isValid) {
-        Toast.error(t("profile.settings.validationError"));
         return { success: false, errors: { email: emailResult.errorKey } };
       }
 
@@ -145,9 +141,7 @@ export function useClientProfile({
       setIsEditing(false);
       setEditDraft({ phone: "", email: "" });
       return { success: true };
-    },
-    [onUpdateSettings, userSettings, t],
-  );
+  };
 
   return {
     profile,

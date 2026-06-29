@@ -10,7 +10,7 @@
  * Выбор хранится в draft (в BookingWizard), сюда приходит через props.
  * При клике вызывает onSelect(serviceId) — callback родителя.
  * 
- * 🔥 ЗАМЕЧАНИЕ №6: Добавлен toggle-режим
+  * ПОЧЕМУ: добавлен toggle-режим
  * - Первый клик на услугу → onSelect(serviceId)
  * - Повторный клик на ту же услугу → onSelect(null) — снять выбор
  */
@@ -67,7 +67,7 @@ export default function ServiceSelector({
     });
   };
 
-  // 🔥 ЗАМЕЧАНИЕ №6: Toggle-обработчик клика по карточке услуги
+  // ПОЧЕМУ: toggle-обработчик клика по карточке услуги
   // ПОЧЕМУ toggle? Пользователь должен иметь возможность "передумать"
   // и снять выбор, не выбирая другую услугу.
   const handleServiceClick = (serviceId) => {

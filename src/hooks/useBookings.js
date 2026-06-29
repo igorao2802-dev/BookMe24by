@@ -144,9 +144,7 @@ export function useBookings() {
     [bookings, setBookings],
   );
 
-  /**
-   * Статистика по записям
-   */
+  // ПОЧЕМУ useMemo: пять проходов filter по bookings для AdminStats
   const stats = useMemo(() => {
     const total = bookings.length;
     const pending = bookings.filter(

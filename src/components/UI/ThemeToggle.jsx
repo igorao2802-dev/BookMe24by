@@ -6,12 +6,12 @@
  * через хук useTheme и вызывает toggleTheme при клике.
  * НЕ владеет состоянием — вся логика живёт в контексте.
  * 
- *  ЭТАП 6.1: Три режима темы (light/dark/auto)
+  * ПОЧЕМУ: три режима темы (light/dark/auto)
  * light: всегда светлая тема
  * dark: всегда тёмная тема
  * auto: определяется по времени суток (7:00-20:00 = день)
  * 
- * 🔥 ИСПРАВЛЕНО: <displayIcon /> → <DisplayIcon /> (большая буква)
+ * ПОЧЕМУ: React-компонент иконки должен начинаться с заглавной буквы (DisplayIcon)
  */
 
 import { Sun, Moon, Monitor } from 'lucide-react';
@@ -112,7 +112,7 @@ const { theme, toggleTheme } = useTheme();
       aria-label={nextLabel}
       title={nextLabel}
     >
-      {/* 🔥 ИСПРАВЛЕНО: DisplayIcon с большой буквы */}
+
       <DisplayIcon size={20} />
     </button>
   );

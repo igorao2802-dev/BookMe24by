@@ -25,26 +25,47 @@
 ## 🚀 Технологии
 
 ### Frontend
-- **React 18.2+** — современная библиотека для создания UI
+- **React 18.3** — UI-библиотека
 - **React Router v6** — клиентский роутинг
-- **Context API** — управление состоянием (тема, язык)
-- **Custom Hooks** — переиспользуемая логика
-- **CSS3** — стилизация с CSS-переменными и BEM
+- **Context API** — тема и язык (`ThemeContext`, `LanguageContext`)
+- **Custom Hooks** — бизнес-логика вынесена в `src/hooks/`
+- **CSS3** — BEM, дизайн-токены в `tokens.css`
 - **Lucide React** — иконки
+
+### Зависимости (production)
+- **date-fns** — работа с датами
+- **react-datepicker** — выбор даты в форме записи
+- **react-hot-toast** — уведомления (обёртка `Toast.jsx` в UI-слое)
+- **nanoid** — генерация ID
+- **lucide-react** — иконки
+
+> Ранее рассматривались `react-hook-form`, `@hookform/resolvers`, `zod` — **удалены**; формы и валидация реализованы на собственных хуках и `validators.js`.
 
 ### Хранение данных
 - **localStorage** — персистентность данных на клиенте
 - **JSON-файлы** — начальный каталог услуг и специалистов
 
 ### Инструменты
-- **Create React App** — сборка проекта
-- **ESLint** — линтинг кода
-- **Prettier** — форматирование кода
+- **Create React App** — сборка и dev-сервер
+- **ESLint** — конфиг `react-app` (запускается при `npm test` и `npm run build`, отдельного скрипта `lint` нет)
+- **Jest + Testing Library** — unit-тесты (`npm test`)
+
+### npm-скрипты
+
+| Команда | Назначение |
+|---------|------------|
+| `npm start` | Dev-сервер на [http://localhost:3000](http://localhost:3000) |
+| `npm test` | Unit-тесты (Jest, интерактивный режим) |
+| `npm run build` | Production-сборка в `build/` |
+| `npm run analyze` | Анализ размера бандла (после `build`) |
+| `npm run eject` | Необратимый eject из CRA |
+
+> Скриптов `lint`, `prettier`, `seed` в `package.json` **нет** — не используйте их в документации и CI.
 
 ## 📦 Установка
 
 ### Требования
-- Node.js >= 16.x
+- Node.js >= 18.x
 - npm >= 8.x
 
 ### Шаги установки
@@ -72,7 +93,7 @@ npm start
 npm run build
 ```
 
-## ️ Структура проекта
+## 📁 Структура проекта
 
 ```
 bookme24/
@@ -126,19 +147,28 @@ bookme24/
 │   ├── contexts/                # React Context
 │   │   ├── ThemeContext.jsx     # Управление темой
 │   │   └── LanguageContext.jsx  # Управление языком
-│   ├── hooks/                   # Custom hooks
-│   │   ├── useLocalStorage.js
-│   │   ├── useDebounce.js
-│   │   ├── useRateLimiter.js
+│   ├── hooks/                   # Custom hooks (бизнес-логика)
+│   │   ├── useBookingWizard.js  # Многошаговая запись (state + confirm)
+│   │   ├── useAdminDashboard.js # Оркестрация админ-панели + Toast в UI
+│   │   ├── useLocalStorage.js   # Персистентность с debounce
+│   │   ├── useTimeSlots.js      # Свободные слоты расписания
 │   │   ├── useBookings.js
-│   │   ├── useServices.js
-│   │   └── useSpecialists.js
+│   │   ├── useServices.js       # CRUD услуг (без Toast)
+│   │   ├── useSpecialists.js    # CRUD специалистов (без Toast)
+│   │   ├── useClientProfile.js  # Профиль клиента (без Toast)
+│   │   ├── useSalonData.js
+│   │   ├── useDebounce.js
+│   │   └── useRateLimiter.js
 │   ├── i18n/                    # Локализация
 │   │   ├── ru.json
 │   │   └── en.json
 │   ├── styles/                  # Глобальные стили
-│   │   ├── variables.css        # CSS-переменные
-│   │   └── globals.css          # Глобальные стили
+│   │   ├── tokens.css           # Единый источник CSS-переменных (light/dark)
+│   │   ├── globals.css          # Базовые стили и reset
+│   │   ├── _admin-table.css     # Shared partials
+│   │   ├── _card-dark.css
+│   │   └── _service-selector-base.css
+│   ├── tests/                   # Unit-тесты (Jest)
 │   ├── utils/                   # Утилиты
 │   │   ├── constants.js         # Константы приложения
 │   │   ├── validators.js        # Функции валидации
@@ -149,8 +179,15 @@ bookme24/
 ├── .env.example                 # Шаблон переменных окружения
 ├── .gitignore                   # Игнорируемые файлы
 ├── package.json                 # Зависимости и скрипты
+├── REFACTOR_LOG.md              # Журнал рефакторинга перед защитой
 └── README.md                    # Документация
 ```
+
+### Архитектурные решения
+
+- **Дизайн-токены:** `variables.css` / `themes.css` консолидированы в `src/styles/tokens.css` — один источник палитры для light/dark.
+- **Бизнес-логика:** многошаговая запись — `useBookingWizard.js`; админ-панель — `useAdminDashboard.js`.
+- **Уведомления:** `react-hot-toast` и `Toast.jsx` живут в UI-слое (`index.js`, компоненты). Хуки `useServices`, `useSpecialists`, `useClientProfile` **не** вызывают Toast — это делает вызывающий UI (например, `useAdminDashboard`, `SettingsForm`).
 
 
 ### Константы приложения
@@ -164,7 +201,17 @@ bookme24/
 - **PRICE_LIMITS** — ограничения цен (min, max, step)
 - **RATE_LIMITS** — ограничения для защиты от спама
 
-##  Функциональность
+## 📋 Функциональность
+
+### Предзащитные улучшения
+
+Перед защитой выполнен рефакторинг по замечаниям руководителя (детали — в [REFACTOR_LOG.md](REFACTOR_LOG.md)):
+
+- **useLocalStorage** — исправлен race condition при быстрых последовательных обновлениях; добавлен stress-тест
+- **Toast** — устранено дублирование уведомлений: вынесен из бизнес-хуков в UI-слой
+- **Валидация телефона** — согласована между `validators.js` и формой записи (формат РБ, коды операторов)
+- **Комментарии** — удалены артефактные маркеры (🔥, ЭТАП, ЗАМЕЧАНИЕ); полезные пояснения сохранены в формате «ПОЧЕМУ»
+- **Мемоизация** — аудит `useMemo` / `useCallback` завершён: убрана избыточная, оставлена обоснованная
 
 ### Многошаговая запись (5 шагов)
 
@@ -227,7 +274,7 @@ bookme24/
 - **Светлая** — по умолчанию
 - **Тёмная** — переключается через кнопку в хедере
 
-Все цвета определены в CSS-переменных (`src/styles/variables.css`) для лёгкой кастомизации.
+Все цвета определены в `src/styles/tokens.css` (CSS-переменные для светлой и тёмной темы).
 
 ### Локализация
 
@@ -285,14 +332,30 @@ bookme24/
 ## 🧪 Тестирование
 
 ### Запуск тестов
+
 ```bash
 npm test
 ```
 
-### Проверка линтером
+Для CI / однократного прогона:
+
 ```bash
-npm run lint
+npm test -- --watchAll=false
 ```
+
+**Актуальное покрытие:** 14 test suites, **77 тестов** (все проходят).
+
+### Ключевые сценарии
+
+| Область | Файл | Что проверяется |
+|---------|------|-----------------|
+| Пересечение слотов | `checkTimeOverlap.test.js` | Конфликты времени записей |
+| Расписание | `useTimeSlots.test.js` | Генерация свободных окон |
+| Хранилище | `useLocalStorage.stress.test.js` | Race condition при 10 быстрых обновлениях |
+| Хранилище | `useLocalStorage.test.js` | Базовая персистентность |
+| Запись | `useBookingWizard.confirm.test.js` | Подтверждение бронирования |
+| Валидация | `validators.test.js` | Телефон, email, цены |
+| CRUD | `useServices.test.js`, `useSpecialists.test.js` | Услуги и специалисты |
 
 ### Проверка доступности
 Используйте инструменты:
@@ -300,6 +363,11 @@ npm run lint
 - **axe DevTools**
 - **WAVE**
 
+## ⚠️ Известные ограничения
+
+- **localStorage вместо БД** — учебный проект; данные хранятся в браузере клиента, без серверной синхронизации
+- **Только unit-тесты** — E2E (Cypress/Playwright) не настроены; регрессии UI проверяются вручную
+- **Нет отдельного `npm run lint`** — ESLint запускается только через CRA при `test` / `build`
 
 ## 🤝 Вклад
 
@@ -333,4 +401,3 @@ npm run lint
 ---
 
 **BookMe24** © 2026. Все права защищены.
-```

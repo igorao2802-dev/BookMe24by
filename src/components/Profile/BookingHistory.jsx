@@ -1,15 +1,16 @@
 /**
  * BookingHistory.jsx — история записей клиента с фильтрацией по статусу
  * 
- * 🔥 ЭТАП 5.3: Реализация полноценной истории записей
- * 🔥 ЭТАП 7.7: Локализация табов и EmptyState через t()
+ * ПОЧЕМУ табы вместо выпадающего списка?
+ * Быстрое переключение между «предстоящие», «завершённые» и «отменённые»
+ * без лишнего клика — типичный паттерн для истории заказов.
  */
 
 import { useState, useMemo } from 'react';
 import { Calendar, CheckCircle, XCircle, List } from 'lucide-react';
 
 import { BOOKING_STATUS } from '../../utils/constants';
-import { useLanguage } from '../../hooks/useLanguage'; // 🔥 ЭТАП 7.7
+import { useLanguage } from '../../hooks/useLanguage';
 
 import HistoryCard from './HistoryCard';
 import EmptyState from '../UI/EmptyState';
@@ -24,13 +25,12 @@ export default function BookingHistory({
   onCancel,
   onRebook,
 }) {
-  const { t } = useLanguage(); // 🔥 ЭТАП 7.7
+  const { t } = useLanguage();
 
   // === АКТИВНЫЙ ТАБ ===
   const [activeTab, setActiveTab] = useState('all');
 
   // === ТАБЫ ФИЛЬТРАЦИИ ===
-  // 🔥 ЭТАП 7.7: label берётся через t()
   const tabs = [
     { id: 'all', label: t('profile.history.tabs.all'), icon: <List size={16} /> },
     { id: 'upcoming', label: t('profile.history.tabs.upcoming'), icon: <Calendar size={16} /> },
@@ -91,8 +91,6 @@ export default function BookingHistory({
     };
   }, [bookings]);
 
-  // === ПУСТЫЕ СОСТОЯНИЯ ДЛЯ КАЖДОГО ТАБА ===
-  // 🔥 ЭТАП 7.7: Локализованные тексты
   const emptyStates = {
     all: {
       title: t('profile.history.empty.all'),

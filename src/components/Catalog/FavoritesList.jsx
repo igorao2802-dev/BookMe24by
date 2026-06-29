@@ -9,13 +9,11 @@
  * АРХИТЕКТУРНАЯ РОЛЬ:
  * Получает отфильтрованные избранные элементы через props.
  * НЕ владеет состоянием favorites — оно живет в CatalogPage.
- * 
- * 🔥 ЭТАП 7.5: Локализация всех текстов
  */
 
 import { Heart, Scissors, Users } from 'lucide-react';
 
-import { useLanguage } from '../../hooks/useLanguage'; // 🔥 ЭТАП 7.5
+import { useLanguage } from '../../hooks/useLanguage';
 
 import EmptyState from '../UI/EmptyState';
 import ServiceCard from './ServiceCard';
@@ -30,7 +28,7 @@ export default function FavoritesList({
   onBookService,
   onBookSpecialist,
 }) {
-  const { t } = useLanguage(); // 🔥 ЭТАП 7.5
+  const { t } = useLanguage();
 
   const isEmpty = services.length === 0 && specialists.length === 0;
 

@@ -2,7 +2,7 @@
  * TimeSlotPicker.css — стили для выбора даты и времени
  * BEM-методология + адаптивность + поддержка тёмной темы
  * 
- * 🔥 ИСПРАВЛЕНО: Горизонтальная прокрутка дат
+  * ПОЧЕМУ: горизонтальная прокрутка дат
  * - .time-slot-picker__dates: flex-direction: column (заголовок + сетка)
  * - .time-slot-picker__date-grid: flex-direction: row + overflow-x: auto
  * - Карточки дат: flex-shrink: 0 (не сжимаются)

@@ -1,7 +1,7 @@
 /**
  * SpecialistCard.jsx — карточка специалиста
- * 🔥 ЭТАП 5.2: Динамический рендеринг имени, должности и услуг в зависимости от языка
- * 🔥 ЭТАП 5.4: Полная локализация
+  * ПОЧЕМУ: динамический рендеринг имени, должности и услуг в зависимости от языка
+  * ПОЧЕМУ: полная локализация
  */
 import { Award, Star, Heart, Calendar } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
@@ -16,10 +16,10 @@ export default function SpecialistCard({
   onToggleFavorite,
   onBook,
 }) {
-  // 🔥 ЭТАП 5.2: получаем и language, и t
+  // ПОЧЕМУ: получаем и language, и t
   const { t, language } = useLanguage();
 
-  // 🔥 ЭТАП 5.2: Динамический выбор полей с фолбэком
+  // ПОЧЕМУ: динамический выбор полей с фолбэком
   const displayFullName = language === 'en' && specialist.fullNameEn ? specialist.fullNameEn : specialist.fullName;
   const displayPosition = language === 'en' && specialist.positionEn ? specialist.positionEn : specialist.position;
 
@@ -54,7 +54,7 @@ export default function SpecialistCard({
 
       <div className="specialist-card__avatar">{initials}</div>
 
-      {/* 🔥 ЭТАП 5.2: Динамические имя и должность */}
+      {/* ПОЧЕМУ: динамические имя и должность */}
       <h3 className="specialist-card__name">{displayFullName}</h3>
       <p className="specialist-card__position">{displayPosition}</p>
 
@@ -72,7 +72,7 @@ export default function SpecialistCard({
       <div className="specialist-card__services">
         {specialistServices.slice(0, 3).map((service) => (
           <Badge key={service.id} variant="default" size="sm">
-            {/* 🔥 ЭТАП 5.2: Динамическое название услуги в теге */}
+            {/* ПОЧЕМУ: динамическое название услуги в теге */}
             {language === 'en' && service.nameEn ? service.nameEn : service.name}
           </Badge>
         ))}

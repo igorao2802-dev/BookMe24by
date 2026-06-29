@@ -1,6 +1,6 @@
 /**
  * ServiceForm.css — стили для формы услуги
- * 🔥 ДОБАВЛЕНО: Стили для чекбоксов специалистов
+  * ПОЧЕМУ: дОБАВЛЕНО: Стили для чекбоксов специалистов
  */
 
 /* === ОСНОВНОЙ КОНТЕЙНЕР === */
@@ -65,7 +65,7 @@
   font-style: italic;
 }
 
-/* 🔥 СЕТКА CHECKBOX СПЕЦИАЛИСТОВ */
+/* ПОЧЕМУ: сЕТКА CHECKBOX СПЕЦИАЛИСТОВ */
 .service-form__specialists-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -78,7 +78,7 @@
   border-radius: var(--radius-md, 8px);
 }
 
-/* 🔥 ОДИН CHECKBOX СПЕЦИАЛИСТА */
+/* ПОЧЕМУ: оДИН CHECKBOX СПЕЦИАЛИСТА */
 .service-form__specialist-checkbox {
   display: flex;
   flex-direction: column;

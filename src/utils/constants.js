@@ -1,7 +1,5 @@
 /**
  * constants.js — глобальные константы приложения bookme24.by
- *
- *  ИСПРАВЛЕНО: Убраны trailing spaces во всех ключах localStorage
  */
 
 // === СТАТУСЫ ЗАПИСЕЙ ===
@@ -47,7 +45,6 @@ export const SERVICE_CATEGORY_LABELS = {
 };
 
 // === КЛЮЧИ LOCALSTORAGE ===
-// 🔥 ИСПРАВЛЕНО: Убраны trailing spaces
 export const STORAGE_KEYS = {
   BOOKINGS: "bookme24_bookings",
   SERVICES: "bookme24_services",
@@ -99,7 +96,7 @@ export const BUSINESS_CONFIG = {
   SALON_CLOSE_HOUR: 21,
 };
 
-// 🔥 ЗАМЕЧАНИЕ №12: Лимиты для защиты от многократных кликов
+// ПОЧЕМУ отдельные лимиты: защита от spam-кликов на критичных кнопках (запись, подтверждение)
 export const RATE_LIMITS = {
   SHORT_WINDOW_MS: 5000, // Короткое окно: 5 секунд
   SHORT_MAX: 3, // Макс. кликов в коротком окне

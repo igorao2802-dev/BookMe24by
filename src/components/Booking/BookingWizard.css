@@ -2,7 +2,7 @@
  * Стили для BookingWizard
  * BEM-методология + мобильная адаптивность
  * 
- * 🔥 ЭТАП 2.1: Кнопки навигации зафиксированы внизу (sticky)
+  * ПОЧЕМУ: кнопки навигации зафиксированы внизу (sticky)
  * - position: sticky + bottom: 0
  * - Визуальное отделение тенью сверху
  * - Padding-bottom у контента, чтобы не перекрывался
@@ -76,15 +76,17 @@
 }
 
 .booking-wizard__step--active .booking-wizard__step-circle {
-  background-color: var(--color-primary, #d4a574);
-  color: white;
+  /* ПОЧЕМУ primary-700? inverse на 700 = 5.63:1 ≥ 3:1 UI */
+  background-color: var(--color-primary-700);
+  color: var(--color-text-inverse);
   transform: scale(1.1);
-  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.4);
+  box-shadow: var(--shadow-md);
 }
 
 .booking-wizard__step--completed .booking-wizard__step-circle {
-  background-color: var(--color-success, #4caf50);
-  color: white;
+  /* ПОЧЕМУ success-dark? inverse на #3e6b4c = 6.24:1 ≥ 3:1 UI */
+  background-color: var(--color-success-dark);
+  color: var(--color-text-inverse);
 }
 
 .booking-wizard__step-label {
@@ -111,16 +113,16 @@
   height: 100%;
   background: linear-gradient(
     90deg,
-    var(--color-primary, #d4a574),
-    var(--color-primary-dark, #b8895a)
+    var(--color-primary-700),
+    var(--color-primary-800)
   );
-  border-radius: var(--radius-full, 9999px);
-  transition: width var(--transition-slow, 400ms ease);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow);
 }
 
 /* === КОНТЕНТ === */
 /* 
-  🔥 ЭТАП 2.1: Добавлен padding-bottom
+  ПОЧЕМУ: padding-bottom для запаса под sticky-панель навигации
   ПОЧЕМУ именно 100px?
   - Высота sticky-панели ≈ 80px (padding + кнопки)
   - + 20px запаса, чтобы последний элемент не прилипал к панели
@@ -129,14 +131,14 @@
 .booking-wizard__content {
   background: var(--color-surface, #ffffff);
   padding: var(--spacing-xl, 32px);
-  padding-bottom: 100px; /* 🔥 Запас под sticky-панель */
+  padding-bottom: 100px; /* ПОЧЕМУ: запас под sticky-панель */
   border-radius: var(--radius-lg, 12px);
   box-shadow: var(--shadow-sm);
   min-height: 400px;
   margin-bottom: 0; /* Убираем отступ — панель теперь внизу */
 }
 
-/* === 🔥 НАВИГАЦИЯ (ЭТАП 2.1: STICKY) === */
+/* ПОЧЕМУ: === НАВИГАЦИЯ (STICKY) === */
 /* 
   ПОЧЕМУ именно эти стили?
   1. position: sticky — панель "прилипает" к низу viewport при прокрутке
@@ -207,7 +209,7 @@
   }
 }
 
-/* 🔥 ЭТАП 2.1: На очень узких экранах кнопки располагаем вертикально */
+/* ПОЧЕМУ: на очень узких экранах кнопки располагаем вертикально */
 @media (max-width: 480px) {
   .booking-wizard__navigation {
     /* 
@@ -246,7 +248,7 @@
 }
 
 /* ═══════════════════════════════════════════════
-   🔥 ЭТАП 3.2: КЛИКАБЕЛЬНЫЕ ШАГИ ПРОГРЕСС-БАРА
+   ПОЧЕМУ: кликабельные шаги прогресс-бара
    ═══════════════════════════════════════════════ */
 
 .booking-wizard__step--clickable {
@@ -264,7 +266,7 @@
 }
 
 /* ═══════════════════════════════════════════════
-   🔥 ЭТАП 3.2: СТИЛИ КНОПКИ ОЧИСТКИ
+   ПОЧЕМУ: стили кнопки очистки формы
    ═══════════════════════════════════════════════ */
 
 .booking-wizard__btn-clear {

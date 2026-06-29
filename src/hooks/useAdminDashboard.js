@@ -123,15 +123,13 @@ export function useAdminDashboard({
     setSortBy(value);
   }, []);
 
+  // ПОЧЕМУ useMemo: filter + sort по debouncedQuery и filters при каждом keystroke без debounce
   const sortedBookings = useMemo(() => {
     const filtered = filterBookings(bookings, filters);
     return sortBookings(filtered, sortBy);
   }, [bookings, filters, sortBy]);
 
-  const activeFiltersCount = useMemo(
-    () => countActiveFilters(filters),
-    [filters],
-  );
+  const activeFiltersCount = countActiveFilters(filters);
 
   const handleOpenAddService = useCallback(() => {
     setServiceModal({ isOpen: true, mode: "add", service: null });

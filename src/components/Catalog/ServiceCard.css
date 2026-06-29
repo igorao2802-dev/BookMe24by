@@ -1,6 +1,5 @@
 /**
  * ServiceCard.css — стили карточки услуги в каталоге
- * 🔥 ИСПРАВЛЕНО: 
  * - Бейдж категории: тёмный текст на светлом фоне (контрастность ≥ 7:1)
  * - Все цвета соответствуют WCAG AA
  */
@@ -33,14 +32,14 @@
 }
 
 /* === КНОПКА ИЗБРАННОГО === */
-.service-card__favorite-btn {
+.service-card__favorite {
   position: absolute;
   top: 12px;
   right: 12px;
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--color-text-muted, #6b5d4f);
+  color: var(--color-text-subtle);
   padding: 4px;
   border-radius: 50%;
   transition: all 0.2s ease;
@@ -49,20 +48,17 @@
   justify-content: center;
 }
 
-[data-theme="dark"] .service-card__favorite-btn {
-  color: var(--color-text-muted, #b0b0b0);
-}
-
-.service-card__favorite-btn:hover {
-  color: #dc3545;
+.service-card__favorite:hover {
+  color: var(--color-favorite);
   transform: scale(1.1);
 }
 
-.service-card__favorite-btn--active {
-  color: #dc3545;
+.service-card__favorite--active {
+  color: var(--color-favorite);
+  background: var(--color-favorite-bg);
 }
 
-/* 🔥 ИСПРАВЛЕНО: Категория услуги — тёмный текст на светлом фоне */
+/* ПОЧЕМУ: категория услуги — тёмный текст на светлом фоне */
 .service-card__category {
   display: inline-block;
   background: #f5ede4;
@@ -235,18 +231,18 @@
 }
 
 [data-theme="dark"] .service-card__favorite {
-  background: var(--color-bg, #1c1613);
-  border-color: var(--color-border, #44362b);
-  color: var(--color-text-muted, #c9b89f);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-subtle);
 }
 
 [data-theme="dark"] .service-card__favorite:hover {
-  color: var(--color-error-light, #fca5a5);
-  border-color: var(--color-error-light, #fca5a5);
+  color: var(--color-favorite-hover);
+  border-color: var(--color-favorite);
 }
 
 [data-theme="dark"] .service-card__favorite--active {
-  color: var(--color-error-light, #fca5a5);
-  background: #3d2419;
-  border-color: var(--color-error-light, #fca5a5);
+  color: var(--color-favorite);
+  background: var(--color-favorite-bg);
+  border-color: var(--color-favorite);
 }

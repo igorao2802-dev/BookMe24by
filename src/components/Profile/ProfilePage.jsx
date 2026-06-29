@@ -3,7 +3,6 @@
  *
  * Композиция секций профиля; бизнес-логика — в useClientProfile.
  */
-import { useCallback } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { Phone, Mail, CalendarPlus } from 'lucide-react';
 import {
@@ -53,10 +52,8 @@ export default function ProfilePage({
     { debounceMs: STORAGE_DEBOUNCE_MS.DEFAULT },
   );
 
-  const handleUpdateSettings = useCallback(
-    (updates) => setUserSettings((prev) => ({ ...prev, ...updates })),
-    [setUserSettings],
-  );
+  const handleUpdateSettings = (updates) =>
+    setUserSettings((prev) => ({ ...prev, ...updates }));
 
   const {
     profile,
@@ -73,10 +70,7 @@ export default function ProfilePage({
     onUpdateSettings: handleUpdateSettings,
   });
 
-  const goToWizard = useCallback(
-    (state) => navigate('/', { state }),
-    [navigate],
-  );
+  const goToWizard = (state) => navigate('/', { state });
 
   const handleCancelBooking = (bookingId) => {
     const result = onCancelBooking(bookingId);

@@ -7,8 +7,9 @@
  * Защита от повторных кликов (isSubmitting) — замечание из ТЗ
  * Автоматическая блокировка при loading (предотвращение дублей записей)
  * 
- * 🔥 ЗАМЕЧАНИЕ №12: Добавлена встроенная защита от spam-кликов через prop `rateLimit`
- * Если rateLimit=true, кнопка использует useRateLimiter для отслеживания кликов
+ * ПОЧЕМУ prop rateLimit?
+ * Встроенная защита от spam-кликов: при rateLimit=true кнопка использует
+ * useRateLimiter для отслеживания частоты нажатий и блокировки повторов.
  */
 import { forwardRef, useCallback } from 'react';
 import { Loader2 } from 'lucide-react';
@@ -36,7 +37,7 @@ const Button = forwardRef(function Button(
     fullWidth = false,
     className = '',
     onClick,
-    rateLimit = false, // 🔥 НОВОЕ: включить rate limiting
+    rateLimit = false,
     ...restProps
   },
   ref,
@@ -48,16 +49,15 @@ const Button = forwardRef(function Button(
   // Кнопка должна быть заблокирована и при явном disabled, и при loading.
   const isDisabled = disabled || isLoading;
 
-  // 🔥 ОБЁРТКА onClick с проверкой rate limit
+  // ПОЧЕМУ обёртка onClick с проверкой rate limit?
+  // Централизуем защиту от частых кликов — родителю не нужно дублировать логику.
   const handleClick = useCallback(
     (e) => {
       if (!onClick) return;
 
-      // 🔥 Если rateLimit включён — проверяем лимит
       if (rateLimit && !isDisabled) {
         const result = checkLimit();
         if (!result.allowed) {
-          // Показываем toast с сообщением и оставшимся временем блокировки
           Toast.error(
             t(result.message, { seconds: result.blockedSeconds }),
             { duration: 3000 },

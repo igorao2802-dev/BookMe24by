@@ -6,15 +6,10 @@
  * Разделяет JSON-данные (read-only) и кастомные данные (localStorage).
  * Валидирует данные перед сохранением.
  *
- * 🔥 ЭТАП 6.3: Добавлены add/update/delete операции
- * 🔥 ЭТАП 7.6: Локализация Toast-уведомлений
- * 🔥 ЭТАП 5.3: Добавлена поддержка двуязычных полей (fullNameEn, positionEn)
- * 🔥 ЭТАП 12: Удалена валидация rating, дефолтное значение 4.5 при создании
- * 🔥 ИСПРАВЛЕНО: Все опечатки в строках валидации (убраны пробелы)
+ * ПОЧЕМУ без Toast?
+ * Бизнес-хук возвращает { success, error } — Toast показывает useAdminDashboard.
  */
 import { useMemo, useCallback } from "react";
-import { useLanguage } from "./useLanguage";
-import Toast from "../components/UI/Toast";
 import { validateSpecialistData } from "../utils/validateSpecialist";
 import { generateSpecialistId } from "../utils/generateId";
 
@@ -23,18 +18,16 @@ export function useSpecialists({
   customSpecialists,
   setCustomSpecialists,
 }) {
-  const { t } = useLanguage();
-
   // ПОЧЕМУ setCustomSpecialists приходит из useSalonData?
   // Чтобы useServices и useSpecialists делили один React-state на ключ
   // CUSTOM_SPECIALISTS — иначе sync serviceIds ↔ specialistIds ломается.
 
+  // ПОЧЕМУ useMemo: стабильная ссылка для deps CRUD-callback'ов (validateSpecialistData)
   const specialists = useMemo(
     () => [...customSpecialists, ...jsonSpecialists],
     [customSpecialists, jsonSpecialists],
   );
 
-  // === ДОБАВЛЕНИЕ СПЕЦИАЛИСТА ===
   const addSpecialist = useCallback(
     (specialistData) => {
       const validation = validateSpecialistData(specialistData, specialists);
@@ -57,7 +50,7 @@ export function useSpecialists({
           ? specialistData.positionEn.trim()
           : "",
         experience: Number(specialistData.experience),
-        //  ЭТАП 12: Дефолтное значение рейтинга 4.5 (рассчитывается автоматически)
+        // ПОЧЕМУ: рейтинг 4.5 по умолчанию — рассчитывается автоматически, не из формы
         rating: 4.5,
         serviceIds: specialistData.serviceIds,
         isCustom: true,
@@ -65,12 +58,9 @@ export function useSpecialists({
       };
 
       setCustomSpecialists((prev) => [newSpecialist, ...prev]);
-      Toast.success(
-        t("admin.specialists.addSuccess", { name: newSpecialist.fullName }),
-      );
       return { success: true, specialist: newSpecialist };
     },
-    [specialists, setCustomSpecialists, t],
+    [specialists, setCustomSpecialists],
   );
 
   // === ОБНОВЛЕНИЕ СПЕЦИАЛИСТА ===
@@ -121,7 +111,7 @@ export function useSpecialists({
                   updates.experience !== undefined
                     ? Number(updates.experience)
                     : s.experience,
-                // 🔥 ЭТАП 12: rating НЕ обновляется из формы — рассчитывается автоматически
+                // ПОЧЕМУ: rating не обновляется из формы — рассчитывается автоматически
                 updatedAt: new Date().toISOString(),
               }
             : s,
@@ -129,14 +119,9 @@ export function useSpecialists({
       );
 
       const updatedSpecialist = { ...existingSpecialist, ...updates };
-      Toast.success(
-        t("admin.specialists.updateSuccess", {
-          name: updatedSpecialist.fullName,
-        }),
-      );
       return { success: true, specialist: updatedSpecialist };
     },
-    [specialists, setCustomSpecialists, t],
+    [specialists, setCustomSpecialists],
   );
 
   // === УДАЛЕНИЕ СПЕЦИАЛИСТА ===
@@ -154,14 +139,9 @@ export function useSpecialists({
       }
 
       setCustomSpecialists((prev) => prev.filter((s) => s.id !== specialistId));
-      Toast.success(
-        t("admin.specialists.deleteSuccess", {
-          name: existingSpecialist.fullName,
-        }),
-      );
       return { success: true };
     },
-    [specialists, setCustomSpecialists, t],
+    [specialists, setCustomSpecialists],
   );
 
   return {

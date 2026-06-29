@@ -1,23 +1,14 @@
 /**
- * validateName.js — улучшенная валидация имени клиента
+ * validators.js — валидация полей форм записи и админки
  *
- * 🔥 ЗАМЕЧАНИЕ №15: Улучшена валидация Email
- * - Проверка длины 254 символа (RFC 5321)
- * - Строгий regex для формата email
- * - Отдельная проверка недопустимых символов
- * - Пустое значение = валидно (поле необязательно)
- *
- * 🔥 ЗАМЕЧАНИЕ №13: Убрана валидация "минимум 2 слова"
- * - Теперь допустимо любое непустое значение
- * - Проверка на минимальную длину не требуется
+ * ПОЧЕМУ отдельный модуль?
+ * Единые правила для BookingForm, SettingsForm и CRUD-форм админки.
  */
 
 import { BY_PHONE_CODES, FIELD_LIMITS, PRICE_LIMITS } from "./constants.js";
+
 /**
  * Валидация цены услуги
- * - Только целые числа
- * - Без ведущих нулей
- * - Максимум 10000 BYN
  *
  * @param {number|string} price - цена
  * @param {Object} options - дополнительные опции
@@ -28,7 +19,6 @@ import { BY_PHONE_CODES, FIELD_LIMITS, PRICE_LIMITS } from "./constants.js";
 export function validatePrice(price, options = {}) {
   const { required = true, max = PRICE_LIMITS.MAX } = options;
 
-  // Пустое значение
   if (price === undefined || price === null || price === "") {
     return required
       ? { isValid: false, errorKey: "validation.service.priceRequired" }
@@ -37,22 +27,18 @@ export function validatePrice(price, options = {}) {
 
   const num = Number(price);
 
-  // Проверка на NaN
   if (isNaN(num)) {
     return { isValid: false, errorKey: "validation.service.priceInvalid" };
   }
 
-  // Проверка на дробное число
   if (!Number.isInteger(num)) {
     return { isValid: false, errorKey: "validation.service.priceNotInteger" };
   }
 
-  // Проверка на отрицательное значение
   if (num < PRICE_LIMITS.MIN) {
     return { isValid: false, errorKey: "validation.service.priceTooLow" };
   }
 
-  // Проверка на превышение максимума
   if (num > max) {
     return { isValid: false, errorKey: "validation.service.priceTooHigh" };
   }
@@ -60,14 +46,10 @@ export function validatePrice(price, options = {}) {
   return { isValid: true, errorKey: null };
 }
 
-// 🔥 ЗАМЕЧАНИЕ №15: Строгий regex для email
-// Разрешает: буквы, цифры, . _ % + - в локальной части
-// Разрешает: буквы, цифры, . - в доменной части
-// Обязателен: минимум 2 символа в TLD
+// ПОЧЕМУ строгий regex: RFC-подобная проверка локальной части и TLD ≥ 2 символов
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-// 🔥 ЗАМЕЧАНИЕ №15: Regex для проверки недопустимых символов
-// Запрещает: пробелы, кириллицу, спецсимволы кроме разрешённых
+// ПОЧЕМУ отдельная проверка символов: кириллица и пробелы недопустимы в email
 const INVALID_EMAIL_CHARS_REGEX = /[^a-zA-Z0-9._%+-@]/;
 
 /**
@@ -82,8 +64,7 @@ export function validatePhone(phone, options = {}) {
 
   if (!phone || typeof phone !== "string" || phone.trim() === "") {
     // ПОЧЕМУ required отдельным параметром?
-    // В настройках профиля телефон может быть пустым при первом входе,
-    // но в форме записи телефон обязателен (замечание по обходу валидации).
+    // В настройках профиля телефон может быть пустым, в форме записи — обязателен.
     return required
       ? { isValid: false, errorKey: "validation.phone.required" }
       : { isValid: true, errorKey: null };
@@ -109,14 +90,7 @@ export function validatePhone(phone, options = {}) {
 }
 
 /**
- * 🔥 ЗАМЕЧАНИЕ №13: Улучшенная валидация имени
- *
- * Проверки по порядку:
- * 1. Пустое значение → ошибка "обязательное поле"
- * 2. Длина > 100 символов → ошибка "слишком длинное"
- * 3. Недопустимые символы → ошибка "недопустимые символы"
- *
- * 🔥 УДАЛЕНО: Проверка на минимальное количество слов (было "минимум 2 слова")
+ * Валидация имени клиента
  *
  * @param {string} name - имя для проверки
  * @returns {{isValid: boolean, errorKey: string|null}}
@@ -132,11 +106,6 @@ export function validateName(name) {
   if (trimmed.length > FIELD_LIMITS.NAME_MAX_LENGTH) {
     return { isValid: false, errorKey: "validation.name.tooLong" };
   }
-  // 🔥 ЗАМЕЧАНИЕ №13: Удалена проверка на минимальное количество слов
-  // const wordsCount = trimmed.split(/\s+/).length;
-  // if (wordsCount < 2) {
-  //   return { isValid: false, errorKey: "validation.name.minTwoWords" };
-  // }
   const nameRegex = /^[a-zA-Zа-яА-ЯёЁіІўЎ\s-']+$/;
   if (!nameRegex.test(trimmed)) {
     return { isValid: false, errorKey: "validation.name.invalidChars" };
@@ -145,37 +114,26 @@ export function validateName(name) {
 }
 
 /**
- * 🔥 ЗАМЕЧАНИЕ №15: Улучшенная валидация email
- *
- * Проверки по порядку:
- * 1. Пустое значение → валидно (поле необязательно)
- * 2. Длина > 254 → ошибка "слишком длинный"
- * 3. Недопустимые символы → ошибка "недопустимые символы"
- * 4. Неверный формат → ошибка "некорректный формат"
+ * Валидация email (поле необязательное — пустое значение валидно)
  *
  * @param {string} email - email для проверки
  * @returns {{isValid: boolean, errorKey: string|null}}
  */
 export function validateEmail(email) {
-  // 🔥 Пустое значение допустимо (поле необязательное)
   if (!email || typeof email !== "string" || email.trim() === "") {
     return { isValid: true, errorKey: null };
   }
 
   const trimmed = email.trim();
 
-  // 🔥 Проверка длины (стандарт RFC 5321: максимум 254 символа)
   if (trimmed.length > FIELD_LIMITS.EMAIL_MAX_LENGTH) {
     return { isValid: false, errorKey: "validation.email.tooLong" };
   }
 
-  //  Проверка недопустимых символов
-  // Запрещены: пробелы, кириллица, спецсимволы кроме ._ %+-@
   if (INVALID_EMAIL_CHARS_REGEX.test(trimmed)) {
     return { isValid: false, errorKey: "validation.email.invalidChars" };
   }
 
-  // 🔥 Проверка корректного формата через строгий regex
   if (!EMAIL_REGEX.test(trimmed)) {
     return { isValid: false, errorKey: "validation.email.invalid" };
   }

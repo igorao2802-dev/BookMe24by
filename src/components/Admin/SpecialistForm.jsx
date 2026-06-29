@@ -1,7 +1,6 @@
 /**
  * SpecialistForm.jsx — форма добавления/редактирования специалиста
  *
- * 🔥 ИСПРАВЛЕНО:
  * - Корректное отображение englishVersion через t()
  * - Убрано поле "Рейтинг" (рассчитывается автоматически)
  * - Все опечатки устранены
@@ -241,7 +240,7 @@ export default function SpecialistForm({
         />
       </div>
 
-      {/* 🔥 Секция английской версии — корректный перевод через t() */}
+      {/* ПОЧЕМУ: секция английской версии — корректный перевод через t() */}
       <div className="specialist-form__divider">
         <h4>{t('admin.specialists.form.englishVersion')}</h4>
       </div>
@@ -331,7 +330,7 @@ export default function SpecialistForm({
         </span>
       </div>
 
-      {/* 🔥 КНОПКИ ДЕЙСТВИЙ — с нормальными отступами */}
+      {/* ПОЧЕМУ: кНОПКИ ДЕЙСТВИЙ — с нормальными отступами */}
       <div className="specialist-form__actions">
         <Button
           type="button"

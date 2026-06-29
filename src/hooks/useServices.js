@@ -8,15 +8,11 @@
  * - При редактировании стандартной услуги создаётся кастомная копия
  * - Удаление стандартных услуг запрещено
  *
- * 🔥 ИСПРАВЛЕНО:
- * - Устранены все опечатки (oldSpecialistIds, newSpecialistIds и др.)
- * - Убраны trailing spaces во всех строках
- * - Исправлены все && вместо & &
- * - Исправлены все стрелочные функции (prev) =>
+ * ПОЧЕМУ без Toast?
+ * Бизнес-хук не знает о UI — уведомления показывает useAdminDashboard
+ * по результату { success, error } из CRUD-методов.
  */
 import { useMemo, useCallback } from "react";
-import { useLanguage } from "./useLanguage";
-import Toast from "../components/UI/Toast";
 import { validateServiceData } from "../utils/validateService";
 import { generateServiceId } from "../utils/generateId";
 
@@ -26,11 +22,10 @@ export function useServices({
   setCustomServices,
   setCustomSpecialists,
 }) {
-  const { t } = useLanguage();
-
   // ПОЧЕМУ customServices приходит снаружи?
   // Owner localStorage — useSalonData.js. Этот хук только мержит JSON + custom
   // и выполняет CRUD, не создавая второй React-state на тот же ключ.
+  // ПОЧЕМУ useMemo: merge JSON + custom с перезаписью стандартных услуг кастомными копиями
   const services = useMemo(() => {
     const customMap = new Map(customServices.map((s) => [s.id, s]));
     const merged = [];
@@ -117,10 +112,9 @@ export function useServices({
         syncSpecialistServices(newService.id, [], newService.specialistIds);
       }
 
-      Toast.success(t("admin.services.addSuccess", { name: newService.name }));
       return { success: true, service: newService };
     },
-    [services, setCustomServices, t, syncSpecialistServices],
+    [services, setCustomServices, syncSpecialistServices],
   );
 
   const updateService = useCallback(
@@ -220,12 +214,9 @@ export function useServices({
       syncSpecialistServices(serviceId, oldSpecialistIds, newSpecialistIds);
 
       const updatedService = { ...existingService, ...updates };
-      Toast.success(
-        t("admin.services.updateSuccess", { name: updatedService.name }),
-      );
       return { success: true, service: updatedService };
     },
-    [services, setCustomServices, t, syncSpecialistServices],
+    [services, setCustomServices, syncSpecialistServices],
   );
 
   const deleteService = useCallback(
@@ -258,12 +249,9 @@ export function useServices({
         })),
       );
 
-      Toast.success(
-        t("admin.services.deleteSuccess", { name: existingService.name }),
-      );
       return { success: true };
     },
-    [services, setCustomServices, setCustomSpecialists, t],
+    [services, setCustomServices, setCustomSpecialists],
   );
 
   return {
