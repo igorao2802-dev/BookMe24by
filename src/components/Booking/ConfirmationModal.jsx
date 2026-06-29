@@ -29,6 +29,8 @@ export default function ConfirmationModal({
   onClose,
   onConfirm,
   isSubmitting,
+  canConfirm = true,
+  validationErrors = {},
   draft,
   service,
   specialist,
@@ -165,9 +167,14 @@ export default function ConfirmationModal({
                   {t('booking.confirmation.phone')}
                 </span>
                 <span className="confirmation-modal__value">
-                  {draft.clientPhone}
+                  {draft.clientPhone || '—'}
                 </span>
               </div>
+              {validationErrors.clientPhone && (
+                <p className="confirmation-modal__field-error">
+                  {t(validationErrors.clientPhone)}
+                </p>
+              )}
 
               {draft.clientEmail && (
                 <div className="confirmation-modal__row">
@@ -214,6 +221,7 @@ export default function ConfirmationModal({
                 variant="primary"
                 onClick={onConfirm}
                 isLoading={isSubmitting}
+                disabled={!canConfirm || isSubmitting}
               >
                 {isSubmitting
                   ? t('common.loading')

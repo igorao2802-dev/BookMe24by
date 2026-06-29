@@ -18,6 +18,12 @@
   margin: 0;
 }
 
+.confirmation-modal__field-error {
+  margin: calc(var(--spacing-xs, 4px) * -1) 0 0;
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-error, #c0392b);
+}
+
 /* === СВОДКА === */
 .confirmation-modal__summary {
   display: flex;

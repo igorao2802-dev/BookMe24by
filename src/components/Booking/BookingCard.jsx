@@ -19,6 +19,10 @@ import Badge from '../UI/Badge';
 import './BookingCard.css';
 
 export default function BookingCard({ booking, service, specialist, isFuture, isNew }) {
+  // Fallback для записей без snapshot-полей (созданных до исправления payload)
+  const displayDuration = booking.duration ?? service?.duration;
+  const displayPrice = booking.totalPrice ?? service?.price;
+
   return (
     <article
       className={`booking-card ${
@@ -50,14 +54,14 @@ export default function BookingCard({ booking, service, specialist, isFuture, is
         <div className="booking-card__info-item">
           <Clock size={14} />
           <span>
-            {booking.startTime} • {formatDuration(booking.duration)}
+            {booking.startTime} • {formatDuration(displayDuration)}
           </span>
         </div>
       </div>
 
       <div className="booking-card__footer">
         <span className="booking-card__price">
-          {formatPrice(booking.totalPrice)}
+          {formatPrice(displayPrice)}
         </span>
       </div>
     </article>
