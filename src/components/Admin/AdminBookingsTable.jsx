@@ -11,7 +11,7 @@
  * - Статусы, кнопки, лейблы — через ключи локализации
  * - Добавлены aria-label для доступности
  */
-import { Edit2, XCircle, Calendar, Clock, User, Phone, Mail } from 'lucide-react';
+import { Edit2, XCircle, CheckCircle, Calendar, Clock, User, Phone, Mail } from 'lucide-react';
 import Button from '../UI/Button';
 import Badge from '../UI/Badge';
 import { BOOKING_STATUS } from '../../utils/constants';
@@ -29,9 +29,15 @@ export default function AdminBookingsTable({
   services,
   specialists,
   onEdit,
+  onConfirm,
   onCancel,
 }) {
   const { t } = useLanguage();
+
+  // === МОЖНО ЛИ ПОДТВЕРДИТЬ? ===
+  const canConfirm = (booking) => {
+    return booking.status === BOOKING_STATUS.PENDING;
+  };
 
   // === МОЖНО ЛИ ОТМЕНИТЬ ЗАПИСЬ? ===
   const canCancel = (booking) => {
@@ -95,7 +101,7 @@ export default function AdminBookingsTable({
                 <div className="admin-booking-row__meta-item">
                   <Clock size={14} aria-hidden="true" />
                   <span>
-                    {booking.startTime} — {booking.endTime}
+                    {booking.startTime} — {booking.endTime || '—'}
                   </span>
                 </div>
                 <div className="admin-booking-row__meta-item">
@@ -103,10 +109,10 @@ export default function AdminBookingsTable({
                   <span>{specialist?.fullName || t('common.specialistNotSpecified')}</span>
                 </div>
                 <div className="admin-booking-row__meta-item">
-                  <span>⏱ {formatDuration(booking.duration, t)}</span>
+                  <span>⏱ {formatDuration(booking.duration ?? service?.duration, t)}</span>
                 </div>
                 <div className="admin-booking-row__meta-item admin-booking-row__meta-item--price">
-                  {formatPrice(booking.totalPrice)}
+                  {formatPrice(booking.totalPrice ?? service?.price)}
                 </div>
               </div>
 
@@ -120,6 +126,18 @@ export default function AdminBookingsTable({
 
             {/* === ДЕЙСТВИЯ === */}
             <div className="admin-booking-row__actions">
+              {canConfirm(booking) && (
+                <Button
+                  variant="primary"
+                  size="sm"
+                  leftIcon={<CheckCircle size={14} />}
+                  onClick={() => onConfirm(booking.id)}
+                  aria-label={t('admin.bookings.confirm')}
+                >
+                  {t('admin.bookings.confirm')}
+                </Button>
+              )}
+
               {canEdit(booking) && (
                 <Button
                   variant="outline"

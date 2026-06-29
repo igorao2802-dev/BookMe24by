@@ -20,7 +20,7 @@ export default function SpecialistModal({
 
   const handleSave = (specialistData) => {
     const result = onSave(specialistData);
-    if (result?.success !== false) {
+    if (result?.success === true) {
       isDirtyRef.current = false;
       onClose();
     }

@@ -22,7 +22,10 @@ export default function ServiceModal({
 
   const handleSave = (serviceData) => {
     const result = onSave(serviceData);
-    if (result?.success !== false) {
+    // ПОЧЕМУ result?.success === true, а не !== false?
+    // handleOpenAddService (старый баг) возвращал undefined — форма закрывалась
+    // без сохранения. Закрываем модалку только при явном успехе CRUD.
+    if (result?.success === true) {
       isDirtyRef.current = false;
       onClose();
     }

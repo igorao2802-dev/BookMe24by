@@ -4,7 +4,7 @@
  * 🔥 ИСПРАВЛЕНО:
  * - Полная локализация через t()
  * - Корректная интеграция с AdminDashboard
- * - Проверка пересечений через checkTimeOverlap
+ * - Проверка слота через validateBookingBeforeSave (duration + overlap)
  */
 import { useState, useEffect, useMemo } from 'react';
 import Modal from '../UI/Modal';
@@ -13,7 +13,7 @@ import Input from '../UI/Input';
 import Select from '../UI/Select';
 import Toast from '../UI/Toast';
 import { BOOKING_STATUS } from '../../utils/constants';
-import { checkTimeOverlap } from '../../utils/checkTimeOverlap';
+import { validateBookingBeforeSave } from '../../utils/validateBookingPipeline';
 import { calculateEndTime } from '../../utils/timeHelpers';
 import { useLanguage } from '../../hooks/useLanguage';
 import './BookingEditModal.css';
@@ -50,10 +50,10 @@ export default function BookingEditModal({
 
   // === ПОЛУЧАЕМ ТЕКУЩУЮ УСЛУГУ И МАСТЕРА ===
   const currentService = services.find((s) => s.id === booking?.serviceId);
- /* const selectedSpecialist = specialists.find(
-    (s) => s.id === editData?.specialistId
+  const selectedSpecialist = specialists.find(
+    (s) => s.id === editData?.specialistId,
   );
-*/
+
   // === АВТОПЕРЕСЧЁТ ВРЕМЕНИ ОКОНЧАНИЯ ===
   const computedEndTime = useMemo(() => {
     if (!editData?.startTime || !editData?.duration) return null;
@@ -110,10 +110,17 @@ export default function BookingEditModal({
       startTime: editData.startTime,
       duration: editData.duration,
     };
-    const result = checkTimeOverlap(hypotheticalBooking, bookings, 15);
 
-    if (result.hasOverlap) {
-      Toast.error(`${t('admin.bookings.conflict')}: ${result.reason}`);
+    const result = validateBookingBeforeSave(hypotheticalBooking, bookings, {
+      excludeBookingId: booking.id,
+      specialist: selectedSpecialist,
+    });
+
+    if (!result.isValid) {
+      const message = result.error?.includes(".")
+        ? t(result.error)
+        : result.error;
+      Toast.error(`${t("admin.bookings.conflict")}: ${message}`);
       return false;
     }
     return true;
