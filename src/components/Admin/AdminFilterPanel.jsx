@@ -1,7 +1,6 @@
 /**
  * AdminFilterPanel.jsx — панель фильтров и сортировки для администратора
  * 
- * 🔥 ИСПРАВЛЕНО:
  * - Используется кастомный календарь react-datepicker для полной локализации
  * - Устранены все опечатки (& &, = >)
  * - Добавлена поддержка тёмной темы для DatePicker
@@ -172,7 +171,7 @@ export default function AdminFilterPanel({
             options={specialistOptions}
           />
 
-          {/* 🔥 Дата от — кастомный календарь с локализацией */}
+          {/* ПОЧЕМУ: дата от — кастомный календарь с локализацией */}
           <div className="admin-filter-panel__date-field">
             <label className="input__label">
               {t('admin.filters.dateFrom')}
@@ -189,7 +188,7 @@ export default function AdminFilterPanel({
             />
           </div>
 
-          {/* 🔥 Дата до — кастомный календарь с локализацией */}
+          {/* ПОЧЕМУ: дата до — кастомный календарь с локализацией */}
           <div className="admin-filter-panel__date-field">
             <label className="input__label">
               {t('admin.filters.dateTo')}

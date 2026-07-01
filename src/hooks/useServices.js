@@ -8,110 +8,24 @@
  * - При редактировании стандартной услуги создаётся кастомная копия
  * - Удаление стандартных услуг запрещено
  *
- * 🔥 ИСПРАВЛЕНО:
- * - Устранены все опечатки (oldSpecialistIds, newSpecialistIds и др.)
- * - Убраны trailing spaces во всех строках
- * - Исправлены все && вместо & &
- * - Исправлены все стрелочные функции (prev) =>
+ * ПОЧЕМУ без Toast?
+ * Бизнес-хук не знает о UI — уведомления показывает useAdminDashboard
+ * по результату { success, error } из CRUD-методов.
  */
 import { useMemo, useCallback } from "react";
-import { useLocalStorage } from "./useLocalStorage";
-import { useLanguage } from "./useLanguage";
-import { STORAGE_KEYS, SERVICE_CATEGORIES } from "../utils/constants";
-import Toast from "../components/UI/Toast";
+import { validateServiceData } from "../utils/validateService";
+import { generateServiceId } from "../utils/generateId";
 
-function generateServiceId() {
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 7);
-  return `custom_svc_${timestamp}_${random}`;
-}
-
-function validateServiceData(data, existingServices = [], currentId = null) {
-  const errors = {};
-
-  if (!data.name || typeof data.name !== "string" || !data.name.trim()) {
-    errors.name = "validation.service.nameRequired";
-  } else if (data.name.trim().length > 100) {
-    errors.name = "validation.service.nameTooLong";
-  } else {
-    const isDuplicate = existingServices.some(
-      (service) =>
-        service.id !== currentId &&
-        service.name.toLowerCase() === data.name.trim().toLowerCase(),
-    );
-    if (isDuplicate) errors.name = "validation.service.nameDuplicate";
-  }
-
-  if (
-    !data.category ||
-    !Object.values(SERVICE_CATEGORIES).includes(data.category)
-  ) {
-    errors.category = "validation.service.categoryRequired";
-  }
-
-  if (!data.description || !data.description.trim()) {
-    errors.description = "validation.service.descriptionRequired";
-  } else if (data.description.trim().length > 500) {
-    errors.description = "validation.service.descriptionTooLong";
-  }
-
-  if (
-    data.duration === undefined ||
-    data.duration === null ||
-    data.duration === ""
-  ) {
-    errors.duration = "validation.service.durationRequired";
-  } else {
-    const duration = Number(data.duration);
-    if (isNaN(duration) || duration < 15 || duration > 480) {
-      errors.duration =
-        duration < 15
-          ? "validation.service.durationTooShort"
-          : "validation.service.durationTooLong";
-    }
-  }
-
-  if (data.price === undefined || data.price === null || data.price === "") {
-    errors.price = "validation.service.priceRequired";
-  } else {
-    const price = Number(data.price);
-    if (isNaN(price) || price <= 0 || price > 10000) {
-      errors.price =
-        price <= 0
-          ? "validation.service.priceTooLow"
-          : "validation.service.priceTooHigh";
-    }
-  }
-
-  if (data.specialistIds !== undefined && !Array.isArray(data.specialistIds)) {
-    errors.specialistIds = "validation.service.specialistsRequired";
-  }
-
-  if (data.nameEn && data.nameEn.trim().length > 100) {
-    errors.nameEn = "validation.service.nameTooLong";
-  }
-
-  if (data.descriptionEn && data.descriptionEn.trim().length > 500) {
-    errors.descriptionEn = "validation.service.descriptionTooLong";
-  }
-
-  return { isValid: Object.keys(errors).length === 0, errors };
-}
-
-export function useServices(jsonServices = []) {
-  const { t } = useLanguage();
-
-  const [customServices, setCustomServices] = useLocalStorage(
-    STORAGE_KEYS.CUSTOM_SERVICES,
-    [],
-  );
-
-  const [customSpecialists, setCustomSpecialists] = useLocalStorage(
-    STORAGE_KEYS.CUSTOM_SPECIALISTS,
-    [],
-  );
-
-  // === СЛИЯНИЕ УСЛУГ: кастомные перекрывают стандартные ===
+export function useServices({
+  jsonServices = [],
+  customServices,
+  setCustomServices,
+  setCustomSpecialists,
+}) {
+  // ПОЧЕМУ customServices приходит снаружи?
+  // Owner localStorage — useSalonData.js. Этот хук только мержит JSON + custom
+  // и выполняет CRUD, не создавая второй React-state на тот же ключ.
+  // ПОЧЕМУ useMemo: merge JSON + custom с перезаписью стандартных услуг кастомными копиями
   const services = useMemo(() => {
     const customMap = new Map(customServices.map((s) => [s.id, s]));
     const merged = [];
@@ -198,10 +112,9 @@ export function useServices(jsonServices = []) {
         syncSpecialistServices(newService.id, [], newService.specialistIds);
       }
 
-      Toast.success(t("admin.services.addSuccess", { name: newService.name }));
       return { success: true, service: newService };
     },
-    [services, setCustomServices, t, syncSpecialistServices],
+    [services, setCustomServices, syncSpecialistServices],
   );
 
   const updateService = useCallback(
@@ -301,12 +214,9 @@ export function useServices(jsonServices = []) {
       syncSpecialistServices(serviceId, oldSpecialistIds, newSpecialistIds);
 
       const updatedService = { ...existingService, ...updates };
-      Toast.success(
-        t("admin.services.updateSuccess", { name: updatedService.name }),
-      );
       return { success: true, service: updatedService };
     },
-    [services, setCustomServices, t, syncSpecialistServices],
+    [services, setCustomServices, syncSpecialistServices],
   );
 
   const deleteService = useCallback(
@@ -339,18 +249,13 @@ export function useServices(jsonServices = []) {
         })),
       );
 
-      Toast.success(
-        t("admin.services.deleteSuccess", { name: existingService.name }),
-      );
       return { success: true };
     },
-    [services, setCustomServices, setCustomSpecialists, t],
+    [services, setCustomServices, setCustomSpecialists],
   );
 
   return {
     services,
-    customServices,
-    customSpecialists,
     addService,
     updateService,
     deleteService,

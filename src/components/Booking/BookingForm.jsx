@@ -1,7 +1,6 @@
 /**
  * BookingForm.jsx — Шаг 4: форма контактов клиента
  * 
- * 🔥 ИСПРАВЛЕНО:
  * - Поле телефона можно полностью очистить
  * - Добавлена кнопка очистки поля (иконка )
  * - Валидация только при blur, не при каждом изменении
@@ -47,7 +46,7 @@ export default function BookingForm({ draft, onChange }) {
         break;
       }
       case 'clientPhone':
-        result = validatePhone(value);
+        result = validatePhone(value, { required: true });
         break;
       case 'clientEmail':
         result = validateEmail(value);
@@ -68,6 +67,11 @@ export default function BookingForm({ draft, onChange }) {
     let value = e.target.value.replace(/\D/g, '');
     if (!value) {
       handleChange('clientPhone', '');
+      // ПОЧЕМУ сразу помечаем touched и валидируем?
+      // Пользователь может стереть телефон после успешного blur —
+      // без этого кнопка «Подтвердить» останется активной до повторного blur.
+      setTouched((prev) => ({ ...prev, clientPhone: true }));
+      validateField('clientPhone', '');
       return;
     }
     if (!value.startsWith('375')) {
@@ -89,7 +93,8 @@ export default function BookingForm({ draft, onChange }) {
 
   const handleClearPhone = () => {
     handleChange('clientPhone', '');
-    setErrors((prev) => ({ ...prev, clientPhone: null }));
+    setTouched((prev) => ({ ...prev, clientPhone: true }));
+    validateField('clientPhone', '');
   };
 
   return (

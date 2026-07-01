@@ -1,65 +1,24 @@
 /**
- * AdminSpecialistsList.jsx — список специалистов с CRUD-операциями
- * 
- * 🔥 ИСПРАВЛЕНО:
- * - Устранены все опечатки (onCl ose, con st)
- * - Редактирование разрешено для всех специалистов
- * - Удаление только для кастомных
- * - Строковое сравнение ID
- * - Tooltip с услугами при наведении
+ * AdminSpecialistsList.jsx — таблица специалистов (только отображение и действия)
+ *
+ * Модалка и CRUD — в AdminDashboard. См. комментарий в AdminServicesList.jsx
+ * (та же ошибка с подменой onAdd на handleOpenAdd).
  */
-import { useState } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 import Button from '../UI/Button';
 import Badge from '../UI/Badge';
 import EmptyState from '../UI/EmptyState';
-import SpecialistModal from './SpecialistModal';
 import { useLanguage } from '../../hooks/useLanguage';
 import './AdminSpecialistsList.css';
 
 export default function AdminSpecialistsList({
   specialists,
   services,
-  onAdd,
-  onUpdate,
-  onDelete,
+  onOpenAdd,
+  onOpenEdit,
+  onRequestDelete,
 }) {
   const { t } = useLanguage();
-  const [modalState, setModalState] = useState({
-    isOpen: false,
-    mode: 'add',
-    specialist: null,
-  });
-
-  const openAddModal = () => {
-    setModalState({ isOpen: true, mode: 'add', specialist: null });
-  };
-
-  const openEditModal = (specialist) => {
-    setModalState({ isOpen: true, mode: 'edit', specialist });
-  };
-
-  const closeModal = () => {
-    setModalState({ isOpen: false, mode: 'add', specialist: null });
-  };
-
-  const handleSave = (specialistData) => {
-    if (modalState.mode === 'add') {
-      onAdd(specialistData);
-    } else {
-      onUpdate(modalState.specialist.id, specialistData);
-    }
-    closeModal();
-  };
-
-  const handleDelete = (specialist) => {
-    const confirmed = window.confirm(
-      t('admin.specialists.confirmDelete', { name: specialist.fullName }),
-    );
-    if (confirmed) {
-      onDelete(specialist.id);
-    }
-  };
 
   const canEdit = () => true;
 
@@ -81,7 +40,9 @@ export default function AdminSpecialistsList({
     const names = specialist.serviceIds
       .map((id) => services.find((s) => String(s.id) === String(id))?.name)
       .filter(Boolean);
-    return names.length > 0 ? names.join(', ') : t('admin.specialists.noServicesAssigned') || 'Нет назначенных услуг';
+    return names.length > 0
+      ? names.join(', ')
+      : t('admin.specialists.noServicesAssigned') || 'Нет назначенных услуг';
   };
 
   if (specialists.length === 0) {
@@ -89,7 +50,7 @@ export default function AdminSpecialistsList({
       <div className="admin-specialists-list">
         <div className="admin-specialists-list__header">
           <h2>{t('admin.specialists.title')}</h2>
-          <Button variant="primary" leftIcon={<Plus size={16} />} onClick={openAddModal}>
+          <Button variant="primary" leftIcon={<Plus size={16} />} onClick={onOpenAdd}>
             {t('admin.specialists.add')}
           </Button>
         </div>
@@ -97,15 +58,6 @@ export default function AdminSpecialistsList({
           title={t('admin.specialists.empty')}
           description={t('admin.specialists.emptyDescription')}
           variant="info"
-        />
-        <SpecialistModal
-          isOpen={modalState.isOpen}
-          mode={modalState.mode}
-          specialist={modalState.specialist}
-          services={services}
-          existingSpecialists={specialists}
-          onSave={handleSave}
-          onClose={closeModal}
         />
       </div>
     );
@@ -117,7 +69,7 @@ export default function AdminSpecialistsList({
         <h2>
           {t('admin.specialists.title')} ({specialists.length})
         </h2>
-        <Button variant="primary" leftIcon={<Plus size={16} />} onClick={openAddModal}>
+        <Button variant="primary" leftIcon={<Plus size={16} />} onClick={onOpenAdd}>
           {t('admin.specialists.add')}
         </Button>
       </div>
@@ -172,7 +124,7 @@ export default function AdminSpecialistsList({
                       <button
                         type="button"
                         className="admin-specialists-list__action-btn"
-                        onClick={() => openEditModal(specialist)}
+                        onClick={() => onOpenEdit(specialist)}
                         disabled={!isEditable}
                         title={
                           isEditable
@@ -185,7 +137,7 @@ export default function AdminSpecialistsList({
                       <button
                         type="button"
                         className="admin-specialists-list__action-btn admin-specialists-list__action-btn--danger"
-                        onClick={() => handleDelete(specialist)}
+                        onClick={() => onRequestDelete(specialist.id)}
                         disabled={!isDeletable}
                         title={
                           isDeletable
@@ -203,16 +155,6 @@ export default function AdminSpecialistsList({
           </tbody>
         </table>
       </div>
-
-      <SpecialistModal
-        isOpen={modalState.isOpen}
-        mode={modalState.mode}
-        specialist={modalState.specialist}
-        services={services}
-        existingSpecialists={specialists}
-        onSave={handleSave}
-        onClose={closeModal}
-      />
     </div>
   );
 }

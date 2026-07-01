@@ -1,18 +1,18 @@
 /**
- * AdminServicesList.jsx — список услуг с CRUD-операциями
- * 
- * 🔥 ИСПРАВЛЕНО:
- * - Устранены все опечатки (clos eModal, h andleSave)
- * - Передаётся prop specialists для назначения в форме
- * - Редактирование разрешено для всех услуг
- * - Удаление запрещено только для стандартных услуг
+ * AdminServicesList.jsx — таблица услуг (только отображение и действия)
+ *
+ * АРХИТЕКТУРНАЯ РОЛЬ:
+ * Презентационный компонент. Не содержит ServiceModal и не вызывает CRUD —
+ * модалка и сохранение живут в AdminDashboard (единая точка для toast и валидации).
+ *
+ * ПОЧЕМУ onOpenAdd / onOpenEdit, а не onAdd?
+ * Раньше onAdd ошибочно получал handleOpenAddService и при submit формы
+ * вызывался повторный open вместо addService — silent fail, поля очищались.
  */
-import { useState } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 import Button from '../UI/Button';
 import Badge from '../UI/Badge';
 import EmptyState from '../UI/EmptyState';
-import ServiceModal from './ServiceModal';
 import { SERVICE_CATEGORY_LABELS } from '../../utils/constants';
 import { formatPrice, formatDuration } from '../../utils/formatters';
 import { useLanguage } from '../../hooks/useLanguage';
@@ -20,47 +20,11 @@ import './AdminServicesList.css';
 
 export default function AdminServicesList({
   services,
-  specialists = [],
-  onAdd,
-  onUpdate,
-  onDelete,
+  onOpenAdd,
+  onOpenEdit,
+  onRequestDelete,
 }) {
   const { t } = useLanguage();
-  const [modalState, setModalState] = useState({
-    isOpen: false,
-    mode: 'add',
-    service: null,
-  });
-
-  const openAddModal = () => {
-    setModalState({ isOpen: true, mode: 'add', service: null });
-  };
-
-  const openEditModal = (service) => {
-    setModalState({ isOpen: true, mode: 'edit', service });
-  };
-
-  const closeModal = () => {
-    setModalState({ isOpen: false, mode: 'add', service: null });
-  };
-
-  const handleSave = (serviceData) => {
-    if (modalState.mode === 'add') {
-      onAdd(serviceData);
-    } else {
-      onUpdate(modalState.service.id, serviceData);
-    }
-    closeModal();
-  };
-
-  const handleDelete = (service) => {
-    const confirmed = window.confirm(
-      t('admin.services.confirmDelete', { name: service.name }),
-    );
-    if (confirmed) {
-      onDelete(service.id);
-    }
-  };
 
   const canEdit = () => true;
 
@@ -73,7 +37,7 @@ export default function AdminServicesList({
       <div className="admin-services-list">
         <div className="admin-services-list__header">
           <h2>{t('admin.services.title')}</h2>
-          <Button variant="primary" leftIcon={<Plus size={16} />} onClick={openAddModal}>
+          <Button variant="primary" leftIcon={<Plus size={16} />} onClick={onOpenAdd}>
             {t('admin.services.add')}
           </Button>
         </div>
@@ -81,15 +45,6 @@ export default function AdminServicesList({
           title={t('admin.services.empty')}
           description={t('admin.services.emptyDescription')}
           variant="info"
-        />
-        <ServiceModal
-          isOpen={modalState.isOpen}
-          mode={modalState.mode}
-          service={modalState.service}
-          specialists={specialists}
-          existingServices={services}
-          onSave={handleSave}
-          onClose={closeModal}
         />
       </div>
     );
@@ -101,7 +56,7 @@ export default function AdminServicesList({
         <h2>
           {t('admin.services.title')} ({services.length})
         </h2>
-        <Button variant="primary" leftIcon={<Plus size={16} />} onClick={openAddModal}>
+        <Button variant="primary" leftIcon={<Plus size={16} />} onClick={onOpenAdd}>
           {t('admin.services.add')}
         </Button>
       </div>
@@ -144,7 +99,7 @@ export default function AdminServicesList({
                       <button
                         type="button"
                         className="admin-services-list__action-btn"
-                        onClick={() => openEditModal(service)}
+                        onClick={() => onOpenEdit(service)}
                         disabled={!isEditable}
                         title={
                           isEditable
@@ -157,7 +112,7 @@ export default function AdminServicesList({
                       <button
                         type="button"
                         className="admin-services-list__action-btn admin-services-list__action-btn--danger"
-                        onClick={() => handleDelete(service)}
+                        onClick={() => onRequestDelete(service.id)}
                         disabled={!isDeletable}
                         title={
                           isDeletable
@@ -175,16 +130,6 @@ export default function AdminServicesList({
           </tbody>
         </table>
       </div>
-
-      <ServiceModal
-        isOpen={modalState.isOpen}
-        mode={modalState.mode}
-        service={modalState.service}
-        specialists={specialists}
-        existingServices={services}
-        onSave={handleSave}
-        onClose={closeModal}
-      />
     </div>
   );
 }

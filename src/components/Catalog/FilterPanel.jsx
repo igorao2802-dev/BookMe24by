@@ -1,13 +1,9 @@
 /**
  * FilterPanel.jsx — панель фильтров каталога
- * 
- * 🔥 ИСПРАВЛЕНО:
- * - Добавлен prop `services` для вычисления maxPrice
- * - step={1} — только целые числа
- * - Запрет ввода дробных и ведущих нулей
- * - maxPrice ограничен максимальной ценой услуги в каталоге
+ *
+ * ПОЧЕМУ prop services?
+ * Верхняя граница «цена до» ограничена реальной max-ценой в каталоге, а не PRICE_LIMITS.MAX.
  */
-import { useMemo } from 'react';
 import { Filter, RotateCcw } from 'lucide-react';
 import { SERVICE_CATEGORIES, PRICE_LIMITS } from '../../utils/constants';
 import Badge from '../UI/Badge';
@@ -15,49 +11,40 @@ import Input from '../UI/Input';
 import { useLanguage } from '../../hooks/useLanguage';
 import './FilterPanel.css';
 
-// 🔥 НОВОЕ: Обработчик для числовых полей — запрет дробных
+// ПОЧЕМУ блокируем '.' и 'e': type=number всё равно пропускает дробные через клавиатуру
 const handleNumericInput = (e) => {
   if (e.key === '.' || e.key === ',' || e.key === 'e' || e.key === 'E' || e.key === '-' || e.key === '+') {
     e.preventDefault();
   }
 };
 
-// 🔥 НОВОЕ: Обработчик изменения — удаление ведущих нулей
 const handlePriceFilterChange = (setValue, maxLimit) => (e) => {
-  let value = e.target.value;
-  
-  // Убираем всё, кроме цифр
-  value = value.replace(/\D/g, '');
-  
-  // Удаляем ведущие нули
+  let value = e.target.value.replace(/\D/g, '');
+
   if (value.length > 1 && value.startsWith('0')) {
     value = value.replace(/^0+/, '') || '0';
   }
-  
-  // Ограничиваем максимум
+
   if (Number(value) > maxLimit) {
     value = String(maxLimit);
   }
-  
+
   setValue(value);
 };
 
-export default function FilterPanel({ 
-  filters, 
-  onFilterChange, 
-  onReset, 
-  activeCount = 0, 
+export default function FilterPanel({
+  filters,
+  onFilterChange,
+  onReset,
+  activeCount = 0,
   viewMode = 'services',
-  services = [], // 🔥 НОВОЕ: для вычисления maxPrice
+  services = [],
 }) {
   const { t } = useLanguage();
 
-  // 🔥 НОВОЕ: Вычисляем максимальную цену в каталоге
-  const maxPriceInCatalog = useMemo(() => {
-    if (!services.length) return PRICE_LIMITS.MAX;
-    const maxPrice = Math.max(...services.map((s) => s.price || 0));
-    return Math.min(maxPrice, PRICE_LIMITS.MAX);
-  }, [services]);
+  const maxPriceInCatalog = services.length
+    ? Math.min(Math.max(...services.map((s) => s.price || 0)), PRICE_LIMITS.MAX)
+    : PRICE_LIMITS.MAX;
 
   const categoryOptions = [
     { value: 'all', label: t('catalog.categories.all') },
@@ -109,7 +96,6 @@ export default function FilterPanel({
         </div>
       )}
 
-      {/* 🔥 ИСПРАВЛЕНО: Фильтры по цене с валидацией */}
       {viewMode === 'services' && (
         <div className="filter-panel__group">
           <label className="filter-panel__label">{t('catalog.filters.price')}</label>

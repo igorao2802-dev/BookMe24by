@@ -1,21 +1,40 @@
 import { renderHook, act } from "@testing-library/react";
 import { useSpecialists } from "../hooks/useSpecialists";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 
-jest.mock("../hooks/useLocalStorage");
+jest.mock("../hooks/useLanguage", () => ({
+  useLanguage: () => ({
+    t: (key) => key,
+    language: "ru",
+    setLanguage: jest.fn(),
+  }),
+}));
+
+jest.mock("../components/UI/Toast", () => ({
+  __esModule: true,
+  default: { success: jest.fn(), error: jest.fn() },
+}));
+
+function applySetter(mockSetter, prevState) {
+  const updater = mockSetter.mock.calls[mockSetter.mock.calls.length - 1][0];
+  return typeof updater === "function" ? updater(prevState) : updater;
+}
 
 describe("useSpecialists", () => {
   let mockSetCustomSpecialists;
+  let customSpecialists;
+
+  const renderUseSpecialists = (jsonSpecialists = []) =>
+    renderHook(() =>
+      useSpecialists({
+        jsonSpecialists,
+        customSpecialists,
+        setCustomSpecialists: mockSetCustomSpecialists,
+      }),
+    );
 
   beforeEach(() => {
+    customSpecialists = [];
     mockSetCustomSpecialists = jest.fn();
-
-    useLocalStorage.mockImplementation((key) => {
-      if (key === "bookme24_custom_specialists") {
-        return [[], mockSetCustomSpecialists];
-      }
-      return [[], jest.fn()];
-    });
   });
 
   afterEach(() => {
@@ -23,20 +42,19 @@ describe("useSpecialists", () => {
   });
 
   test("должен создать нового специалиста", () => {
-    const { result } = renderHook(() => useSpecialists([]));
-
-    const newSpecialist = {
-      fullName: "Иванова Мария Петровна",
-      position: "Стилист",
-      experience: 5,
-      serviceIds: ["service-1"],
-    };
+    const { result } = renderUseSpecialists([]);
 
     act(() => {
-      const response = result.current.addSpecialist(newSpecialist);
+      const response = result.current.addSpecialist({
+        fullName: "Иванова Мария Петровна",
+        position: "Стилист",
+        experience: 5,
+        serviceIds: ["service-1"],
+      });
 
       expect(response.success).toBe(true);
-      expect(mockSetCustomSpecialists).toHaveBeenCalledWith(
+      const nextState = applySetter(mockSetCustomSpecialists, customSpecialists);
+      expect(nextState).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             fullName: "Иванова Мария Петровна",
@@ -49,16 +67,14 @@ describe("useSpecialists", () => {
   });
 
   test("должен отклонить специалиста без ФИО", () => {
-    const { result } = renderHook(() => useSpecialists([]));
-
-    const invalidSpecialist = {
-      fullName: "",
-      position: "Стилист",
-      experience: 5,
-    };
+    const { result } = renderUseSpecialists([]);
 
     act(() => {
-      const response = result.current.addSpecialist(invalidSpecialist);
+      const response = result.current.addSpecialist({
+        fullName: "",
+        position: "Стилист",
+        experience: 5,
+      });
 
       expect(response.success).toBe(false);
       expect(response.error).toBe("validation.specialist.nameRequired");
@@ -66,22 +82,18 @@ describe("useSpecialists", () => {
   });
 
   test("должен обновить существующего специалиста", () => {
-    const existingSpecialist = {
-      id: "test-specialist-1",
-      fullName: "Старое ФИО",
-      position: "Стилист",
-      experience: 5,
-      isCustom: true,
-    };
+    customSpecialists = [
+      {
+        id: "test-specialist-1",
+        fullName: "Старое ФИО",
+        position: "Стилист",
+        experience: 5,
+        serviceIds: ["service-1"],
+        isCustom: true,
+      },
+    ];
 
-    useLocalStorage.mockImplementation((key) => {
-      if (key === "bookme24_custom_specialists") {
-        return [[existingSpecialist], mockSetCustomSpecialists];
-      }
-      return [[], jest.fn()];
-    });
-
-    const { result } = renderHook(() => useSpecialists([]));
+    const { result } = renderUseSpecialists([]);
 
     act(() => {
       const response = result.current.updateSpecialist("test-specialist-1", {
@@ -89,37 +101,32 @@ describe("useSpecialists", () => {
       });
 
       expect(response.success).toBe(true);
-      expect(mockSetCustomSpecialists).toHaveBeenCalledWith(
+      const nextState = applySetter(mockSetCustomSpecialists, customSpecialists);
+      expect(nextState).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({
-            fullName: "Новое ФИО",
-          }),
+          expect.objectContaining({ fullName: "Новое ФИО" }),
         ]),
       );
     });
   });
 
   test("должен удалить специалиста", () => {
-    const existingSpecialist = {
-      id: "test-specialist-1",
-      fullName: "Тестовый специалист",
-      isCustom: true,
-    };
+    customSpecialists = [
+      {
+        id: "test-specialist-1",
+        fullName: "Тестовый специалист",
+        isCustom: true,
+      },
+    ];
 
-    useLocalStorage.mockImplementation((key) => {
-      if (key === "bookme24_custom_specialists") {
-        return [[existingSpecialist], mockSetCustomSpecialists];
-      }
-      return [[], jest.fn()];
-    });
-
-    const { result } = renderHook(() => useSpecialists([]));
+    const { result } = renderUseSpecialists([]);
 
     act(() => {
       const response = result.current.deleteSpecialist("test-specialist-1");
 
       expect(response.success).toBe(true);
-      expect(mockSetCustomSpecialists).toHaveBeenCalledWith([]);
+      const nextState = applySetter(mockSetCustomSpecialists, customSpecialists);
+      expect(nextState).toEqual([]);
     });
   });
 
@@ -130,14 +137,7 @@ describe("useSpecialists", () => {
       isCustom: false,
     };
 
-    useLocalStorage.mockImplementation((key) => {
-      if (key === "bookme24_custom_specialists") {
-        return [[], mockSetCustomSpecialists];
-      }
-      return [[], jest.fn()];
-    });
-
-    const { result } = renderHook(() => useSpecialists([standardSpecialist]));
+    const { result } = renderUseSpecialists([standardSpecialist]);
 
     act(() => {
       const response = result.current.deleteSpecialist("standard-specialist-1");

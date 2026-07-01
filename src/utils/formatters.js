@@ -1,16 +1,11 @@
 /**
  * formatters.js — утилиты форматирования данных для отображения в UI
  *
- * АРХИТЕКТУРНАЯ РОЛЬ:
- * Единый формат цен, телефонов, дат во всём приложении.
- * Замечание В.В. по ПР-05: "не дублируйте функции форматирования"
- * Легко менять формат в одном месте.
+ * ПОЧЕМУ единый модуль форматирования?
+ * Цены, телефоны и даты отображаются одинаково во всём приложении.
  *
- * 🔥 ИСПРАВЛЕНО ЗАМЕЧАНИЕ №5:
- * - Все цены гарантированно отображаются в BYN (не Br)
- * - Добавлен параметр currencyDisplay: "code" в Intl.NumberFormat
- * - Это заставляет показывать код валюты (BYN), а не символ (Br)
- * - Fallback также возвращает BYN
+ * ПОЧЕМУ currencyDisplay: "code"?
+ * Intl.NumberFormat по умолчанию может показать «Br» вместо кода «BYN».
  */
 
 /**
@@ -19,12 +14,7 @@
  *
  * ПОЧЕМУ Intl.NumberFormat?
  * - Автоматически учитывает локаль (запятая вместо точки)
- * - Стандартный способ форматирования валют
- *
- * 🔥 ПОЧЕМУ currencyDisplay: "code"?
- * - Без этого параметра браузер может показывать "Br" (символ)
- * - С этим параметром гарантированно показывается "BYN" (код валюты)
- * - Это требование замечания №5
+ * - currencyDisplay: "code" гарантирует «BYN», а не символ «Br»
  */
 export function formatPrice(price) {
   if (price === null || price === undefined || isNaN(price)) {
@@ -34,7 +24,7 @@ export function formatPrice(price) {
     return new Intl.NumberFormat("ru-BY", {
       style: "currency",
       currency: "BYN",
-      currencyDisplay: "code", // 🔥 КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ: показывать "BYN", а не "Br"
+      currencyDisplay: "code",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(price);
@@ -45,11 +35,22 @@ export function formatPrice(price) {
 }
 
 /**
+ * Оставляет только цифры телефона (для сравнения и фильтрации).
+ *
+ * @param {string} phone
+ * @returns {string}
+ */
+export function normalizePhone(phone) {
+  if (!phone || typeof phone !== "string") return "";
+  return phone.replace(/\D/g, "");
+}
+
+/**
  * Форматирует телефон РБ: "+375291234567" → "+375 (29) 123-45-67"
  */
 export function formatPhone(phone) {
   if (!phone || typeof phone !== "string") return "";
-  const cleaned = phone.replace(/\D/g, "");
+  const cleaned = normalizePhone(phone);
   if (cleaned.length !== 12) return phone;
   return `+${cleaned.slice(0, 3)} (${cleaned.slice(3, 5)}) ${cleaned.slice(5, 8)}-${cleaned.slice(8, 10)}-${cleaned.slice(10, 12)}`;
 }
@@ -76,8 +77,8 @@ export function formatDateShort(dateString) {
 /**
  * Форматирует длительность: 60 → "1 ч", 90 → "1 ч 30 мин", 30 → "30 мин"
  *
- * 🔥 Принимает опциональный параметр t() для локализации единиц времени
- * Если t() не передан — используется fallback на русском
+ * ПОЧЕМУ опциональный t()?
+ * Единицы времени («ч», «мин») локализуются через i18n при наличии функции перевода.
  *
  * @param {number} minutes - длительность в минутах
  * @param {Function} [t] - функция локализации из useLanguage()
@@ -104,7 +105,7 @@ export function formatDuration(minutes, t) {
  */
 export function maskPhone(phone) {
   if (!phone || typeof phone !== "string") return "";
-  const cleaned = phone.replace(/\D/g, "");
+  const cleaned = normalizePhone(phone);
   if (cleaned.length !== 12) return phone;
   return `+${cleaned.slice(0, 3)} (${cleaned.slice(3, 5)}) ***-**-${cleaned.slice(10, 12)}`;
 }

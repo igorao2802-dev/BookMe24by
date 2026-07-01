@@ -65,6 +65,15 @@ export function useLocalStorage(key, initialValue, options = {}) {
   // вызывал бы лишний ререндер.
   const timeoutRef = useRef(null);
 
+  // ПОЧЕМУ ref для последнего значения?
+  // Debounced-запись не должна перечитывать localStorage и повторно применять updater —
+  // при быстрых functional updates (prev => ...) в storage попадало бы устаревшее значение.
+  const latestValueRef = useRef(storedValue);
+
+  useEffect(() => {
+    latestValueRef.current = storedValue;
+  }, [storedValue]);
+
   // === SETTER С DEBOUNCE ===
   // ПОЧЕМУ useCallback?
   // Чтобы ссылка на функцию не менялась при каждом рендере.
@@ -78,6 +87,7 @@ export function useLocalStorage(key, initialValue, options = {}) {
       // React гарантирует, что prev — это актуальное значение.
       setStoredValue((prev) => {
         const newValue = value instanceof Function ? value(prev) : value;
+        latestValueRef.current = newValue;
         return newValue;
       });
 
@@ -91,9 +101,7 @@ export function useLocalStorage(key, initialValue, options = {}) {
       }
 
       timeoutRef.current = setTimeout(() => {
-        // Вычисляем финальное значение (с учётом функции-обновления)
-        const current = safeGetItem(key, initialValue);
-        const toSave = value instanceof Function ? value(current) : value;
+        const toSave = latestValueRef.current;
 
         const success = safeSetItem(key, toSave);
         if (!success) {
@@ -101,7 +109,7 @@ export function useLocalStorage(key, initialValue, options = {}) {
         }
       }, debounceMs);
     },
-    [key, initialValue, debounceMs],
+    [key, debounceMs],
   );
 
   // === ФУНКЦИЯ УДАЛЕНИЯ ===
@@ -126,9 +134,12 @@ export function useLocalStorage(key, initialValue, options = {}) {
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
+        // ПОЧЕМУ flush при unmount?
+        // Иначе debounced-запись теряется, если компонент размонтировался до срабатывания таймера.
+        safeSetItem(key, latestValueRef.current);
       }
     };
-  }, []);
+  }, [key]);
 
   // === СИНХРОНИЗАЦИЯ МЕЖДУ ВКЛАДКАМИ (storage event) ===
   // ПОЧЕМУ это нужно?

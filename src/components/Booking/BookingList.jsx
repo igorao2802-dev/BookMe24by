@@ -3,13 +3,14 @@
  * Отображает будущие и прошедшие записи, сгруппированные по статусу.
  * Даёт возможность отменить запись.
  * 
- * 🔥 ЭТАП 1.3: Добавлена поддержка lastCreatedBooking
+  * ПОЧЕМУ: добавлена поддержка lastCreatedBooking
  * Если пользователь только что создал запись, она отображается первой
  * в секции "Предстоящие", даже если фильтр по телефону не находит записи.
  * 
- * 🔥 ЗАМЕЧАНИЕ №2: Увеличены отступы между заголовком и кнопкой
+  * ПОЧЕМУ: увеличены отступы между заголовком и кнопкой
  */
 import { CalendarPlus, Sparkles } from 'lucide-react';
+import { useMemo } from 'react';
 import { BOOKING_STATUS } from '../../utils/constants';
 import BookingCard from './BookingCard';
 import EmptyState from '../UI/EmptyState';
@@ -44,12 +45,19 @@ export default function BookingList({
     .sort((a, b) => new Date(b.date) - new Date(a.date));
 
   // === ОБЪЕДИНЕНИЕ lastCreatedBooking С БУДУЩИМИ ЗАПИСЯМИ ===
-  const displayedFutureBookings = lastCreatedBooking
-    ? [
-        lastCreatedBooking,
-        ...futureBookings.filter((b) => b.id !== lastCreatedBooking.id),
-      ]
-    : futureBookings;
+  // ПОЧЕМУ проверяем наличие в массиве?
+  // lastCreatedBooking — страховка на один кадр рендера; если запись уже
+  // в bookings, не дублируем её в начале списка.
+  const displayedFutureBookings = useMemo(() => {
+    if (!lastCreatedBooking) return futureBookings;
+
+    const alreadyInList = futureBookings.some(
+      (b) => b.id === lastCreatedBooking.id,
+    );
+    if (alreadyInList) return futureBookings;
+
+    return [lastCreatedBooking, ...futureBookings];
+  }, [futureBookings, lastCreatedBooking]);
 
   return (
     <div className="booking-list">

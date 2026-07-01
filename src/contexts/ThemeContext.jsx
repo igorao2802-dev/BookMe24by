@@ -1,11 +1,13 @@
 /**
  * ThemeContext.jsx — контекст для управления темой приложения
- * 
- * 🔥 ИСПРАВЛЕНО: Упрощено переключение light ↔ dark (убран auto)
+ *
+ * ПОЧЕМУ только light/dark?
+ * Достаточно для UX; auto-theme усложнял синхронизацию с ThemeToggle.
  */
 
 import { createContext, useContext, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { STORAGE_KEYS, STORAGE_DEBOUNCE_MS } from '../utils/constants';
 
 // === СОЗДАНИЕ КОНТЕКСТА ===
 const ThemeContext = createContext({
@@ -17,9 +19,11 @@ const ThemeContext = createContext({
 // === ПРОВАЙДЕР ТЕМЫ ===
 export function ThemeProvider({ children }) {
   // === СОСТОЯНИЕ ТЕМЫ ===
-  const [theme, setTheme] = useLocalStorage('bookme24_theme', 'light');
+  const [theme, setTheme] = useLocalStorage(STORAGE_KEYS.THEME, 'light', {
+    debounceMs: STORAGE_DEBOUNCE_MS.DEFAULT,
+  });
 
-  // 🔥 ИСПРАВЛЕНО: Простое переключение light ↔ dark
+  // ПОЧЕМУ бинарное переключение: один клик — одна тема, без промежуточных состояний
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };

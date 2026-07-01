@@ -1,4 +1,4 @@
-import { filterBookings, sortBookings } from "../utils/bookingsHelpers";
+import { filterBookings, sortBookings, countActiveFilters } from "../utils/bookingsHelpers";
 
 describe("Фильтрация и сортировка записей", () => {
   const mockBookings = [
@@ -93,6 +93,32 @@ describe("Фильтрация и сортировка записей", () => {
       expect(sorted[0].clientName).toBe("Иванова Анна");
       expect(sorted[1].clientName).toBe("Петров Иван");
       expect(sorted[2].clientName).toBe("Сидорова Мария");
+    });
+  });
+
+  describe("countActiveFilters", () => {
+    test("должен вернуть 0 для дефолтных фильтров", () => {
+      expect(
+        countActiveFilters({
+          searchQuery: "",
+          status: "all",
+          specialistId: "all",
+          dateFrom: "",
+          dateTo: "",
+        }),
+      ).toBe(0);
+    });
+
+    test("должен посчитать несколько активных фильтров", () => {
+      expect(
+        countActiveFilters({
+          searchQuery: "Иванова",
+          status: "confirmed",
+          specialistId: "all",
+          dateFrom: "2026-07-01",
+          dateTo: "",
+        }),
+      ).toBe(3);
     });
   });
 });

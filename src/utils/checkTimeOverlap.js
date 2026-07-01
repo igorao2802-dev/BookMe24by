@@ -1,9 +1,8 @@
 /**
  * ПРОВЕРКА ПЕРЕСЕЧЕНИЯ ЗАПИСЕЙ ПО ВРЕМЕНИ
  * ⚠️ КРИТИЧЕСКАЯ БИЗНЕС-ЛОГИКА
- * Это главный замечание В.В. к spa-mini-practice:
- * "Если одна процедура длится 2 часа, а вторая начинается через 20 минут —
- *  система пропустит наслоение"
+ * ПОЧЕМУ критично: без проверки пересечений две процедуры могут наслоиться
+ * (например, 2-часовая услуга и вторая запись через 20 минут).
  *
  * Алгоритм:
  * Два окна пересекаются, если:
@@ -20,6 +19,37 @@ import { BUSINESS_CONFIG } from "./constants.js";
 import { parseTimeToMinutes, getDayOfWeek } from "./timeHelpers.js";
 
 /**
+ * Вычисляет конец занятого интервала записи (включая буфер между клиентами).
+ *
+ * ПОЧЕМУ отдельная функция?
+ * - У старых записей в localStorage может не быть duration, но есть endTime
+ * - Без fallback пересечение считалось бы только по 15-минутному буферу
+ *
+ * @param {Object} booking - существующая или новая запись
+ * @param {number} bufferMinutes - буфер подготовки кабинета
+ * @returns {number} минуты с начала дня (конец интервала + буфер) или NaN
+ */
+function getBookingBlockedUntilMinutes(booking, bufferMinutes) {
+  const startMinutes = parseTimeToMinutes(booking.startTime);
+  if (isNaN(startMinutes)) return NaN;
+
+  let serviceEndMinutes;
+
+  if (booking.duration && booking.duration > 0) {
+    serviceEndMinutes = startMinutes + booking.duration;
+  } else if (booking.endTime) {
+    // Fallback для записей, созданных до сохранения duration в payload
+    serviceEndMinutes = parseTimeToMinutes(booking.endTime);
+  } else {
+    serviceEndMinutes = startMinutes;
+  }
+
+  if (isNaN(serviceEndMinutes)) return NaN;
+
+  return serviceEndMinutes + bufferMinutes;
+}
+
+/**
  * Проверяет пересечение новой записи с существующими
  *
  * @param {Object} newBooking - новая или редактируемая запись
@@ -33,7 +63,7 @@ export function checkTimeOverlap(
   bufferMinutes = BUSINESS_CONFIG.BUFFER_MINUTES,
 ) {
   // === ВАЛИДАЦИЯ ВХОДНЫХ ДАННЫХ ===
-  // ПОЧЕМУ здесь? Защита от silent fail (замечание из системных правил)
+  // ПОЧЕМУ: защита от silent fail при некорректных входных данных
   if (
     !newBooking ||
     !newBooking.date ||
@@ -95,8 +125,11 @@ export function checkTimeOverlap(
     const existStartMinutes = parseTimeToMinutes(existing.startTime);
     if (isNaN(existStartMinutes)) return false;
 
-    const existEndMinutes =
-      existStartMinutes + (existing.duration || 0) + bufferMinutes;
+    const existEndMinutes = getBookingBlockedUntilMinutes(
+      existing,
+      bufferMinutes,
+    );
+    if (isNaN(existEndMinutes)) return false;
 
     // 5. КЛАССИЧЕСКАЯ ФОРМУЛА ПЕРЕСЕЧЕНИЯ ИНТЕРВАЛОВ:
     // Два интервала [A_start, A_end] и [B_start, B_end] пересекаются,

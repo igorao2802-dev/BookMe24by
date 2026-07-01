@@ -26,4 +26,21 @@ export function generateId(size = 21) {
   return nanoid(size);
 }
 
+/**
+ * ID кастомной услуги с префиксом для отличия от JSON-seed.
+ * ПОЧЕМУ префикс + nanoid, а не Date.now()?
+ * - Соответствует .cursorrules: только nanoid для ID
+ * - Префикс custom_svc_ используется в проверках isCustom / delete
+ */
+export function generateServiceId() {
+  return `custom_svc_${generateId(12)}`;
+}
+
+/**
+ * ID кастомного специалиста (аналогично услугам).
+ */
+export function generateSpecialistId() {
+  return `custom_spec_${generateId(12)}`;
+}
+
 export default generateId;

@@ -8,9 +8,8 @@
  * - Некорректного состояния приложения
  * - Ошибок валидации при быстрых переходах
  *
- * 🔥 ЗАМЕЧАНИЕ №12: Двойное ограничение
- * - ≤ 3 клика за 5 секунд (защита от случайных двойных кликов)
- * - ≤ 10 кликов за 30 секунд (защита от намеренного спама)
+ * ПОЧЕМУ двойное окно (5с и 30с)?
+ * Короткое — от случайных двойных кликов, длинное — от намеренного спама.
  *
  * @example
  * const checkLimit = useRateLimiter();
@@ -73,7 +72,7 @@ export function useRateLimiter(options = {}) {
   const checkLimit = useCallback(() => {
     const now = Date.now();
 
-    // 🔥 ПРОВЕРКА 1: Заблокирован ли пользователь?
+    // Заблокирован ли пользователь после превышения лимита?
     if (now < blockedUntil) {
       const remainingSeconds = Math.ceil((blockedUntil - now) / 1000);
       return {
@@ -83,10 +82,10 @@ export function useRateLimiter(options = {}) {
       };
     }
 
-    // 🔥 ПРОВЕРКА 2: Фильтруем устаревшие клики (за пределами длинного окна)
+    // Отсекаем клики старше длинного окна
     const recentClicks = clicks.filter((t) => now - t < longWindowMs);
 
-    // 🔥 ПРОВЕРКА 3: Короткое окно (≤ 3 клика за 5 секунд)
+    // Короткое окно: ≤ SHORT_MAX кликов за SHORT_WINDOW_MS
     const shortWindowClicks = recentClicks.filter(
       (t) => now - t < shortWindowMs,
     );
@@ -101,7 +100,7 @@ export function useRateLimiter(options = {}) {
       };
     }
 
-    // 🔥 ПРОВЕРКА 4: Длинное окно (≤ 10 кликов за 30 секунд)
+    // Длинное окно: ≤ LONG_MAX кликов за LONG_WINDOW_MS
     if (recentClicks.length >= longMax) {
       setBlockedUntil(now + blockDurationMs);
       setClicks(recentClicks);

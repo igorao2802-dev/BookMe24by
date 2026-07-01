@@ -3,7 +3,17 @@
     "booking": "Booking",
     "catalog": "Catalog",
     "manager": "Manager",
-    "profile": "Profile"
+    "profile": "Profile",
+    "specialist": "Schedule"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The address you requested does not exist or has been moved.",
+    "goHome": "Go to home"
+  },
+  "specialist": {
+    "scheduleTitle": "Specialist schedule",
+    "schedulePlaceholder": "This section is under development. Your appointment schedule will appear here."
   },
   "common": {
     "save": "Save",
@@ -20,6 +30,8 @@
     "reset": "Reset",
     "resetFilters": "Reset Filters",
     "loading": "Loading...",
+    "loadingSalonData": "Loading salon data...",
+    "loadingSalonDataError": "Failed to load salon data. Please refresh the page or try again later.",
     "noData": "No data",
     "error": "Error",
     "success": "Success",
@@ -34,6 +46,7 @@
     "role": "Role",
     "client": "Client",
     "admin": "Admin",
+    "specialistRole": "Specialist",
     "mainNavigation": "Main navigation",
     "locale": "en-US",
     "serviceNotFound": "Service not found",
@@ -236,6 +249,9 @@
     "bookings": {
       "edit": "Edit",
       "cancel": "Cancel",
+      "confirm": "Confirm",
+      "confirmSuccess": "Booking confirmed",
+      "editSuccess": "Booking updated",
       "editTitle": "Edit Booking",
       "clientInfo": "Client Information",
       "client": "Client",
@@ -396,6 +412,10 @@
       "title": "You have no bookings yet",
       "description": "Create your first booking to see your profile and statistics",
       "action": "Create Booking"
+    },
+    "emptyNoPhone": {
+      "description": "Sign in or enter your phone number to view your booking history",
+      "action": "Enter phone number"
     },
     "bookings": {
       "cancelSuccess": "Booking cancelled",

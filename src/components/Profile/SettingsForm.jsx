@@ -8,10 +8,9 @@
  * - Очистка истории
  * - Выход из аккаунта
  * 
- * 🔥 ЭТАП 5.5: Настройки профиля
- * 🔥 ЭТАП 7.8: Локализация всех текстов и ошибок валидации
- * 🔥 ЭТАП 20: Удалён блок "Способ уведомлений"
- * 🔥 ЭТАП 22: Добавлена поддержка редактирования телефона/email
+ * ПОЧЕМУ локальное состояние editData?
+ * Телефон и email редактируются в отдельном режиме — изменения не должны
+ * попадать в родительский state до успешной валидации и сохранения.
  */
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../../hooks/useLanguage';
@@ -19,6 +18,8 @@ import { validatePhone, validateEmail } from '../../utils/validators';
 import Input from '../UI/Input';
 import Button from '../UI/Button';
 import Toast from '../UI/Toast';
+import ConfirmDialog from '../UI/ConfirmDialog';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
 import './SettingsForm.css';
 
 export default function SettingsForm({ 
@@ -31,9 +32,9 @@ export default function SettingsForm({
   onClearHistory,
   onLogout 
 }) {
-  const { t } = useLanguage(); // 🔥 ЭТАП 7.8
+  const { t } = useLanguage();
+  const { confirm, dialogProps } = useConfirmDialog();
 
-  // 🔥 ЭТАП 22: Локальное состояние для редактирования
   const [localEditData, setLocalEditData] = useState({
     phone: '',
     email: '',
@@ -41,7 +42,8 @@ export default function SettingsForm({
   
   const [errors, setErrors] = useState({});
 
-  // 🔥 ЭТАП 22: Синхронизация с props при изменении editData
+  // ПОЧЕМУ синхронизация с editData через useEffect?
+  // Родитель передаёт актуальные данные при входе в режим редактирования.
   useEffect(() => {
     setLocalEditData(editData);
   }, [editData]);
@@ -81,24 +83,26 @@ export default function SettingsForm({
   };
 
   // === ОЧИСТКА ИСТОРИИ ===
-  const handleClearHistory = () => {
-    const confirmed = window.confirm(
-      `${t('profile.settings.clearHistoryConfirm')}\n\n${t('profile.settings.clearHistoryWarning')}`
-    );
-    if (confirmed) {
-      onClearHistory();
-      Toast.success(t('profile.settings.clearHistorySuccess'));
-    }
+  const handleClearHistory = async () => {
+    const confirmed = await confirm({
+      message: `${t('profile.settings.clearHistoryConfirm')}\n\n${t('profile.settings.clearHistoryWarning')}`,
+      variant: 'warning',
+    });
+    if (!confirmed) return;
+
+    onClearHistory();
+    Toast.success(t('profile.settings.clearHistorySuccess'));
   };
 
   // === ВЫХОД ИЗ АККАУНТА ===
-  const handleLogout = () => {
-    const confirmed = window.confirm(
-      `${t('profile.settings.logoutConfirm')}\n\n${t('profile.settings.logoutWarning')}`
-    );
-    if (confirmed) {
-      onLogout();
-    }
+  const handleLogout = async () => {
+    const confirmed = await confirm({
+      message: `${t('profile.settings.logoutConfirm')}\n\n${t('profile.settings.logoutWarning')}`,
+      variant: 'danger',
+    });
+    if (!confirmed) return;
+
+    onLogout();
   };
 
   return (
@@ -109,7 +113,6 @@ export default function SettingsForm({
           {t('profile.settings.contacts')}
         </h3>
 
-        {/* 🔥 ЭТАП 22: Условный рендеринг для режима редактирования */}
         <Input
           label={t('profile.settings.phone')}
           name="phone"
@@ -134,11 +137,8 @@ export default function SettingsForm({
         />
       </section>
 
-      {/* 🔥 ЭТАП 20: Блок "Способ уведомлений" УДАЛЁН */}
-
       {/* === СЕКЦИЯ 2: КНОПКИ ДЕЙСТВИЙ === */}
       <section className="settings-form__section settings-form__actions">
-        {/* 🔥 ЭТАП 22: Условный рендеринг кнопок */}
         {isEditing ? (
           <>
             <Button
@@ -182,6 +182,8 @@ export default function SettingsForm({
           </Button>
         </div>
       </section>
+
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 }

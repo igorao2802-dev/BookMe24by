@@ -1,8 +1,7 @@
 /**
  * HistoryCard.jsx — карточка записи в истории клиента
- * 🔥 ЭТАП 5.5: Исправлено отображение статуса через t() и добавлены fallback для интерполяции
+  * ПОЧЕМУ: отображение статуса через t() и добавлены fallback для интерполяции
  */
-import { useMemo } from 'react';
 import { Calendar, Clock, User, RotateCcw, XCircle } from 'lucide-react';
 import { BOOKING_STATUS } from '../../utils/constants';
 import { formatPrice, formatDateShort } from '../../utils/formatters';
@@ -10,6 +9,8 @@ import { calculateEndTime } from '../../utils/timeHelpers';
 import { useLanguage } from '../../hooks/useLanguage';
 import Badge from '../UI/Badge';
 import Button from '../UI/Button';
+import ConfirmDialog from '../UI/ConfirmDialog';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
 import './HistoryCard.css';
 
 export default function HistoryCard({
@@ -20,11 +21,12 @@ export default function HistoryCard({
   onRebook,
 }) {
   const { t } = useLanguage();
+  const { confirm, dialogProps } = useConfirmDialog();
 
-  const endTime = useMemo(() => {
-    if (!booking.startTime || !booking.duration) return null;
-    return calculateEndTime(booking.startTime, booking.duration);
-  }, [booking.startTime, booking.duration]);
+  const endTime =
+    booking.startTime && booking.duration
+      ? calculateEndTime(booking.startTime, booking.duration)
+      : null;
 
   const canCancel =
     booking.status === BOOKING_STATUS.PENDING ||
@@ -34,12 +36,14 @@ export default function HistoryCard({
     booking.status === BOOKING_STATUS.COMPLETED ||
     booking.status === BOOKING_STATUS.CANCELLED;
 
-  const handleCancel = () => {
-    const confirmed = window.confirm(
-      `${t('profile.bookings.confirmCancel')}\n\n` +
-      `${t('booking.confirmation.service')} ${service?.name || t('common.unknown')}\n` +
-      `${t('booking.confirmation.date')} ${formatDateShort(booking.date)} ${t('booking.confirmation.time')} ${booking.startTime || '—'}`
-    );
+  const handleCancel = async () => {
+    const confirmed = await confirm({
+      title: t('profile.bookings.confirmCancel'),
+      message:
+        `${t('booking.confirmation.service')} ${service?.name || t('common.unknown')}\n` +
+        `${t('booking.confirmation.date')} ${formatDateShort(booking.date)} ${t('booking.confirmation.time')} ${booking.startTime || '—'}`,
+      variant: 'danger',
+    });
     if (confirmed && onCancel) {
       onCancel(booking.id);
     }
@@ -52,14 +56,15 @@ export default function HistoryCard({
   };
 
   return (
+    <>
     <article className={`history-card history-card--${booking.status}`}>
       <div className="history-card__header">
-        {/* 🔥 ЭТАП 5.5: Fallback для названия услуги */}
+        {/* ПОЧЕМУ: fallback для названия услуги */}
         <h3 className="history-card__title">
           {service?.name || t('common.serviceNotFound')}
         </h3>
         
-        {/* 🔥 ЭТАП 5.5: Динамический перевод статуса вместо BOOKING_STATUS_LABELS */}
+        {/* ПОЧЕМУ: динамический перевод статуса вместо BOOKING_STATUS_LABELS */}
         <Badge variant={booking.status}>
           {t(`status.${booking.status}`)}
         </Badge>
@@ -68,7 +73,7 @@ export default function HistoryCard({
       <div className="history-card__info">
         <div className="history-card__info-item">
           <User size={14} />
-          {/* 🔥 ЭТАП 5.5: Fallback для имени специалиста */}
+          {/* ПОЧЕМУ: fallback для имени специалиста */}
           <span>{specialist?.fullName || t('common.specialistNotSpecified')}</span>
         </div>
 
@@ -122,5 +127,7 @@ export default function HistoryCard({
         </div>
       )}
     </article>
+    <ConfirmDialog {...dialogProps} />
+  </>
   );
 }

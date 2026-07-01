@@ -1,7 +1,5 @@
 /**
  * constants.js — глобальные константы приложения bookme24.by
- *
- *  ИСПРАВЛЕНО: Убраны trailing spaces во всех ключах localStorage
  */
 
 // === СТАТУСЫ ЗАПИСЕЙ ===
@@ -47,7 +45,6 @@ export const SERVICE_CATEGORY_LABELS = {
 };
 
 // === КЛЮЧИ LOCALSTORAGE ===
-// 🔥 ИСПРАВЛЕНО: Убраны trailing spaces
 export const STORAGE_KEYS = {
   BOOKINGS: "bookme24_bookings",
   SERVICES: "bookme24_services",
@@ -61,6 +58,32 @@ export const STORAGE_KEYS = {
   BONUS_HISTORY: "bookme24_bonus_history",
   CUSTOM_SERVICES: "bookme24_custom_services",
   CUSTOM_SPECIALISTS: "bookme24_custom_specialists",
+  LAST_CLIENT_PHONE: "bookme24_last_client_phone",
+  THEME: "bookme24_theme",
+  LANGUAGE: "bookme24_language",
+  SCHEMA_VERSION: "bookme24_schema_version",
+};
+
+/**
+ * Текущая версия схемы localStorage.
+ * ПОЧЕМУ отдельно от ключа?
+ * migrateStorage сравнивает сохранённую версию с этой константой.
+ */
+export const STORAGE_SCHEMA_VERSION = 1;
+
+/**
+ * Политика debounce для useLocalStorage (Фаза 4, группа C).
+ *
+ * | Категория   | ms  | Примеры ключей                          |
+ * |-------------|-----|-----------------------------------------|
+ * | DRAFT       | 500 | BOOKING_DRAFT — частый ввод в wizard    |
+ * | DEFAULT     | 300 | BOOKINGS, CUSTOM_*, FAVORITES, роль     |
+ * | IMMEDIATE   | 0   | LAST_CLIENT_PHONE — нужен после submit  |
+ */
+export const STORAGE_DEBOUNCE_MS = {
+  DRAFT: 500,
+  DEFAULT: 300,
+  IMMEDIATE: 0,
 };
 
 // === БИЗНЕС-КОНСТАНТЫ ===
@@ -73,7 +96,7 @@ export const BUSINESS_CONFIG = {
   SALON_CLOSE_HOUR: 21,
 };
 
-// 🔥 ЗАМЕЧАНИЕ №12: Лимиты для защиты от многократных кликов
+// ПОЧЕМУ отдельные лимиты: защита от spam-кликов на критичных кнопках (запись, подтверждение)
 export const RATE_LIMITS = {
   SHORT_WINDOW_MS: 5000, // Короткое окно: 5 секунд
   SHORT_MAX: 3, // Макс. кликов в коротком окне
@@ -117,6 +140,17 @@ export const BOOKING_STEPS_LABELS = {
 export const USER_ROLES = {
   CLIENT: "client",
   ADMIN: "admin",
+  SPECIALIST: "specialist",
+};
+
+/**
+ * Флаги приложения для demo/production.
+ * ПОЧЕМУ SHOW_DEMO_ROLE_SWITCHER только в development?
+ * Переключатель ролей нужен при разработке и приёмке курсового проекта,
+ * но скрывается в production-сборке — там будет реальная авторизация.
+ */
+export const APP_CONFIG = {
+  SHOW_DEMO_ROLE_SWITCHER: process.env.NODE_ENV === "development",
 };
 
 // === ВАЛИДАЦИЯ: ЛИМИТЫ ПОЛЕЙ ===

@@ -5,22 +5,22 @@
  * Чисто презентационный компонент — получает готовые данные через props.
  * НЕ владеет состоянием, НЕ делает вычислений (всё считает useBookings).
  * 
- * 🔥 ЭТАП 4.3: Замена иконки в карточке "Выручка"
+  * ПОЧЕМУ: замена иконки в карточке "Выручка"
  * DollarSign ($) заменён на Wallet (кошелёк)
  * Причина: знак доллара не соответствует белорусской валюте BYN.
  * Wallet семантически корректнее: "выручка" = деньги.
  * 
- * 🔥 ЭТАП 7.6: Полная локализация всех текстов
+  * ПОЧЕМУ: полная локализация всех текстов
  * - Названия карточек через t('admin.stats.*')
  */
 
 import { Calendar, TrendingUp, CheckCircle, XCircle, Wallet } from 'lucide-react';
 import { formatPrice } from '../../utils/formatters';
-import { useLanguage } from '../../hooks/useLanguage'; // 🔥 ЭТАП 7.6
+import { useLanguage } from '../../hooks/useLanguage';
 import './AdminStats.css';
 
 export default function AdminStats({ stats, bookings }) {
-  const { t } = useLanguage(); // 🔥 ЭТАП 7.6
+  const { t } = useLanguage();
 
   // === РАСШИРЕННАЯ СТАТИСТИКА ===
   // ПОЧЕМУ считаем здесь, а не в useBookings?
@@ -40,7 +40,7 @@ export default function AdminStats({ stats, bookings }) {
 
   // === МАССИВ КАРТОЧЕК СТАТИСТИКИ ===
   // ПОЧЕМУ массив? Легко рендерить через .map() и расширять
-  // 🔥 ЭТАП 7.6: label берётся через t() вместо хардкода
+  // ПОЧЕМУ: label берётся через t() вместо хардкода
   const statsCards = [
     {
       label: t('admin.stats.totalBookings'),

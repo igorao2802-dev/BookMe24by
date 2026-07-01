@@ -1,27 +1,44 @@
 import { renderHook, act } from "@testing-library/react";
 import { useServices } from "../hooks/useServices";
-import { useLocalStorage } from "../hooks/useLocalStorage";
 
-// Мок для useLocalStorage
-jest.mock("../hooks/useLocalStorage");
+jest.mock("../hooks/useLanguage", () => ({
+  useLanguage: () => ({
+    t: (key, params) => key,
+    language: "ru",
+    setLanguage: jest.fn(),
+  }),
+}));
+
+jest.mock("../components/UI/Toast", () => ({
+  __esModule: true,
+  default: { success: jest.fn(), error: jest.fn() },
+}));
+
+/** Вспомогательная функция: setState в хуках вызывается как (prev) => next */
+function applySetter(mockSetter, prevState) {
+  const updater = mockSetter.mock.calls[mockSetter.mock.calls.length - 1][0];
+  return typeof updater === "function" ? updater(prevState) : updater;
+}
 
 describe("useServices", () => {
   let mockSetCustomServices;
   let mockSetCustomSpecialists;
+  let customServices;
+
+  const renderUseServices = (jsonServices = []) =>
+    renderHook(() =>
+      useServices({
+        jsonServices,
+        customServices,
+        setCustomServices: mockSetCustomServices,
+        setCustomSpecialists: mockSetCustomSpecialists,
+      }),
+    );
 
   beforeEach(() => {
+    customServices = [];
     mockSetCustomServices = jest.fn();
     mockSetCustomSpecialists = jest.fn();
-
-    useLocalStorage.mockImplementation((key, initialValue) => {
-      if (key === "bookme24_custom_services") {
-        return [[], mockSetCustomServices];
-      }
-      if (key === "bookme24_custom_specialists") {
-        return [[], mockSetCustomSpecialists];
-      }
-      return [initialValue, jest.fn()];
-    });
   });
 
   afterEach(() => {
@@ -29,7 +46,7 @@ describe("useServices", () => {
   });
 
   test("должен создать новую услугу", () => {
-    const { result } = renderHook(() => useServices([]));
+    const { result } = renderUseServices([]);
 
     const newService = {
       name: "Тестовая услуга",
@@ -44,7 +61,8 @@ describe("useServices", () => {
       const response = result.current.addService(newService);
 
       expect(response.success).toBe(true);
-      expect(mockSetCustomServices).toHaveBeenCalledWith(
+      const nextState = applySetter(mockSetCustomServices, customServices);
+      expect(nextState).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             name: "Тестовая услуга",
@@ -56,18 +74,16 @@ describe("useServices", () => {
   });
 
   test("должен отклонить услугу без названия", () => {
-    const { result } = renderHook(() => useServices([]));
-
-    const invalidService = {
-      name: "",
-      category: "hair",
-      description: "Описание",
-      duration: 60,
-      price: 100,
-    };
+    const { result } = renderUseServices([]);
 
     act(() => {
-      const response = result.current.addService(invalidService);
+      const response = result.current.addService({
+        name: "",
+        category: "hair",
+        description: "Описание",
+        duration: 60,
+        price: 100,
+      });
 
       expect(response.success).toBe(false);
       expect(response.error).toBe("validation.service.nameRequired");
@@ -75,24 +91,19 @@ describe("useServices", () => {
   });
 
   test("должен обновить существующую услугу", () => {
-    const existingService = {
-      id: "test-service-1",
-      name: "Старое название",
-      category: "hair",
-      description: "Описание",
-      duration: 60,
-      price: 100,
-      isCustom: true,
-    };
+    customServices = [
+      {
+        id: "test-service-1",
+        name: "Старое название",
+        category: "hair",
+        description: "Описание",
+        duration: 60,
+        price: 100,
+        isCustom: true,
+      },
+    ];
 
-    useLocalStorage.mockImplementation((key) => {
-      if (key === "bookme24_custom_services") {
-        return [[existingService], mockSetCustomServices];
-      }
-      return [[], jest.fn()];
-    });
-
-    const { result } = renderHook(() => useServices([]));
+    const { result } = renderUseServices([]);
 
     act(() => {
       const response = result.current.updateService("test-service-1", {
@@ -100,37 +111,32 @@ describe("useServices", () => {
       });
 
       expect(response.success).toBe(true);
-      expect(mockSetCustomServices).toHaveBeenCalledWith(
+      const nextState = applySetter(mockSetCustomServices, customServices);
+      expect(nextState).toEqual(
         expect.arrayContaining([
-          expect.objectContaining({
-            name: "Новое название",
-          }),
+          expect.objectContaining({ name: "Новое название" }),
         ]),
       );
     });
   });
 
   test("должен удалить услугу", () => {
-    const existingService = {
-      id: "test-service-1",
-      name: "Тестовая услуга",
-      isCustom: true,
-    };
+    customServices = [
+      {
+        id: "test-service-1",
+        name: "Тестовая услуга",
+        isCustom: true,
+      },
+    ];
 
-    useLocalStorage.mockImplementation((key) => {
-      if (key === "bookme24_custom_services") {
-        return [[existingService], mockSetCustomServices];
-      }
-      return [[], jest.fn()];
-    });
-
-    const { result } = renderHook(() => useServices([]));
+    const { result } = renderUseServices([]);
 
     act(() => {
       const response = result.current.deleteService("test-service-1");
 
       expect(response.success).toBe(true);
-      expect(mockSetCustomServices).toHaveBeenCalledWith([]);
+      const nextState = applySetter(mockSetCustomServices, customServices);
+      expect(nextState).toEqual([]);
     });
   });
 
@@ -141,14 +147,7 @@ describe("useServices", () => {
       isCustom: false,
     };
 
-    useLocalStorage.mockImplementation((key) => {
-      if (key === "bookme24_custom_services") {
-        return [[], mockSetCustomServices];
-      }
-      return [[], jest.fn()];
-    });
-
-    const { result } = renderHook(() => useServices([standardService]));
+    const { result } = renderUseServices([standardService]);
 
     act(() => {
       const response = result.current.deleteService("standard-service-1");

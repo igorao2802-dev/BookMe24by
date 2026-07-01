@@ -8,6 +8,7 @@ import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import App from "./App";
+import "./styles/tokens.css";
 import "./styles/globals.css";
 import "./index.css";
 
@@ -17,7 +18,7 @@ import "./index.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    {/* 🔥 ИСПРАВЛЕНО: Добавлены future флаги для подавления предупреждений v7 */}
+    {/* ПОЧЕМУ future-флаги: подавляют предупреждения react-router v7 в консоли */}
     <BrowserRouter
       future={{
         v7_startTransition: true,
@@ -28,21 +29,18 @@ root.render(
       {/* 
         ПОЧЕМУ Toaster здесь?
         Глобальный контейнер для toast-уведомлений, доступен во всём приложении.
-        position="top-right" — стандартное положение для desktop.
-        
-        🔥 ЗАМЕЧАНИЕ №11: Унифицирована длительность = 3000мс
+        duration: 3000 — единая длительность для всех типов уведомлений.
       */}
       <Toaster
         position="top-right"
         toastOptions={{
-          duration: 3000, // 🔥 ЗАМЕЧАНИЕ №11: 3 секунды (было 3000)
+          duration: 3000,
           style: {
             background: "var(--color-surface)",
             color: "var(--color-text)",
             borderRadius: "var(--radius-md)",
             boxShadow: "var(--shadow-lg)",
-            // 🔥 ЗАМЕЧАНИЕ №11: Отключаем встроенную анимацию react-hot-toast
-            // чтобы не конфликтовала с нашей CSS-анимацией fade out
+            // ПОЧЕМУ animation: none — не конфликтует с CSS fade-out в Toast.css
             animation: "none",
           },
           success: {

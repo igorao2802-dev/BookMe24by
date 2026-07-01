@@ -49,7 +49,7 @@ const Input = forwardRef(function Input(
   const helperId = `${inputId}-helper`;
 
   // ПОЧЕМУ вычисляем классы через массив?
-  // Состояние ошибки меняет визуал поля через CSS-класс (замечание В.В. из ПР-03)
+  // ПОЧЕМУ: состояние ошибки меняет визуал поля через CSS-класс (В.В. из ПР-03)
   const inputClasses = [
     'input__field',
     leftIcon && 'input__field--with-left-icon',

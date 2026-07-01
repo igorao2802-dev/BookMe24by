@@ -1,9 +1,9 @@
 /**
  * ConfirmationModal.jsx — модальное окно подтверждения записи
  *
- * 🔥 ИСПРАВЛЕНО: Добавлен заметный скелетон при обработке запроса
+  * ПОЧЕМУ: добавлен заметный скелетон при обработке запроса
  */
-import { useMemo, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Calendar,
   Clock,
@@ -29,12 +29,14 @@ export default function ConfirmationModal({
   onClose,
   onConfirm,
   isSubmitting,
+  canConfirm = true,
+  validationErrors = {},
   draft,
   service,
   specialist,
 }) {
   const { t } = useLanguage();
-  // 🔥 Локальное состояние для скелетона
+  // ПОЧЕМУ: локальное состояние для скелетона
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -47,10 +49,10 @@ export default function ConfirmationModal({
     }
   }, [isSubmitting]);
 
-  const endTime = useMemo(() => {
-    if (!draft.startTime || !service?.duration) return '';
-    return calculateEndTime(draft.startTime, service.duration);
-  }, [draft.startTime, service?.duration]);
+  const endTime =
+    draft.startTime && service?.duration
+      ? calculateEndTime(draft.startTime, service.duration)
+      : '';
 
   const timeInterval = endTime
     ? `${draft.startTime} — ${endTime}`
@@ -64,7 +66,7 @@ export default function ConfirmationModal({
       size="md"
     >
       <div className="confirmation-modal">
-        {/* 🔥 СКЕЛЕТОН при обработке запроса */}
+        {/* ПОЧЕМУ: сКЕЛЕТОН при обработке запроса */}
         {isProcessing ? (
           <div className="confirmation-modal__processing">
             <div className="confirmation-modal__skeleton">
@@ -165,9 +167,14 @@ export default function ConfirmationModal({
                   {t('booking.confirmation.phone')}
                 </span>
                 <span className="confirmation-modal__value">
-                  {draft.clientPhone}
+                  {draft.clientPhone || '—'}
                 </span>
               </div>
+              {validationErrors.clientPhone && (
+                <p className="confirmation-modal__field-error">
+                  {t(validationErrors.clientPhone)}
+                </p>
+              )}
 
               {draft.clientEmail && (
                 <div className="confirmation-modal__row">
@@ -214,6 +221,7 @@ export default function ConfirmationModal({
                 variant="primary"
                 onClick={onConfirm}
                 isLoading={isSubmitting}
+                disabled={!canConfirm || isSubmitting}
               >
                 {isSubmitting
                   ? t('common.loading')

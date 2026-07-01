@@ -6,120 +6,28 @@
  * Разделяет JSON-данные (read-only) и кастомные данные (localStorage).
  * Валидирует данные перед сохранением.
  *
- * 🔥 ЭТАП 6.3: Добавлены add/update/delete операции
- * 🔥 ЭТАП 7.6: Локализация Toast-уведомлений
- * 🔥 ЭТАП 5.3: Добавлена поддержка двуязычных полей (fullNameEn, positionEn)
- * 🔥 ЭТАП 12: Удалена валидация rating, дефолтное значение 4.5 при создании
- * 🔥 ИСПРАВЛЕНО: Все опечатки в строках валидации (убраны пробелы)
+ * ПОЧЕМУ без Toast?
+ * Бизнес-хук возвращает { success, error } — Toast показывает useAdminDashboard.
  */
 import { useMemo, useCallback } from "react";
-import { useLocalStorage } from "./useLocalStorage";
-import { useLanguage } from "./useLanguage";
-import { STORAGE_KEYS } from "../utils/constants";
-import Toast from "../components/UI/Toast";
+import { validateSpecialistData } from "../utils/validateSpecialist";
+import { generateSpecialistId } from "../utils/generateId";
 
-// === ГЕНЕРАЦИЯ УНИКАЛЬНОГО ID ===
-function generateSpecialistId() {
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 7);
-  return `custom_spec_${timestamp}_${random}`;
-}
+export function useSpecialists({
+  jsonSpecialists = [],
+  customSpecialists,
+  setCustomSpecialists,
+}) {
+  // ПОЧЕМУ setCustomSpecialists приходит из useSalonData?
+  // Чтобы useServices и useSpecialists делили один React-state на ключ
+  // CUSTOM_SPECIALISTS — иначе sync serviceIds ↔ specialistIds ломается.
 
-// === ВАЛИДАЦИЯ ДАННЫХ СПЕЦИАЛИСТА ===
-function validateSpecialistData(
-  data,
-  existingSpecialists = [],
-  currentId = null,
-) {
-  const errors = {};
-
-  if (!data.fullName || typeof data.fullName !== "string") {
-    errors.fullName = "validation.specialist.nameRequired";
-  } else {
-    const trimmedName = data.fullName.trim();
-    if (trimmedName.length === 0) {
-      errors.fullName = "validation.specialist.nameRequired";
-    } else if (trimmedName.length > 100) {
-      errors.fullName = "validation.specialist.nameTooLong";
-    } else {
-      const wordsCount = trimmedName.split(/\s+/).length;
-      if (wordsCount < 2) {
-        errors.fullName = "validation.specialist.nameMinTwoWords";
-      }
-      const isDuplicate = existingSpecialists.some(
-        (spec) =>
-          spec.id !== currentId &&
-          spec.fullName.toLowerCase() === trimmedName.toLowerCase(),
-      );
-      if (isDuplicate) {
-        errors.fullName = "validation.specialist.nameDuplicate";
-      }
-    }
-  }
-
-  if (!data.position || typeof data.position !== "string") {
-    errors.position = "validation.specialist.positionRequired";
-  } else {
-    const trimmedPosition = data.position.trim();
-    if (trimmedPosition.length === 0) {
-      errors.position = "validation.specialist.positionRequired";
-    } else if (trimmedPosition.length > 50) {
-      errors.position = "validation.specialist.positionTooLong";
-    }
-  }
-
-  if (
-    data.experience === undefined ||
-    data.experience === null ||
-    data.experience === ""
-  ) {
-    errors.experience = "validation.specialist.experienceRequired";
-  } else {
-    const experience = Number(data.experience);
-    if (isNaN(experience)) {
-      errors.experience = "validation.specialist.experienceInvalid";
-    } else if (experience < 0) {
-      errors.experience = "validation.specialist.experienceNegative";
-    } else if (experience > 50) {
-      errors.experience = "validation.specialist.experienceTooHigh";
-    }
-  }
-
-  // 🔥 ЭТАП 12: Валидация rating УДАЛЕНА — рейтинг рассчитывается автоматически
-
-  if (
-    !data.serviceIds ||
-    !Array.isArray(data.serviceIds) ||
-    data.serviceIds.length === 0
-  ) {
-    errors.serviceIds = "validation.specialist.servicesEmpty";
-  }
-
-  // 🔥 ЭТАП 5.3: Валидация EN-полей
-  if (data.fullNameEn && data.fullNameEn.trim().length > 100) {
-    errors.fullNameEn = "validation.specialist.nameTooLong";
-  }
-  if (data.positionEn && data.positionEn.trim().length > 50) {
-    errors.positionEn = "validation.specialist.positionTooLong";
-  }
-
-  return { isValid: Object.keys(errors).length === 0, errors };
-}
-
-// === ОСНОВНОЙ ХУК ===
-export function useSpecialists(jsonSpecialists = []) {
-  const { t } = useLanguage();
-  const [customSpecialists, setCustomSpecialists] = useLocalStorage(
-    STORAGE_KEYS.CUSTOM_SPECIALISTS,
-    [],
-  );
-
+  // ПОЧЕМУ useMemo: стабильная ссылка для deps CRUD-callback'ов (validateSpecialistData)
   const specialists = useMemo(
     () => [...customSpecialists, ...jsonSpecialists],
     [customSpecialists, jsonSpecialists],
   );
 
-  // === ДОБАВЛЕНИЕ СПЕЦИАЛИСТА ===
   const addSpecialist = useCallback(
     (specialistData) => {
       const validation = validateSpecialistData(specialistData, specialists);
@@ -142,7 +50,7 @@ export function useSpecialists(jsonSpecialists = []) {
           ? specialistData.positionEn.trim()
           : "",
         experience: Number(specialistData.experience),
-        //  ЭТАП 12: Дефолтное значение рейтинга 4.5 (рассчитывается автоматически)
+        // ПОЧЕМУ: рейтинг 4.5 по умолчанию — рассчитывается автоматически, не из формы
         rating: 4.5,
         serviceIds: specialistData.serviceIds,
         isCustom: true,
@@ -150,12 +58,9 @@ export function useSpecialists(jsonSpecialists = []) {
       };
 
       setCustomSpecialists((prev) => [newSpecialist, ...prev]);
-      Toast.success(
-        t("admin.specialists.addSuccess", { name: newSpecialist.fullName }),
-      );
       return { success: true, specialist: newSpecialist };
     },
-    [specialists, setCustomSpecialists, t],
+    [specialists, setCustomSpecialists],
   );
 
   // === ОБНОВЛЕНИЕ СПЕЦИАЛИСТА ===
@@ -206,7 +111,7 @@ export function useSpecialists(jsonSpecialists = []) {
                   updates.experience !== undefined
                     ? Number(updates.experience)
                     : s.experience,
-                // 🔥 ЭТАП 12: rating НЕ обновляется из формы — рассчитывается автоматически
+                // ПОЧЕМУ: rating не обновляется из формы — рассчитывается автоматически
                 updatedAt: new Date().toISOString(),
               }
             : s,
@@ -214,14 +119,9 @@ export function useSpecialists(jsonSpecialists = []) {
       );
 
       const updatedSpecialist = { ...existingSpecialist, ...updates };
-      Toast.success(
-        t("admin.specialists.updateSuccess", {
-          name: updatedSpecialist.fullName,
-        }),
-      );
       return { success: true, specialist: updatedSpecialist };
     },
-    [specialists, setCustomSpecialists, t],
+    [specialists, setCustomSpecialists],
   );
 
   // === УДАЛЕНИЕ СПЕЦИАЛИСТА ===
@@ -239,19 +139,13 @@ export function useSpecialists(jsonSpecialists = []) {
       }
 
       setCustomSpecialists((prev) => prev.filter((s) => s.id !== specialistId));
-      Toast.success(
-        t("admin.specialists.deleteSuccess", {
-          name: existingSpecialist.fullName,
-        }),
-      );
       return { success: true };
     },
-    [specialists, setCustomSpecialists, t],
+    [specialists, setCustomSpecialists],
   );
 
   return {
     specialists,
-    customSpecialists,
     addSpecialist,
     updateSpecialist,
     deleteSpecialist,

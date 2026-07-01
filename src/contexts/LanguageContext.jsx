@@ -15,12 +15,11 @@
  * - Интерполяция параметров: t('greeting', { name: 'Анна' }) → "Привет, Анна"
  * - Fallback на ключ если перевод не найден (защита от ошибок)
  * - Централизованная логика форматирования
- * 
- * 🔥 ЭТАП 7.1: Инфраструктура локализации
  */
 
 import { createContext, useContext, useMemo } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage';
+import { STORAGE_KEYS, STORAGE_DEBOUNCE_MS } from '../utils/constants';
 import translations, { defaultLanguage, availableLanguages } from '../i18n';
 
 // === СОЗДАНИЕ КОНТЕКСТА ===
@@ -36,7 +35,11 @@ const LanguageContext = createContext({
 // === ПРОВАЙДЕР ЯЗЫКА ===
 export function LanguageProvider({ children }) {
   // === СОСТОЯНИЕ ЯЗЫКА С АВТОСОХРАНЕНИЕМ ===
-  const [language, setLanguage] = useLocalStorage('bookme24_language', defaultLanguage);
+  const [language, setLanguage] = useLocalStorage(
+    STORAGE_KEYS.LANGUAGE,
+    defaultLanguage,
+    { debounceMs: STORAGE_DEBOUNCE_MS.DEFAULT },
+  );
 
   // === ФУНКЦИЯ ПЕРЕВОДА ===
   // ПОЧЕМУ useMemo?
@@ -119,5 +122,5 @@ export function useLanguage() {
   return context;
 }
 
-// 🔥 КРИТИЧЕСКИ ВАЖНО: Default export для корректного импорта в useLanguage.js
+// ПОЧЕМУ default export: useLanguage.js импортирует LanguageProvider как default
 export default LanguageContext;

@@ -1,7 +1,7 @@
 /**
  * SpecialistSelector.jsx — Шаг 2: выбор специалиста
  * 
- * 🔥 КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ:
+ * ПОЧЕМУ фильтрация по specialistIds услуги?
  * Фильтрация идёт по specialistIds услуги (обратная проверка),
  * а не по serviceIds специалиста. Это гарантирует корректную работу
  * даже если serviceIds у стандартных специалистов не обновлены.
@@ -19,26 +19,24 @@ import './SpecialistSelector.css';
 
 export default function SpecialistSelector({
   specialists,
-  services = [],  // 🔥 НОВОЕ: для обратной проверки
+  services = [],
   selectedServiceId,
   selectedSpecialistId,
   onSelect,
 }) {
   const { t } = useLanguage();
 
-  // 🔥 ИСПРАВЛЕНО: Фильтрация по specialistIds услуги
+  // ПОЧЕМУ useMemo для availableSpecialists?
+  // Список пересчитывается только при смене услуги или данных специалистов.
   const availableSpecialists = useMemo(() => {
     if (!selectedServiceId) return [];
 
-    // Находим выбранную услугу
     const service = services.find((s) => s.id === selectedServiceId);
 
-    // Если услуга не найдена или у неё нет specialistIds — показываем всех
     if (!service || !service.specialistIds || service.specialistIds.length === 0) {
       return specialists;
     }
 
-    // Фильтруем только тех специалистов, которые назначены на эту услугу
     return specialists.filter((spec) =>
       service.specialistIds.includes(spec.id)
     );

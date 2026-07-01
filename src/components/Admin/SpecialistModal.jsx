@@ -3,8 +3,10 @@
  */
 import { useRef } from 'react';
 import Modal from '../UI/Modal';
+import ConfirmDialog from '../UI/ConfirmDialog';
 import SpecialistForm from './SpecialistForm';
 import { useLanguage } from '../../hooks/useLanguage';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
 
 export default function SpecialistModal({
   isOpen,
@@ -16,21 +18,23 @@ export default function SpecialistModal({
   onClose,
 }) {
   const { t } = useLanguage();
+  const { confirm, dialogProps } = useConfirmDialog();
   const isDirtyRef = useRef(false);
 
   const handleSave = (specialistData) => {
     const result = onSave(specialistData);
-    if (result?.success !== false) {
+    if (result?.success === true) {
       isDirtyRef.current = false;
       onClose();
     }
   };
 
-  const handleClose = () => {
+  const handleClose = async () => {
     if (isDirtyRef.current) {
-      const confirmed = window.confirm(
-        t('admin.specialists.form.unsavedChanges'),
-      );
+      const confirmed = await confirm({
+        message: t('admin.specialists.form.unsavedChanges'),
+        variant: 'warning',
+      });
       if (!confirmed) return;
     }
     isDirtyRef.current = false;
@@ -47,17 +51,20 @@ export default function SpecialistModal({
       : t('admin.specialists.form.addTitle');
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} title={title} size="lg">
-      <div onChange={handleFormChange}>
-        <SpecialistForm
-          mode={mode}
-          specialist={specialist}
-          services={services}
-          existingSpecialists={existingSpecialists}
-          onSave={handleSave}
-          onCancel={handleClose}
-        />
-      </div>
-    </Modal>
+    <>
+      <Modal isOpen={isOpen} onClose={handleClose} title={title} size="lg">
+        <div onChange={handleFormChange}>
+          <SpecialistForm
+            mode={mode}
+            specialist={specialist}
+            services={services}
+            existingSpecialists={existingSpecialists}
+            onSave={handleSave}
+            onCancel={handleClose}
+          />
+        </div>
+      </Modal>
+      <ConfirmDialog {...dialogProps} />
+    </>
   );
 }

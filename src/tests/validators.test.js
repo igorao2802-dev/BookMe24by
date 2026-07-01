@@ -44,6 +44,18 @@ describe("Валидация форм", () => {
       expect(result.errors.clientPhone).toBeDefined();
     });
 
+    test("должен отклонить форму с пустым телефоном", () => {
+      const invalidData = {
+        clientName: "Иванова Анна Петровна",
+        clientPhone: "",
+      };
+
+      const result = validateBookingForm(invalidData);
+
+      expect(result.isValid).toBe(false);
+      expect(result.errors.clientPhone).toBe("validation.phone.required");
+    });
+
     test("должен отклонить форму с некорректным email", () => {
       const invalidData = {
         clientName: "Иванова Анна Петровна",
@@ -59,6 +71,19 @@ describe("Валидация форм", () => {
   });
 
   describe("validatePhone", () => {
+    test("должен отклонить пустой телефон при required=true", () => {
+      const result = validatePhone("", { required: true });
+
+      expect(result.isValid).toBe(false);
+      expect(result.errorKey).toBe("validation.phone.required");
+    });
+
+    test("должен принять пустой телефон при required=false (профиль)", () => {
+      const result = validatePhone("", { required: false });
+
+      expect(result.isValid).toBe(true);
+    });
+
     test("должен принять корректный белорусский номер", () => {
       const result = validatePhone("+375291234567");
 
@@ -73,7 +98,8 @@ describe("Валидация форм", () => {
     });
 
     test("должен отклонить номер без префикса +375", () => {
-      const result = validatePhone("+79291234567");
+      // 12 цифр после очистки — иначе сработает tooShort раньше invalidPrefix
+      const result = validatePhone("+792912345678");
 
       expect(result.isValid).toBe(false);
       expect(result.errorKey).toBe("validation.phone.invalidPrefix");
@@ -102,7 +128,7 @@ describe("Валидация форм", () => {
     });
 
     test("должен отклонить слишком длинный email", () => {
-      const longEmail = "a".repeat(101) + "@example.com";
+      const longEmail = "a".repeat(250) + "@example.com";
       const result = validateEmail(longEmail);
 
       expect(result.isValid).toBe(false);

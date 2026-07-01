@@ -3,7 +3,13 @@ import { useLocalStorage } from "../hooks/useLocalStorage";
 
 describe("useLocalStorage", () => {
   beforeEach(() => {
-    localStorage.clear();
+    jest.useFakeTimers();
+    window.localStorage.clear();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
   });
 
   test("должен вернуть начальное значение", () => {
@@ -13,13 +19,19 @@ describe("useLocalStorage", () => {
   });
 
   test("должен сохранить значение в localStorage", () => {
-    const { result } = renderHook(() => useLocalStorage("test-key", "initial"));
+    const { result } = renderHook(() =>
+      useLocalStorage("test-key", "initial", { debounceMs: 0 }),
+    );
 
     act(() => {
       result.current[1]("new-value");
     });
 
-    expect(localStorage.getItem("test-key")).toBe(JSON.stringify("new-value"));
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
+
+    expect(window.localStorage.getItem("test-key")).toBe(JSON.stringify("new-value"));
   });
 
   test("должен обновить значение", () => {
@@ -39,7 +51,7 @@ describe("useLocalStorage", () => {
       result.current[2]();
     });
 
-    expect(localStorage.getItem("test-key")).toBeNull();
+    expect(window.localStorage.getItem("test-key")).toBeNull();
     expect(result.current[0]).toBe("initial");
   });
 
@@ -54,7 +66,6 @@ describe("useLocalStorage", () => {
   });
 
   test("должен применить debounce при записи", () => {
-    jest.useFakeTimers();
     const { result } = renderHook(() =>
       useLocalStorage("test-key", "initial", { debounceMs: 300 }),
     );
@@ -63,18 +74,15 @@ describe("useLocalStorage", () => {
       result.current[1]("debounced-value");
     });
 
-    // Сразу после обновления localStorage ещё не обновлён
-    expect(localStorage.getItem("test-key")).toBeNull();
+    expect(window.localStorage.getItem("test-key")).toBeNull();
 
-    // После истечения debounce
     act(() => {
       jest.advanceTimersByTime(300);
     });
 
-    expect(localStorage.getItem("test-key")).toBe(
+    expect(window.localStorage.getItem("test-key")).toBe(
       JSON.stringify("debounced-value"),
     );
-    jest.useRealTimers();
   });
 
   test("должен синхронизироваться между вкладками", () => {

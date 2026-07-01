@@ -1,10 +1,14 @@
 /**
- * Layout.jsx — Компонент-обёртка
- * 🔥 ЭТАП 5.4: Полная локализация логотипа и подвала
- * 🔥 ИСПРАВЛЕНО: Используется nav.manager вместо nav.admin
+ * Layout.jsx — компонент-обёртка (шапка, навигация, подвал)
+ *
+ * ПОЧЕМУ menuItems не объявлены здесь?
+ * Единый конфиг src/config/navigation.js — один источник для Layout и AppRoutes.
  */
+
 import { Link, useLocation } from 'react-router-dom';
-import { USER_ROLES } from '../../utils/constants.js';
+
+import { USER_ROLES, APP_CONFIG } from '../../utils/constants.js';
+import { getVisibleNavItems } from '../../config/navigation';
 import ThemeToggle from '../UI/ThemeToggle';
 import LanguageToggle from '../UI/LanguageToggle';
 import { useLanguage } from '../../hooks/useLanguage';
@@ -14,14 +18,7 @@ export default function Layout({ children, userRole, onRoleChange }) {
   const location = useLocation();
   const { t } = useLanguage();
 
-  const menuItems = [
-    { path: '/', label: t('nav.booking'), roles: [USER_ROLES.CLIENT, USER_ROLES.ADMIN] },
-    { path: '/catalog', label: t('nav.catalog'), roles: [USER_ROLES.CLIENT, USER_ROLES.ADMIN] },
-    { path: '/admin', label: t('nav.manager'), roles: [USER_ROLES.ADMIN] }, //  nav.manager
-    { path: '/profile', label: t('nav.profile'), roles: [USER_ROLES.CLIENT] },
-  ];
-
-  const visibleMenu = menuItems.filter(item => item.roles.includes(userRole));
+  const visibleMenu = getVisibleNavItems(userRole);
 
   return (
     <div className="layout">
@@ -34,35 +31,54 @@ export default function Layout({ children, userRole, onRoleChange }) {
           </div>
 
           <nav className="layout__nav" aria-label={t('common.mainNavigation')}>
-            {visibleMenu.map(item => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`layout__nav-link ${
-                  location.pathname === item.path ? 'layout__nav-link--active' : ''
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {visibleMenu.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`layout__nav-link ${
+                    isActive ? 'layout__nav-link--active' : ''
+                  }`}
+                >
+                  <Icon
+                    className="layout__nav-icon"
+                    size={18}
+                    aria-hidden="true"
+                  />
+                  {t(item.labelKey)}
+                </Link>
+              );
+            })}
           </nav>
 
           <div className="layout__controls">
             <ThemeToggle />
             <LanguageToggle />
-            <div className="layout__role-switcher">
-              <label className="layout__role-label">
-                {t('common.role')}:
-                <select
-                  value={userRole}
-                  onChange={(e) => onRoleChange(e.target.value)}
-                  className="layout__role-select"
-                >
-                  <option value={USER_ROLES.CLIENT}>{t('common.client')}</option>
-                  <option value={USER_ROLES.ADMIN}>{t('common.admin')}</option>
-                </select>
-              </label>
-            </div>
+            {APP_CONFIG.SHOW_DEMO_ROLE_SWITCHER && (
+              <div className="layout__role-switcher">
+                <label className="layout__role-label">
+                  {t('common.role')}:
+                  <select
+                    value={userRole}
+                    onChange={(e) => onRoleChange(e.target.value)}
+                    className="layout__role-select"
+                  >
+                    <option value={USER_ROLES.CLIENT}>
+                      {t('common.client')}
+                    </option>
+                    <option value={USER_ROLES.ADMIN}>
+                      {t('common.admin')}
+                    </option>
+                    <option value={USER_ROLES.SPECIALIST}>
+                      {t('common.specialistRole')}
+                    </option>
+                  </select>
+                </label>
+              </div>
+            )}
           </div>
         </div>
       </header>
