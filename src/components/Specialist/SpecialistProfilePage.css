@@ -1,0 +1,120 @@
+/**
+ * SpecialistProfilePage.css — кабинет мастера
+ */
+
+.specialist-profile-page__header {
+  margin-bottom: var(--spacing-xl, 32px);
+  text-align: center;
+}
+
+.specialist-profile-page__header h1 {
+  font-size: var(--font-size-2xl, 2rem);
+  margin-bottom: var(--spacing-sm, 8px);
+  color: var(--color-text, #3d2f26);
+}
+
+.specialist-profile-page__subtitle {
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+.specialist-profile-page__section {
+  background: var(--color-surface, #ffffff);
+  padding: var(--spacing-xl, 32px);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--spacing-lg, 24px);
+}
+
+.specialist-profile-page__section-title {
+  font-size: var(--font-size-xl, 1.5rem);
+  margin-bottom: var(--spacing-md, 16px);
+  color: var(--color-text, #3d2f26);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs, 4px);
+}
+
+.specialist-profile-page__section-count {
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 500;
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+.specialist-profile-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg, 24px);
+  padding: var(--spacing-lg, 24px);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-soft, #fbf5ef) 0%,
+    var(--color-surface, #ffffff) 100%
+  );
+  border: 1px solid var(--color-primary-200, #eacfb5);
+  border-radius: var(--radius-lg, 12px);
+}
+
+.specialist-profile-card__avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--color-primary-600, #9c7558),
+    var(--color-primary-700, #7f5e44)
+  );
+  color: var(--color-surface, #ffffff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-2xl, 2rem);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.specialist-profile-card__name {
+  font-size: var(--font-size-xl, 1.5rem);
+  margin: 0 0 var(--spacing-sm, 8px);
+  color: var(--color-neutral-900, #251b14);
+}
+
+.specialist-profile-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 4px);
+}
+
+.specialist-profile-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  color: var(--color-text-muted, #6b5d4f);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+.specialist-profile-page__stats-note {
+  margin-top: var(--spacing-md, 16px);
+  color: var(--color-text-muted, #6b5d4f);
+  font-size: var(--font-size-sm, 0.875rem);
+}
+
+[data-theme='dark'] .specialist-profile-page__section {
+  background: var(--color-surface, #2a211b);
+}
+
+[data-theme='dark'] .specialist-profile-page__header h1,
+[data-theme='dark'] .specialist-profile-page__section-title,
+[data-theme='dark'] .specialist-profile-card__name {
+  color: var(--color-text, #f5ede4);
+}
+
+@media (max-width: 640px) {
+  .specialist-profile-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .specialist-profile-card__meta {
+    align-items: center;
+  }
+}

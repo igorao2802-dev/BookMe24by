@@ -1,0 +1,248 @@
+/**
+ * ServiceCard.css — стили карточки услуги в каталоге
+ * - Бейдж категории: тёмный текст на светлом фоне (контрастность ≥ 7:1)
+ * - Все цвета соответствуют WCAG AA
+ */
+
+.service-card {
+  background: var(--color-card-bg, #ffffff);
+  border: 1px solid var(--color-card-border, #e8dcc4);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--spacing-lg, 24px);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+[data-theme="dark"] .service-card {
+  background: var(--color-card-bg, #2d2d2d);
+  border-color: var(--color-card-border, #404040);
+}
+
+.service-card:hover {
+  background: var(--color-card-hover, #fdfaf6);
+  border-color: var(--color-primary, #d4a574);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.15);
+}
+
+[data-theme="dark"] .service-card:hover {
+  background: var(--color-card-hover, #3d3d3d);
+}
+
+/* === КНОПКА ИЗБРАННОГО === */
+.service-card__favorite {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-subtle);
+  padding: 4px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.service-card__favorite:hover {
+  color: var(--color-favorite);
+  transform: scale(1.1);
+}
+
+.service-card__favorite--active {
+  color: var(--color-favorite);
+  background: var(--color-favorite-bg);
+}
+
+/* ПОЧЕМУ: категория услуги — тёмный текст на светлом фоне */
+.service-card__category {
+  display: inline-block;
+  background: #f5ede4;
+  color: #2d2419;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  align-self: flex-start;
+}
+
+[data-theme="dark"] .service-card__category {
+  background: #f5ede4;
+  color: #2d2419;
+}
+
+/* === НАЗВАНИЕ УСЛУГИ === */
+.service-card__title {
+  color: var(--color-service-name-text, #2d2419);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 12px 0 8px;
+  line-height: 1.4;
+}
+
+[data-theme="dark"] .service-card__title {
+  color: var(--color-service-name-text, #f5f5f5);
+}
+
+/* === ОПИСАНИЕ === */
+.service-card__description {
+  color: var(--color-text-muted, #6b5d4f);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  flex-grow: 1;
+}
+
+[data-theme="dark"] .service-card__description {
+  color: var(--color-text-muted, #b0b0b0);
+}
+
+/* === МЕТА-ИНФОРМАЦИЯ === */
+.service-card__meta {
+  color: var(--color-text-muted, #6b5d4f);
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+[data-theme="dark"] .service-card__meta {
+  color: var(--color-text-muted, #b0b0b0);
+}
+
+.service-card__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-text, #2d2419);
+}
+
+[data-theme="dark"] .service-card__meta-item {
+  color: var(--color-text, #f5f5f5);
+}
+
+/* === ЦЕНА === */
+.service-card__price {
+  color: var(--color-primary-dark, #b89060);
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+[data-theme="dark"] .service-card__price {
+  color: var(--color-primary-light, #e6b88a);
+}
+
+/* === ДЕЙСТВИЯ === */
+.service-card__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: auto;
+}
+
+/* === КНОПКА ЗАПИСИ === */
+.service-card__book-btn {
+  background: var(--color-primary, #d4a574);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md, 8px);
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.service-card__book-btn:hover {
+  background: var(--color-primary-dark, #b89060);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3);
+}
+
+[data-theme="dark"] .service-card__book-btn {
+  background: var(--color-primary, #d4a574);
+  color: #1a1a1a;
+}
+
+[data-theme="dark"] .service-card__book-btn:hover {
+  background: var(--color-primary-light, #e6b88a);
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 480px) {
+  .service-card {
+    padding: var(--spacing-md, 16px);
+  }
+
+  .service-card__title {
+    font-size: 1rem;
+  }
+
+  .service-card__price {
+    font-size: 1.125rem;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   ТЁМНАЯ ТЕМА
+   ══════════════════════════════════════════════ */
+[data-theme="dark"] .service-card {
+  background: var(--color-surface, #2a211b);
+  border: 1px solid var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .service-card:hover {
+  border-color: var(--color-primary-400, #c9a88c);
+}
+
+[data-theme="dark"] .service-card__title {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme="dark"] .service-card__description {
+  color: var(--color-text-muted, #c9b89f);
+}
+
+[data-theme="dark"] .service-card__meta {
+  border-top-color: var(--color-border, #44362b);
+  border-bottom-color: var(--color-border, #44362b);
+}
+
+[data-theme="dark"] .service-card__meta-item {
+  color: var(--color-text-muted, #c9b89f);
+}
+
+[data-theme="dark"] .service-card__price {
+  color: var(--color-primary-400, #c9a88c);
+}
+
+[data-theme="dark"] .service-card__favorite {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-subtle);
+}
+
+[data-theme="dark"] .service-card__favorite:hover {
+  color: var(--color-favorite-hover);
+  border-color: var(--color-favorite);
+}
+
+[data-theme="dark"] .service-card__favorite--active {
+  color: var(--color-favorite);
+  background: var(--color-favorite-bg);
+  border-color: var(--color-favorite);
+}

@@ -1,0 +1,194 @@
+/**
+ * SettingsForm.jsx — форма настроек профиля
+ * 
+ * АРХИТЕКТУРНАЯ РОЛЬ:
+ * Управляет настройками пользователя:
+ * - Контактные данные (телефон, email)
+ * - Уведомления (SMS, email, не беспокоить)
+ * - Очистка истории
+ * - Выход из аккаунта
+ * 
+ * ПОЧЕМУ локальное состояние editData?
+ * Телефон и email редактируются в отдельном режиме — изменения не должны
+ * попадать в родительский state до успешной валидации и сохранения.
+ */
+import { useState, useEffect } from 'react';
+import { useLanguage } from '../../hooks/useLanguage';
+import { validatePhone, validateEmail } from '../../utils/validators';
+import { sanitizeString } from '../../utils/sanitizers';
+import { VALIDATION_LIMITS } from '../../constants/validationLimits';
+import Input from '../UI/Input';
+import Button from '../UI/Button';
+import Toast from '../UI/Toast';
+import ConfirmDialog from '../UI/ConfirmDialog';
+import { useConfirmDialog } from '../../hooks/useConfirmDialog';
+import './SettingsForm.css';
+
+export default function SettingsForm({ 
+  settings, 
+  isEditing = false,
+  editData = {},
+  onEdit,
+  onCancel,
+  onSave,
+  onClearHistory,
+  onLogout 
+}) {
+  const { t } = useLanguage();
+  const { confirm, dialogProps } = useConfirmDialog();
+
+  const [localEditData, setLocalEditData] = useState({
+    phone: '',
+    email: '',
+  });
+  
+  const [errors, setErrors] = useState({});
+
+  // ПОЧЕМУ синхронизация с editData через useEffect?
+  // Родитель передаёт актуальные данные при входе в режим редактирования.
+  useEffect(() => {
+    setLocalEditData(editData);
+  }, [editData]);
+
+  // === ОБРАБОТЧИК ИЗМЕНЕНИЯ ПОЛЯ ===
+  const handleChange = (field, value) => {
+    const safeValue = sanitizeString(value);
+    setLocalEditData(prev => ({ ...prev, [field]: safeValue }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: null }));
+    }
+  };
+
+  // === ВАЛИДАЦИЯ И СОХРАНЕНИЕ ===
+  const handleSave = () => {
+    const newErrors = {};
+
+    // Валидация телефона
+    const phoneResult = validatePhone(localEditData.phone);
+    if (!phoneResult.isValid) {
+      newErrors.phone = phoneResult.errorKey;
+    }
+
+    // Валидация email
+    const emailResult = validateEmail(localEditData.email);
+    if (!emailResult.isValid) {
+      newErrors.email = emailResult.errorKey;
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      Toast.error(t('profile.settings.validationError'));
+      return;
+    }
+
+    onSave(localEditData);
+    Toast.success(t('profile.settings.saveSuccess'));
+  };
+
+  // === ОЧИСТКА ИСТОРИИ ===
+  const handleClearHistory = async () => {
+    const confirmed = await confirm({
+      message: `${t('profile.settings.clearHistoryConfirm')}\n\n${t('profile.settings.clearHistoryWarning')}`,
+      variant: 'warning',
+    });
+    if (!confirmed) return;
+
+    onClearHistory();
+    Toast.success(t('profile.settings.clearHistorySuccess'));
+  };
+
+  // === ВЫХОД ИЗ АККАУНТА ===
+  const handleLogout = async () => {
+    const confirmed = await confirm({
+      message: `${t('profile.settings.logoutConfirm')}\n\n${t('profile.settings.logoutWarning')}`,
+      variant: 'danger',
+    });
+    if (!confirmed) return;
+
+    onLogout();
+  };
+
+  return (
+    <div className="settings-form">
+      {/* === СЕКЦИЯ 1: КОНТАКТНЫЕ ДАННЫЕ === */}
+      <section className="settings-form__section">
+        <h3 className="settings-form__section-title">
+          {t('profile.settings.contacts')}
+        </h3>
+
+        <Input
+          label={t('profile.settings.phone')}
+          name="phone"
+          type="tel"
+          value={localEditData.phone || settings.phone}
+          onChange={(e) => handleChange('phone', e.target.value)}
+          error={errors.phone ? t(errors.phone) : null}
+          placeholder="+375 (29) 123-45-67"
+          maxLength={VALIDATION_LIMITS.PHONE.maxLength}
+          disabled={!isEditing}
+          required
+        />
+
+        <Input
+          label={t('profile.settings.email')}
+          name="email"
+          type="email"
+          value={localEditData.email || settings.email}
+          onChange={(e) => handleChange('email', e.target.value)}
+          error={errors.email ? t(errors.email) : null}
+          placeholder="anna@example.com"
+          maxLength={VALIDATION_LIMITS.EMAIL.maxLength}
+          disabled={!isEditing}
+        />
+      </section>
+
+      {/* === СЕКЦИЯ 2: КНОПКИ ДЕЙСТВИЙ === */}
+      <section className="settings-form__section settings-form__actions">
+        {isEditing ? (
+          <>
+            <Button
+              variant="outline"
+              onClick={onCancel}
+            >
+              {t('common.cancel')}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleSave}
+              className="settings-form__btn-save"
+            >
+              {t('profile.settings.save')}
+            </Button>
+          </>
+        ) : (
+          <Button
+            variant="outline"
+            onClick={onEdit}
+          >
+            {t('common.edit')}
+          </Button>
+        )}
+
+        <div className="settings-form__danger-actions">
+          <Button
+            variant="outline"
+            onClick={handleClearHistory}
+            className="settings-form__btn-danger"
+          >
+            {t('profile.settings.clearHistory')}
+          </Button>
+
+          <Button
+            variant="outline"
+            onClick={handleLogout}
+            className="settings-form__btn-danger"
+          >
+            {t('profile.settings.logout')}
+          </Button>
+        </div>
+      </section>
+
+      <ConfirmDialog {...dialogProps} />
+    </div>
+  );
+}

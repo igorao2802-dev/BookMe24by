@@ -1,0 +1,47 @@
+/**
+ * SpecialistPicker.css — выбор мастера в шапке
+ */
+
+.specialist-picker__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-inverse, #ffffff);
+  white-space: nowrap;
+}
+
+.specialist-picker__select {
+  min-height: 36px;
+  min-width: 180px;
+  padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--radius-md, 8px);
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-text-inverse, #ffffff);
+  font-size: var(--font-size-sm, 0.875rem);
+  cursor: pointer;
+}
+
+.specialist-picker__select:focus-visible {
+  outline: 2px solid var(--color-text-inverse, #ffffff);
+  outline-offset: 2px;
+}
+
+.specialist-picker__select option {
+  color: var(--color-text, #3d2f26);
+  background: var(--color-surface, #ffffff);
+}
+
+@media (max-width: 768px) {
+  .specialist-picker__label {
+    flex-direction: column;
+    align-items: flex-start;
+    white-space: normal;
+  }
+
+  .specialist-picker__select {
+    width: 100%;
+    min-width: 0;
+  }
+}

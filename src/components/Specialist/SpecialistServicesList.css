@@ -1,0 +1,84 @@
+/**
+ * SpecialistServicesList.css — список услуг мастера
+ */
+
+.specialist-services-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 8px);
+}
+
+.specialist-services-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+  padding: var(--spacing-md, 16px);
+  background: var(--color-bg, #fdfaf6);
+  border: 1px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+}
+
+.specialist-services-list__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 4px);
+  min-width: 0;
+}
+
+.specialist-services-list__name {
+  font-weight: 600;
+  color: var(--color-text, #3d2f26);
+  word-wrap: break-word;
+}
+
+.specialist-services-list__category {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+.specialist-services-list__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-xs, 4px);
+  flex-shrink: 0;
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+.specialist-services-list__price {
+  font-weight: 600;
+  color: var(--color-primary-700, #7f5e44);
+  font-size: var(--font-size-base, 1rem);
+}
+
+[data-theme='dark'] .specialist-services-list__item {
+  background: var(--color-bg, #1c1613);
+  border-color: var(--color-border, #44362b);
+}
+
+[data-theme='dark'] .specialist-services-list__name {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme='dark'] .specialist-services-list__category,
+[data-theme='dark'] .specialist-services-list__meta {
+  color: var(--color-text-muted, #c9b89f);
+}
+
+@media (max-width: 640px) {
+  .specialist-services-list__item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .specialist-services-list__meta {
+    align-items: flex-start;
+    flex-direction: row;
+    gap: var(--spacing-md, 16px);
+  }
+}

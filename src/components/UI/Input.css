@@ -1,0 +1,146 @@
+/**
+ * Стили для Input (BEM)
+ * ПОЧЕМУ через классы, а не inline-стили?
+  * ПОЧЕМУ: в.В. из ПР-03: "управляйте состоянием через CSS-классы"
+ */
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  width: 100%;
+}
+
+.input__label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xs);
+}
+
+.input__required {
+  color: var(--color-error);
+  font-weight: 700;
+}
+
+.input__wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input__field {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--spacing-sm) var(--spacing-md);
+
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+
+  background-color: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+/* ПОЧЕМУ без opacity? --color-text-placeholder = 4.68:1 на surface без ослабления */
+.input__field::placeholder {
+  color: var(--color-text-placeholder);
+}
+
+.input__icon {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.input__icon--left {
+  left: 12px;
+}
+
+.input__icon--right {
+  right: 12px;
+}
+
+.input__field--with-left-icon {
+  padding-left: 40px;
+}
+
+.input__field--with-right-icon {
+  padding-right: 40px;
+}
+
+.input__field:hover:not(:disabled):not(:read-only) {
+  border-color: var(--color-primary-600);
+}
+
+.input__field:focus {
+  outline: none;
+  border-color: var(--color-primary-700);
+  box-shadow: var(--focus-ring);
+}
+
+.input__field--error {
+  border-color: var(--color-error);
+  background-color: var(--color-error-light);
+}
+
+.input__field--error:focus {
+  box-shadow: var(--focus-ring-error);
+}
+
+/* ПОЧЕМУ без opacity? disabled color = 4.52:1 на bg ≥ 3:1 */
+.input__field--disabled,
+.input__field:disabled {
+  background-color: var(--color-bg);
+  color: var(--color-text-disabled);
+  cursor: not-allowed;
+}
+
+.input__message {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-xs);
+}
+
+.input__message--error {
+  color: var(--color-error-dark);
+  font-weight: 500;
+}
+
+.input__message--helper {
+  color: var(--color-text-muted);
+}
+
+.input__message-icon {
+  flex-shrink: 0;
+}
+
+.input__field {
+  min-width: 180px;
+  padding-right: var(--spacing-lg);
+}
+
+.input__field--with-right-icon {
+  padding-right: 48px;
+}
+
+.input__field::placeholder {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.input__field[type="date"] {
+  min-width: 160px;
+}

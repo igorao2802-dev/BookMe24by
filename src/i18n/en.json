@@ -1,0 +1,689 @@
+{
+  "nav": {
+    "booking": "Booking",
+    "catalog": "Catalog",
+    "manager": "Manager",
+    "profile": "Profile",
+    "specialist": "Schedule",
+    "specialistSchedule": "Schedule",
+    "specialistProfile": "Specialist profile"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The address you requested does not exist or has been moved.",
+    "goHome": "Go to home"
+  },
+  "specialist": {
+    "scheduleTitle": "Specialist schedule",
+    "scheduleSubtitle": "{name} · appointments: {count}",
+    "scheduleEmptyTitle": "No appointments yet",
+    "scheduleEmptyDescription": "When clients book with you, appointments will appear here",
+    "profileTitle": "Specialist dashboard",
+    "profileSubtitle": "Profile and performance metrics",
+    "notFoundTitle": "Specialist profile not found",
+    "notFoundDescription": "Could not determine the current specialist. Please contact the administrator.",
+    "experienceYears": "{years} years of experience",
+    "ratingValue": "Rating {rating}",
+    "selectMaster": "Specialist",
+    "sections": {
+      "profile": "Profile",
+      "services": "Services",
+      "stats": "Statistics"
+    },
+    "servicesEmptyTitle": "No services assigned",
+    "servicesEmptyDescription": "The administrator has not linked any services to this specialist yet",
+    "stats": {
+      "total": "Total appointments",
+      "confirmed": "Confirmed",
+      "rating": "Rating",
+      "revenue": "Revenue"
+    },
+    "statsNote": "Pending: {pending} · Completed: {completed} · Cancelled: {cancelled}"
+  },
+  "common": {
+    "save": "Save",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "confirm": "Confirm",
+    "search": "Search",
+    "reset": "Reset",
+    "resetFilters": "Reset Filters",
+    "loading": "Loading...",
+    "loadingSalonData": "Loading salon data...",
+    "loadingSalonDataError": "Failed to load salon data. Please refresh the page or try again later.",
+    "noData": "No data",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Info",
+    "yes": "Yes",
+    "no": "No",
+    "or": "or",
+    "and": "and",
+    "all": "All",
+    "none": "None",
+    "role": "Role",
+    "client": "Client",
+    "admin": "Admin",
+    "specialistRole": "Specialist",
+    "mainNavigation": "Main navigation",
+    "locale": "en-US",
+    "serviceNotFound": "Service not found",
+    "specialistNotSpecified": "Specialist not specified",
+    "unknown": "Unknown",
+    "brandName": "Health & Beauty",
+    "currency": "BYN"
+  },
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "booking": {
+    "title": "📝 Book a Service",
+    "subtitle": "Book in 5 simple steps — it will take no more than 2 minutes",
+    "serviceSelected": "Service selected: {name}",
+    "serviceNotFound": "Selected service not found",
+    "specialistSelected": "Specialist selected: {name}",
+    "dateTimeSelected": "Date and time selected",
+    "contactsSaved": "Contact information saved",
+    "serviceCount": "We have {services} services in {categories} categories",
+    "steps": {
+      "service": "Service",
+      "specialist": "Specialist",
+      "datetime": "Date & Time",
+      "contacts": "Contacts",
+      "confirm": "Confirmation"
+    },
+    "buttons": {
+      "next": "Next",
+      "back": "Back",
+      "confirm": "Confirm Booking",
+      "selectTime": "Select Time",
+      "selectDate": "Select Date",
+      "selectSpecialist": "Select Specialist",
+      "newBooking": "New Booking",
+      "clearForm": "Clear Form"
+    },
+    "validation": {
+      "selectService": "Please select a service",
+      "selectSpecialist": "Please select a specialist",
+      "selectDateTime": "Please select date and time"
+    },
+    "confirmation": {
+      "title": "Booking Confirmation",
+      "intro": "Please check your details before confirming:",
+      "service": "Service:",
+      "specialist": "Specialist:",
+      "date": "Date:",
+      "time": "Time:",
+      "client": "Client:",
+      "phone": "Phone:",
+      "email": "Email:",
+      "comment": "Comment:",
+      "total": "Total:",
+      "success": "Booking created! {service}, {time}",
+      "failed": "Failed to create booking",
+      "error": "An error occurred while creating the booking",
+      "processing": "Please wait, processing your request..."
+    },
+    "contacts": {
+      "title": "Contact Information",
+      "description": "Fill out the form — we will contact you to confirm the booking",
+      "name": "Full Name",
+      "namePlaceholder": "Anna Smith",
+      "phone": "Phone",
+      "phonePlaceholder": "+375 (29) 123-45-67",
+      "phoneHelper": "BY operator codes: 25, 29, 33, 44",
+      "phoneClear": "Clear phone field",
+      "email": "Email (optional)",
+      "emailPlaceholder": "anna@example.com",
+      "comment": "Comment (optional)",
+      "commentPlaceholder": "Wishes, special requirements, allergies...",
+      "commentHelper": "Maximum {max} characters",
+      "fixFieldsHint": "Fill in all required fields correctly"
+    },
+    "draft": {
+      "restored": "Form draft restored"
+    },
+    "myBookings": {
+      "title": "📋 My Bookings",
+      "upcoming": "Upcoming",
+      "history": "History",
+      "empty": "You have no upcoming bookings",
+      "emptyDescription": "Book your first service at Health & Beauty salon",
+      "bookNow": "Book Now",
+      "created": "Booking successfully created!"
+    },
+    "clearForm": "Clear Form",
+    "clearFormShort": "Clear",
+    "clearFormConfirm": "Are you sure you want to clear the form? All entered data will be lost.",
+    "clearFormConfirmTitle": "Clear form?",
+    "clearFormConfirmMessage": "All entered data will be lost.",
+    "clearFormConfirmYes": "Yes, clear",
+    "formCleared": "Booking form has been cleared. You can start over."
+  },
+  "catalog": {
+    "title": "📋 Services & Specialists Catalog",
+    "subtitle": "{services} services • {specialists} specialists • Health & Beauty salon",
+    "tabs": {
+      "services": "Services",
+      "specialists": "Specialists",
+      "favorites": "Favorites"
+    },
+    "search": {
+      "service": "Search by service name...",
+      "specialist": "Search by specialist name...",
+      "placeholder": "Search by name...",
+      "charCount": "{current} / {max} characters"
+    },
+    "empty": {
+      "services": "No services found",
+      "servicesDescription": "Try changing search parameters or selecting a different category",
+      "specialists": "No specialists found",
+      "specialistsDescription": "Try changing search parameters"
+    },
+    "buttons": {
+      "book": "Book Now",
+      "addToFavorites": "Add to favorites",
+      "removeFromFavorites": "Remove from favorites",
+      "resetFilters": "Reset Filters"
+    },
+    "specialist": {
+      "experience": "{years} years exp.",
+      "services": "Specialist's services"
+    },
+    "favorites": {
+      "empty": "Your favorites list is empty",
+      "emptyDescription": "Add services and specialists to favorites to find them quickly later",
+      "services": "Favorite services",
+      "specialists": "Favorite specialists"
+    },
+    "categories": {
+      "all": "All categories",
+      "hair": "Hair",
+      "nails": "Nails",
+      "massage": "Massage",
+      "cosmetology": "Cosmetology",
+      "spa": "SPA"
+    },
+    "filters": {
+      "title": "Filters",
+      "category": "Category",
+      "price": "Price, BYN",
+      "priceFrom": "From",
+      "priceTo": "To",
+      "rating": "Rating",
+      "ratingAny": "Any",
+      "priceHelper": "Integers only, BYN"
+    },
+    "sort": {
+      "title": "Sort by",
+      "popular": "By popularity",
+      "priceAsc": "Price: low to high",
+      "priceDesc": "Price: high to low",
+      "rating": "By rating",
+      "name": "Alphabetically",
+      "category": "By category",
+      "experience": "By experience",
+      "nameShort": "A–Z"
+    }
+  },
+  "admin": {
+    "title": "Admin Dashboard",
+    "tabs": {
+      "bookings": "Bookings",
+      "services": "Services",
+      "specialists": "Specialists"
+    },
+    "stats": {
+      "totalBookings": "Total Bookings",
+      "today": "Today",
+      "active": "Active",
+      "cancelled": "Cancelled",
+      "revenue": "Revenue"
+    },
+    "filters": {
+      "title": "Filters & Search",
+      "search": "Search",
+      "sort": "Sort",
+      "filters": "Filters",
+      "searchPlaceholder": "Search by name or phone...",
+      "status": "Status",
+      "specialist": "Specialist",
+      "allStatuses": "All statuses",
+      "allSpecialists": "All specialists",
+      "dateFrom": "From (start date)",
+      "dateTo": "To (end date)",
+      "datePlaceholder": "dd.mm.yyyy",
+      "dateFormatHint": "Format: dd.mm.yyyy",
+      "reset": "Reset",
+      "notLaterThan": "Not later than",
+      "notEarlierThan": "Not earlier than",
+      "selectStartDate": "Select start date",
+      "selectEndDate": "Select end date",
+      "dateFromResetWarning": "End date has been reset because it is earlier than start date",
+      "dateToResetWarning": "Start date has been reset because it is later than end date"
+    },
+    "sort": {
+      "dateDesc": "Date (newest → oldest)",
+      "dateAsc": "Date (oldest → newest)",
+      "service": "By service",
+      "specialist": "By specialist",
+      "client": "By client"
+    },
+    "bookings": {
+      "edit": "Edit",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "confirmSuccess": "Booking confirmed",
+      "editSuccess": "Booking updated",
+      "editTitle": "Edit Booking",
+      "clientInfo": "Client Information",
+      "client": "Client",
+      "fullName": "Full Name",
+      "phone": "Phone",
+      "service": "Service",
+      "specialist": "Specialist",
+      "date": "Date",
+      "startTime": "Start Time",
+      "duration": "Duration (minutes)",
+      "endTime": "End Time",
+      "status": "Status",
+      "confirmCancel": "Are you sure you want to cancel this booking?",
+      "conflict": "Schedule conflict",
+      "selectSpecialist": "Please select a specialist",
+      "selectDate": "Please select a date",
+      "selectTime": "Please select a time",
+      "durationMin": "Minimum duration is 15 minutes"
+    },
+    "services": {
+      "title": "Service Management",
+      "add": "Add Service",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete the service \"{name}\"?",
+      "custom": "Custom",
+      "standard": "Standard",
+      "cannotModifyStandard": "Cannot edit standard service from catalog",
+      "cannotDeleteStandard": "Cannot delete standard service from catalog",
+      "empty": "No services yet. Add your first service so clients can book.",
+      "emptyDescription": "Add your first service so clients can book",
+      "searchPlaceholder": "Search by service name...",
+      "noResults": "No services found",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "page": "Page",
+      "addSuccess": "Service \"{name}\" added successfully",
+      "updateSuccess": "Service \"{name}\" updated successfully",
+      "deleteSuccess": "Service \"{name}\" deleted successfully",
+      "columns": {
+        "name": "Name",
+        "category": "Category",
+        "duration": "Duration",
+        "price": "Price",
+        "rating": "Rating",
+        "type": "Type",
+        "actions": "Actions"
+      },
+      "form": {
+        "addTitle": "Add New Service",
+        "editTitle": "Edit Service",
+        "add": "Add",
+        "update": "Update",
+        "name": "Service Name",
+        "namePlaceholder": "e.g. Women's Haircut",
+        "category": "Category",
+        "selectCategory": "Select category",
+        "description": "Description",
+        "descriptionPlaceholder": "Describe the service in detail: what's included, features...",
+        "descriptionHelper": "Maximum {max} characters",
+        "duration": "Duration (min)",
+        "price": "Price (BYN)",
+        "priceHelper": "Maximum price: {max} BYN. Integers only.",
+        "rating": "Rating (optional)",
+        "ratingHelper": "From 0 to 5. Default is 4.5",
+        "englishVersion": "English Version (optional)",
+        "nameEn": "Name in English",
+        "nameEnPlaceholder": "e.g. Women's Haircut",
+        "descriptionEn": "Description in English",
+        "descriptionEnPlaceholder": "Describe the service in detail...",
+        "specialists": "Specialists",
+        "specialistsHint": "Select specialists who provide this service",
+        "specialistsCounter": "Selected: {selected} of {total}",
+        "noSpecialists": "No specialists available. Please add specialists first.",
+        "unsavedChanges": "You have unsaved changes. Are you sure you want to close the form?"
+      }
+    },
+    "specialists": {
+      "title": "Specialist Management",
+      "add": "Add Specialist",
+      "edit": "Edit",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete the specialist \"{name}\"?",
+      "custom": "Custom",
+      "standard": "Standard",
+      "cannotModifyStandard": "Cannot edit standard specialist",
+      "cannotDeleteStandard": "Cannot delete standard specialist",
+      "noServicesAssigned": "No assigned services",
+      "empty": "No specialists yet. Add your first specialist so clients can choose a master.",
+      "emptyDescription": "Add your first specialist so clients can choose a master",
+      "searchPlaceholder": "Search by name or position...",
+      "noResults": "No specialists found",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "page": "Page",
+      "addSuccess": "Specialist \"{name}\" added successfully",
+      "updateSuccess": "Specialist \"{name}\" updated successfully",
+      "deleteSuccess": "Specialist \"{name}\" deleted successfully",
+      "columns": {
+        "fullName": "Full Name",
+        "position": "Position",
+        "experience": "Experience",
+        "rating": "Rating",
+        "servicesCount": "Services",
+        "type": "Type",
+        "actions": "Actions"
+      },
+      "form": {
+        "addTitle": "Add New Specialist",
+        "editTitle": "Edit Specialist",
+        "add": "Add",
+        "update": "Update",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Anna Smith",
+        "position": "Position",
+        "positionPlaceholder": "Hair Stylist",
+        "experience": "Experience (years)",
+        "rating": "Rating (optional)",
+        "ratingHelper": "From 0 to 5. Default is 4.5",
+        "englishVersion": "English Version (optional)",
+        "fullNameEn": "Full Name in English",
+        "fullNameEnPlaceholder": "Anna Smith",
+        "positionEn": "Position in English",
+        "positionEnPlaceholder": "Hair Stylist",
+        "services": "Specialist Services",
+        "servicesHint": "Select services provided by this specialist",
+        "servicesCounter": "Selected: {selected} of {total}",
+        "noServices": "No services available. Please add services to the catalog first.",
+        "unsavedChanges": "You have unsaved changes. Are you sure you want to close the form?"
+      }
+    }
+  },
+  "profile": {
+    "title": "👤 Personal Profile",
+    "subtitle": "Manage your bookings and settings",
+    "sections": {
+      "profile": "📋 Profile",
+      "stats": "📊 Statistics",
+      "bookings": "📅 My Bookings",
+      "favorites": "❤️ Favorites",
+      "settings": "️ Settings",
+      "bonus": " Bonus Account"
+    },
+    "profile": {
+      "defaultName": "Client",
+      "name": "Full Name",
+      "phone": "Phone",
+      "email": "Email"
+    },
+    "stats": {
+      "total": "Total Bookings",
+      "upcoming": "Upcoming",
+      "confirmed": "Confirmed",
+      "cancelled": "Cancelled",
+      "spent": "Spent"
+    },
+    "empty": {
+      "title": "You have no bookings yet",
+      "description": "Create your first booking to see your profile and statistics",
+      "action": "Create Booking"
+    },
+    "emptyNoPhone": {
+      "description": "Sign in or enter your phone number to view your booking history",
+      "action": "Enter phone number"
+    },
+    "bookings": {
+      "cancelSuccess": "Booking cancelled",
+      "cancelError": "Failed to cancel booking",
+      "confirmCancel": "Are you sure you want to cancel this booking?"
+    },
+    "history": {
+      "tabs": {
+        "all": "All",
+        "upcoming": "Upcoming",
+        "completed": "Completed",
+        "cancelled": "Cancelled"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "rebook": "Rebook"
+      },
+      "empty": {
+        "all": "You have no bookings yet",
+        "allDescription": "Create your first booking to see it here",
+        "upcoming": "No upcoming bookings",
+        "upcomingDescription": "All your bookings are either completed or cancelled",
+        "completed": "No completed bookings",
+        "completedDescription": "Your completed bookings will appear here",
+        "cancelled": "No cancelled bookings",
+        "cancelledDescription": "Your cancelled bookings will appear here"
+      }
+    },
+    "settings": {
+      "contacts": "Contact Information",
+      "phone": "Phone",
+      "email": "Email",
+      "notifications": "Notification Preferences",
+      "sms": "SMS Reminders",
+      "emailNotifications": "Email Reminders",
+      "doNotDisturb": "Do Not Disturb",
+      "save": "Save Settings",
+      "clearHistory": "Clear History",
+      "logout": "Log Out",
+      "saveSuccess": "Settings saved",
+      "validationError": "Please fix the errors in the form",
+      "clearHistoryConfirm": "Are you sure you want to delete the entire booking history?",
+      "clearHistoryWarning": "This action cannot be undone.",
+      "clearHistorySuccess": "History cleared successfully",
+      "logoutConfirm": "Are you sure you want to log out?",
+      "logoutWarning": "You will need to select your role again.",
+      "logoutSuccess": "You have logged out"
+    },
+    "bonus": {
+      "title": "Bonus Account",
+      "balance": "Your balance",
+      "points": "points",
+      "equivalent": "equivalent",
+      "level": "Level",
+      "progress": "Until next level",
+      "history": "Points history",
+      "noHistory": "Points history is empty",
+      "levels": {
+        "bronze": "Bronze",
+        "silver": "Silver",
+        "gold": "Gold"
+      }
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "xssDetected": "Invalid characters detected",
+    "tooLong": "Value is too long",
+    "tooShort": "Value is too short",
+    "phone": {
+      "required": "Enter phone number in format +375 (XX) XXX-XX-XX",
+      "tooShort": "Phone number is too short — enter 12 digits in format +375 (XX) XXX-XX-XX",
+      "invalidPrefix": "Number must start with +375",
+      "invalidCode": "Invalid operator code. Allowed: 25, 29, 33, 44"
+    },
+    "name": {
+      "required": "Please enter your full name",
+      "tooShort": "Minimum length is {min} characters",
+      "tooLong": "Full name cannot exceed 100 characters",
+      "minTwoWords": "Please specify first and last name (minimum 2 words)",
+      "invalidChars": "Full name can only contain letters, spaces and hyphens"
+    },
+    "email": {
+      "required": "Email is required",
+      "invalid": "Invalid email format",
+      "tooLong": "Email cannot exceed 254 characters",
+      "invalidChars": "Email contains invalid characters",
+      "noAt": "Email must contain \"@\"",
+      "emptyLocal": "Enter mailbox name before \"@\"",
+      "startsWithDash": "Email cannot start with \"-\"",
+      "startsWithDot": "Email cannot start with a dot",
+      "endsWithInvalid": "Part before \"@\" cannot end with \"-\" or \".\"",
+      "consecutiveDots": "Email cannot contain consecutive dots",
+      "noDomain": "Enter domain after \"@\"",
+      "noDomainDot": "Email domain must contain a dot (e.g. mail.com)",
+      "shortTld": "Top-level domain must contain at least 2 letters",
+      "invalidDomain": "Invalid domain name in email"
+    },
+    "comment": {
+      "tooLong": "Comment cannot exceed 500 characters",
+      "htmlNotAllowed": "Comment cannot contain HTML tags"
+    },
+    "date": {
+      "notSelected": "Date is not selected",
+      "invalidFormat": "Invalid date format",
+      "inPast": "Cannot book for a past date",
+      "tooFarAhead": "Booking is possible no more than 30 days in advance"
+    },
+    "time": {
+      "notSelected": "Please select a time",
+      "invalidFormat": "Invalid time format",
+      "invalidStep": "Time must be in {step}-minute increments",
+      "outOfWorkingHours": "Time is outside salon working hours"
+    },
+    "search": {
+      "tooLong": "Search query is too long",
+      "invalidChars": "Invalid characters in search query"
+    },
+    "duration": {
+      "invalidStep": "Duration must be in {step}-minute increments"
+    },
+    "service": {
+      "nameRequired": "Service name is required",
+      "nameTooLong": "Service name cannot exceed 150 characters",
+      "nameTooShort": "Service name is too short (minimum 3 characters)",
+      "nameDuplicate": "Service with this name already exists",
+      "categoryRequired": "Please select a service category",
+      "categoryInvalid": "Invalid service category",
+      "descriptionRequired": "Service description is required",
+      "descriptionTooLong": "Description cannot exceed 500 characters",
+      "descriptionTooShort": "Description is too short (minimum 10 characters)",
+      "durationRequired": "Please specify service duration",
+      "durationInvalid": "Duration must be a number",
+      "durationTooShort": "Minimum duration is 15 minutes",
+      "durationTooLong": "Maximum duration is 480 minutes (8 hours)",
+      "priceRequired": "Please specify service price",
+      "priceInvalid": "Price must be a number",
+      "priceNotInteger": "Price must be an integer",
+      "priceTooLow": "Price must be greater than 0",
+      "priceTooHigh": "Price cannot exceed 999999 BYN",
+      "specialistsRequired": "Select at least one specialist",
+      "notFound": "Service not found",
+      "cannotModifyStandard": "Cannot edit standard service from catalog",
+      "cannotDeleteStandard": "Cannot delete standard service from catalog"
+    },
+    "specialist": {
+      "required": "Please select a specialist",
+      "nameRequired": "Full name is required",
+      "nameTooLong": "Full name cannot exceed 100 characters",
+      "nameMinTwoWords": "Please specify first and last name (minimum 2 words)",
+      "nameDuplicate": "Specialist with this name already exists",
+      "positionRequired": "Position is required",
+      "positionTooLong": "Position cannot exceed 200 characters",
+      "experienceRequired": "Please specify years of experience",
+      "experienceInvalid": "Experience must be a number",
+      "experienceNegative": "Experience cannot be negative",
+      "experienceTooHigh": "Experience cannot exceed 50 years",
+      "ratingInvalid": "Rating must be a number",
+      "ratingOutOfRange": "Rating must be between 0 and 5",
+      "servicesRequired": "Please select specialist services",
+      "servicesEmpty": "Select at least one service",
+      "notFound": "Specialist not found",
+      "cannotModifyStandard": "Cannot edit standard specialist",
+      "cannotDeleteStandard": "Cannot delete standard specialist"
+    },
+    "rateLimit": {
+      "title": "Your actions look like a robot",
+      "description": "Please wait {seconds} seconds and try again.",
+      "captcha": "Please confirm you are not a robot",
+      "tooFast": "Too many clicks. Please wait {seconds} seconds.",
+      "suspicious": "Suspicious activity. Please wait {seconds} seconds.",
+      "blocked": "You are blocked. Please wait {seconds} more seconds."
+    },
+    "minLength": "Minimum length: {min} characters",
+    "maxLength": "Maximum length: {max} characters"
+  },
+  "time": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday",
+    "free": "Free",
+    "busy": "Busy",
+    "minutes": "min",
+    "hourShort": "h",
+    "minuteShort": "min"
+  },
+  "timeSlotPicker": {
+    "title": "Choose date and time",
+    "visitDate": "Visit date",
+    "freeTime": "Available time",
+    "windows": {
+      "one": "{count} slot",
+      "few": "{count} slots",
+      "many": "{count} slots"
+    },
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "loading": "Loading slots...",
+    "noSlots": "No available slots for this date",
+    "tryAnotherDay": "Try selecting another day",
+    "pastDate": "Date has passed",
+    "notWorking": "Specialist is not working on {day}",
+    "busy": "Busy",
+    "selectTime": "select time",
+    "selectDate": "select date",
+    "unavailable": "unavailable",
+    "days": {
+      "0": "Sunday",
+      "1": "Monday",
+      "2": "Tuesday",
+      "3": "Wednesday",
+      "4": "Thursday",
+      "5": "Friday",
+      "6": "Saturday"
+    }
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light theme",
+    "dark": "Dark theme",
+    "auto": "Auto (by time of day)"
+  },
+  "footer": {
+    "title": "Health & Beauty Salon",
+    "address": "Minsk, Primernaya st., 42",
+    "hours": "Weekdays from 9:00 to 21:00",
+    "contacts": "Contacts",
+    "phone": "+375 (29) 123-45-67",
+    "email": "info@bookme24.by",
+    "emailSubject": "Website inquiry",
+    "emailAriaLabel": "Send email to {email}",
+    "online": "Online Booking",
+    "onlineDesc": "bookme24.by — 24/7",
+    "copyright": "© 2026 All rights reserved"
+  }
+}

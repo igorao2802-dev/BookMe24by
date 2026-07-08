@@ -1,0 +1,56 @@
+{
+  "name": "bookme24",
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "analyze": "source-map-explorer 'build/static/js/*.js'",
+    "audit:block1": "node scripts/run-audit-block1.js",
+    "audit:block2": "node scripts/run-audit-block2.js",
+    "audit:stress": "node scripts/stress-test-localstorage.js && node scripts/stress-test-xss.js && node scripts/stress-test-performance.js"
+  },
+  "private": true,
+  "description": "SPA «Система онлайн-записи» салона «Здоровье и красота» | bookme24.by",
+  "author": "Осадчий Игорь Александрович",
+  "homepage": "https://bookme24.by",
+  "dependencies": {
+    "date-fns": "^3.6.0",
+    "lucide-react": "^0.378.0",
+    "nanoid": "^5.1.16",
+    "react": "^18.3.1",
+    "react-datepicker": "^9.1.0",
+    "react-dom": "^18.3.1",
+    "react-hot-toast": "^2.4.1",
+    "react-router-dom": "^6.23.1",
+    "react-scripts": "5.0.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.5",
+    "@testing-library/react": "^15.0.7",
+    "@testing-library/user-event": "^14.5.2",
+    "playwright": "^1.61.1"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

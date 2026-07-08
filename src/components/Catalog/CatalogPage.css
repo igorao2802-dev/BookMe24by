@@ -1,0 +1,234 @@
+/**
+ * CatalogPage.css — стили для страницы каталога
+ * - Улучшена контрастность бейджей в кнопках режимов
+ * - Добавлен hover-эффект для активных кнопок
+ * - Улучшена читаемость в тёмной теме
+ */
+
+.catalog-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--spacing-xl, 32px) var(--spacing-md, 16px);
+}
+
+/* === ЗАГОЛОВОК === */
+.catalog-page__header {
+  text-align: center;
+  margin-bottom: var(--spacing-xl, 32px);
+}
+
+.catalog-page__header h1 {
+  font-size: var(--font-size-2xl, 2rem);
+  margin-bottom: var(--spacing-sm, 8px);
+  color: var(--color-text, #2d2419);
+}
+
+[data-theme="dark"] .catalog-page__header h1 {
+  color: var(--color-text, #f5ede4);
+}
+
+.catalog-page__subtitle {
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+[data-theme="dark"] .catalog-page__subtitle {
+  color: var(--color-text-muted, #b0a89f);
+}
+
+/* === ПЕРЕКЛЮЧАТЕЛЬ РЕЖИМОВ === */
+.catalog-page__modes {
+  display: flex;
+  gap: var(--spacing-sm, 8px);
+  justify-content: center;
+  margin-bottom: var(--spacing-xl, 32px);
+  flex-wrap: wrap;
+}
+
+.catalog-page__mode {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-sm, 8px) var(--spacing-lg, 24px);
+  min-height: 44px;
+  background: var(--color-surface, #fff);
+  border: 2px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-full, 9999px);
+  font-weight: 500;
+  color: var(--color-text, #2d2419);
+  cursor: pointer;
+  transition: all var(--transition-fast, 150ms ease);
+}
+
+[data-theme="dark"] .catalog-page__mode {
+  background: var(--color-surface, #2d2d2d);
+  border-color: var(--color-border, #404040);
+  color: var(--color-text, #f5f5f5);
+}
+
+.catalog-page__mode:hover {
+  border-color: var(--color-primary, #d4a574);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.2);
+}
+
+[data-theme="dark"] .catalog-page__mode:hover {
+  box-shadow: 0 2px 8px rgba(212, 165, 116, 0.3);
+}
+
+.catalog-page__mode--active {
+  background: var(--color-primary, #d4a574);
+  border-color: var(--color-primary, #d4a574);
+  color: white;
+}
+
+[data-theme="dark"] .catalog-page__mode--active {
+  background: var(--color-primary, #d4a574);
+  border-color: var(--color-primary, #d4a574);
+  color: #1a1a1a;
+}
+
+/* ПОЧЕМУ: hover-эффект для активной кнопки */
+.catalog-page__mode--active:hover {
+  background: var(--color-primary-dark, #b89060);
+  border-color: var(--color-primary-dark, #b89060);
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .catalog-page__mode--active:hover {
+  background: var(--color-primary-light, #e6b88a);
+  border-color: var(--color-primary-light, #e6b88a);
+}
+
+/* ПОЧЕМУ: бейджи в кнопках режимов — высокая контрастность */
+.catalog-page__mode .badge {
+  background: rgba(0, 0, 0, 0.15);
+  color: #2d2419;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  min-width: 24px;
+  text-align: center;
+}
+
+[data-theme="dark"] .catalog-page__mode .badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+.catalog-page__mode--active .badge {
+  background: rgba(255, 255, 255, 0.3);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .catalog-page__mode--active .badge {
+  background: rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+}
+
+/* === ПАНЕЛИ УПРАВЛЕНИЯ === */
+.catalog-page__controls {
+  display: flex;
+  gap: var(--spacing-lg, 24px);
+  margin-bottom: var(--spacing-xl, 32px);
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+/* === СЕКЦИИ === */
+.catalog-page__section {
+  margin-bottom: var(--spacing-2xl, 48px);
+}
+
+.catalog-page__section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-lg, 24px);
+  gap: var(--spacing-md, 16px);
+  flex-wrap: wrap;
+}
+
+.catalog-page__section-header h2 {
+  font-size: var(--font-size-xl, 1.5rem);
+  margin: 0;
+  color: var(--color-text, #2d2419);
+}
+
+[data-theme="dark"] .catalog-page__section-header h2 {
+  color: var(--color-text, #f5f5f5);
+}
+
+/* === СЕТКА КАРТОЧЕК === */
+.catalog-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg, 24px);
+}
+
+.catalog-page__grid--specialists {
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* === КАРТОЧКИ УСЛУГ === */
+.catalog-page__grid .service-card {
+  background: var(--color-card-bg, #fff);
+  border: 1px solid var(--color-card-border, #e8dcc4);
+  border-radius: var(--radius-lg, 12px);
+  padding: var(--spacing-lg, 24px);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+[data-theme="dark"] .catalog-page__grid .service-card {
+  background: var(--color-card-bg, #2d2d2d);
+  border-color: var(--color-card-border, #404040);
+}
+
+.catalog-page__grid .service-card:hover {
+  background: var(--color-card-hover, #fdfaf6);
+  border-color: var(--color-primary, #d4a574);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 165, 116, 0.15);
+}
+
+[data-theme="dark"] .catalog-page__grid .service-card:hover {
+  background: var(--color-card-hover, #3d3d3d);
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 768px) {
+  .catalog-page {
+    padding: var(--spacing-lg, 24px) var(--spacing-sm, 12px);
+  }
+
+  .catalog-page__header h1 {
+    font-size: var(--font-size-xl, 1.5rem);
+  }
+
+  .catalog-page__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .catalog-page__modes {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .catalog-page__mode {
+    justify-content: center;
+  }
+
+  .catalog-page__controls {
+    flex-direction: column;
+    gap: var(--spacing-md, 16px);
+  }
+
+  .catalog-page__controls > * {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+  }
+}

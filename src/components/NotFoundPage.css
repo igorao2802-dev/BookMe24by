@@ -1,0 +1,49 @@
+/**
+ * NotFoundPage.css — стили страницы 404
+ * BEM + палитра из variables.css
+ */
+
+.not-found-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.not-found-page__inner {
+  max-width: 28rem;
+  text-align: center;
+}
+
+.not-found-page__code {
+  margin: 0 0 var(--spacing-sm);
+  font-size: clamp(4rem, 12vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-primary-dark);
+  opacity: 0.85;
+}
+
+.not-found-page__icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-md);
+  color: var(--color-primary);
+}
+
+.not-found-page__title {
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--font-size-xl);
+  color: var(--color-text);
+}
+
+.not-found-page__description {
+  margin: 0 0 var(--spacing-lg);
+  color: var(--color-text-muted);
+  word-wrap: break-word;
+}
+
+.not-found-page__action {
+  min-width: 12rem;
+}

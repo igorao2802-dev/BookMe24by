@@ -1,0 +1,98 @@
+# === ЗАВИСИМОСТИ ===
+node_modules/
+.pnp
+.pnp.js
+
+# === СБОРКА И ПРОДАКШН ===
+build/
+dist/
+.next/
+out/
+
+# === ENV FILES (НИКОГДА НЕ КОММИТИТЬ!) ===
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# РАЗРЕШИТЬ ТОЛЬКО ШАБЛОН:
+!.env.example
+
+# === ТЕСТИРОВАНИЕ ===
+coverage/
+.nyc_output
+*.lcov
+.jest/
+
+# === LOGS ===
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+pnpm-debug.log*
+*.log
+
+# === IDE, РЕДАКТОРЫ И AI-ИНСТРУМЕНТЫ ===
+.vscode/
+.idea/
+.cursor/
+.cursorignore
+.cursorrules
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# === ОС ФАЙЛЫ ===
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# === ВРЕМЕННЫЕ И КЭШИ ===
+.tmp/
+.temp/
+.cache/
+node_modules/.cache/
+*.tmp
+*.swp
+*.bak
+
+# === ТИПЫ ФАЙЛОВ ===
+*.pem
+*.key
+*.cert
+
+# === ESLINT / PRETTIER / TYPESCRIPT ===
+.eslintcache
+.prettiercache
+*.tsbuildinfo
+
+# === STORYBOOK / DOCKER ===
+storybook-static/
+.dockerignore
+
+# === ВНУТРЕННЯЯ ДОКУМЕНТАЦИЯ (не для публичного GitHub) ===
+AUDIT_REPORT.md
+AUDIT_FORMS.md
+VALIDATION_REPORT.md
+VALIDATION_CHECKLIST.md
+REFACTOR_LOG.md
+project_tree.txt
+
+# === МАТЕРИАЛЫ ЗАЩИТЫ / ПРЕЗЕНТАЦИИ ===
+DEFENSE_PREPARATION.md
+presentation/
+*.pptx
+
+# === СЛУЖЕБНЫЕ СКРИПТЫ АУДИТА И СТРЕСС-ТЕСТОВ ===
+scripts/
+
+# === БЕЗОПАСНОСТЬ ===
+# Никогда не коммитьте приватные ключи и секреты!

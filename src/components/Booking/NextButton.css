@@ -1,0 +1,32 @@
+/**
+ * NextButton — кнопка перехода в правой части панели навигации визарда
+ */
+.next-button-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-xs);
+  flex-shrink: 0;
+  max-width: 280px;
+}
+
+.next-button {
+  flex-shrink: 0;
+}
+
+.next-button__hint {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  line-height: 1.4;
+  color: var(--color-error-dark);
+  text-align: right;
+  word-wrap: break-word;
+}
+
+@media (max-width: 768px) {
+  .next-button-wrap {
+    width: auto;
+    max-width: none;
+    align-items: center;
+  }
+}

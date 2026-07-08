@@ -1,0 +1,6 @@
+{
+  "ignores": [
+    "playwright",
+    "eslint-config-react-app"
+  ]
+}

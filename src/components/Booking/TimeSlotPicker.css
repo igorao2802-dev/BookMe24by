@@ -1,0 +1,405 @@
+/**
+ * TimeSlotPicker.css — стили для выбора даты и времени
+ * BEM-методология + адаптивность + поддержка тёмной темы
+ * 
+  * ПОЧЕМУ: горизонтальная прокрутка дат
+ * - .time-slot-picker__dates: flex-direction: column (заголовок + сетка)
+ * - .time-slot-picker__date-grid: flex-direction: row + overflow-x: auto
+ * - Карточки дат: flex-shrink: 0 (не сжимаются)
+ */
+
+/* === ОСНОВНОЙ КОНТЕЙНЕР === */
+.time-slot-picker {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg, 24px);
+}
+
+.time-slot-picker__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs, 4px);
+}
+
+.time-slot-picker__title {
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 600;
+  color: var(--color-text, #3d2f26);
+  margin: 0;
+}
+
+.time-slot-picker__subtitle {
+  font-size: var(--font-size-base, 1rem);
+  color: var(--color-text-muted, #6b5d4f);
+  margin: 0;
+}
+
+/* === СЕКЦИЯ ВЫБОРА ДАТЫ === */
+.time-slot-picker__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 8px);
+}
+
+.time-slot-picker__section-title {
+  font-size: var(--font-size-lg, 1.125rem);
+  font-weight: 600;
+  color: var(--color-text, #3d2f26);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+}
+
+/* РОДИТЕЛЬСКИЙ КОНТЕЙНЕР ДАТ */
+.time-slot-picker__dates {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 16px);
+}
+
+/* СЕТКА ДАТ — горизонтальная прокрутка */
+.time-slot-picker__date-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  gap: var(--spacing-sm, 8px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: var(--spacing-xs, 4px);
+  padding-bottom: var(--spacing-sm, 8px);
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-200, #eacfb5) transparent;
+}
+
+.time-slot-picker__date-grid::-webkit-scrollbar {
+  height: 8px;
+}
+
+.time-slot-picker__date-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.time-slot-picker__date-grid::-webkit-scrollbar-thumb {
+  background: var(--color-primary-200, #eacfb5);
+  border-radius: var(--radius-full, 9999px);
+}
+
+/* === БАЗОВАЯ КАРТОЧКА ДАТЫ === */
+.time-slot-picker__date {
+  flex-shrink: 0;
+  width: 80px;
+  padding: var(--spacing-sm, 8px);
+  background: var(--color-surface, #ffffff);
+  border: 2px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+  scroll-snap-align: start;
+}
+
+.time-slot-picker__date-day {
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted, #6b5d4f);
+  font-weight: 500;
+}
+
+.time-slot-picker__date-number {
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 700;
+  color: var(--color-text, #3d2f26);
+}
+
+.time-slot-picker__date-num {
+  font-size: var(--font-size-xl, 1.5rem);
+  font-weight: 700;
+  color: var(--color-text, #3d2f26);
+}
+
+.time-slot-picker__date-month {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--color-text-subtle, #8a7968);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Hover-эффект для даты */
+.time-slot-picker__date:hover:not(:disabled):not(
+    .time-slot-picker__date--selected
+  ) {
+  border-color: var(--color-primary-400, #c9a88c);
+  background: var(--color-primary-soft, #fbf5ef);
+  box-shadow: 0 4px 8px rgba(61, 47, 38, 0.12);
+}
+
+/* ВЫБРАННАЯ ДАТА */
+.time-slot-picker__date--selected {
+  background: var(--color-primary-600, #9c7558);
+  border-color: var(--color-primary-600, #9c7558);
+}
+
+.time-slot-picker__date--selected .time-slot-picker__date-day,
+.time-slot-picker__date--selected .time-slot-picker__date-number,
+.time-slot-picker__date--selected .time-slot-picker__date-num,
+.time-slot-picker__date--selected .time-slot-picker__date-month {
+  color: white;
+}
+
+.time-slot-picker__date--selected:hover {
+  background: var(--color-primary-700, #7f5e44);
+  border-color: var(--color-primary-700, #7f5e44);
+  box-shadow: 0 4px 8px rgba(61, 47, 38, 0.2);
+}
+
+/* ПРОШЕДШАЯ ДАТА */
+.time-slot-picker__date--past {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* НЕРАБОЧИЙ ДЕНЬ */
+.time-slot-picker__date--not-working {
+  opacity: 0.5;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
+.time-slot-picker__date:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* === СЕКЦИЯ ВЫБОРА ВРЕМЕНИ === */
+.time-slot-picker__times {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md, 16px);
+}
+
+.time-slot-picker__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm, 8px);
+}
+
+.time-slot-picker__group-title {
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 600;
+  color: var(--color-text, #3d2f26);
+  margin: 0;
+}
+
+.time-slot-picker__slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: var(--spacing-sm, 8px);
+}
+
+/* СЛОТ ВРЕМЕНИ */
+.time-slot-picker__slot {
+  padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+  min-height: 48px;
+  background: var(--color-surface, #ffffff);
+  border: 2px solid var(--color-border, #e8dcc4);
+  border-radius: var(--radius-md, 8px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.time-slot-picker__slot-time {
+  font-size: var(--font-size-base, 1rem);
+  font-weight: 600;
+  color: var(--color-text, #3d2f26);
+}
+
+.time-slot-picker__slot-status {
+  font-size: var(--font-size-xs, 0.75rem);
+  color: var(--color-text-muted, #6b5d4f);
+}
+
+.time-slot-picker__slot-reason {
+  font-size: var(--font-size-xs, 0.75rem);
+  opacity: 0.8;
+  color: var(--color-error-dark, #9e4539);
+}
+
+.time-slot-picker__slot:hover:not(:disabled):not(
+    .time-slot-picker__slot--selected
+  ):not(.time-slot-picker__slot--busy) {
+  border-color: var(--color-primary-400, #c9a88c);
+  background: var(--color-primary-soft, #fbf5ef);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.time-slot-picker__slot:focus-visible {
+  outline: 2px solid var(--color-primary, #b8957a);
+  outline-offset: 2px;
+}
+
+/* ВЫБРАННЫЙ СЛОТ */
+.time-slot-picker__slot--selected {
+  background: var(--color-primary-600, #9c7558);
+  border-color: var(--color-primary-600, #9c7558);
+}
+
+.time-slot-picker__slot--selected .time-slot-picker__slot-time,
+.time-slot-picker__slot--selected .time-slot-picker__slot-status {
+  color: white;
+}
+
+.time-slot-picker__slot--selected:hover {
+  background: var(--color-primary-700, #7f5e44);
+  border-color: var(--color-primary-700, #7f5e44);
+  border-top-color: transparent;
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ЗАНЯТОЙ СЛОТ */
+.time-slot-picker__slot--busy {
+  background: var(--color-neutral-200, #e8ddd0);
+  border-color: var(--color-neutral-200, #e8ddd0);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.time-slot-picker__slot--busy:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* ОШИБКА */
+.time-slot-picker__error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-md, 16px);
+  background: var(--color-error-light, #fceae8);
+  color: var(--color-error-dark, #9e4539);
+  border-radius: var(--radius-md, 8px);
+  border: 1px solid var(--color-error, #c65d52);
+}
+
+/* === ТЁМНАЯ ТЕМА === */
+[data-theme="dark"] .time-slot-picker__title,
+[data-theme="dark"] .time-slot-picker__section-title,
+[data-theme="dark"] .time-slot-picker__group-title {
+  color: var(--color-text, #f2ebe0);
+}
+
+[data-theme="dark"] .time-slot-picker__subtitle {
+  color: var(--color-text-muted, #b5a28d);
+}
+
+[data-theme="dark"] .time-slot-picker__date {
+  background: var(--color-surface, #2d2419);
+  border-color: var(--color-border, #4a3a2a);
+}
+
+[data-theme="dark"] .time-slot-picker__date-day {
+  color: var(--color-text-muted, #b5a28d);
+}
+
+[data-theme="dark"] .time-slot-picker__date-number,
+[data-theme="dark"] .time-slot-picker__date-num {
+  color: var(--color-text, #f2ebe0);
+}
+
+[data-theme="dark"] .time-slot-picker__date-month {
+  color: var(--color-text-subtle, #8a7968);
+}
+
+[data-theme="dark"]
+  .time-slot-picker__date:hover:not(:disabled):not(
+    .time-slot-picker__date--selected
+  ) {
+  border-color: var(--color-primary-400, #c9a88c);
+  background: var(--color-primary-soft, #3d2f26);
+}
+
+[data-theme="dark"] .time-slot-picker__date--selected {
+  background: var(--color-primary-600, #9c7558);
+  border-color: var(--color-primary-600, #9c7558);
+}
+
+[data-theme="dark"] .time-slot-picker__date--selected:hover {
+  background: var(--color-primary-700, #7f5e44);
+  border-color: var(--color-primary-700, #7f5e44);
+}
+
+[data-theme="dark"] .time-slot-picker__slot {
+  background: var(--color-surface, #2d2419);
+  border-color: var(--color-border, #4a3a2a);
+}
+
+[data-theme="dark"] .time-slot-picker__slot-time {
+  color: var(--color-text, #f2ebe0);
+}
+
+[data-theme="dark"] .time-slot-picker__slot-status {
+  color: var(--color-text-muted, #b5a28d);
+}
+
+[data-theme="dark"]
+  .time-slot-picker__slot:hover:not(.time-slot-picker__slot--selected):not(
+    .time-slot-picker__slot--busy
+  ) {
+  border-color: var(--color-primary-400, #c9a88c);
+  background: var(--color-primary-soft, #3d2f26);
+}
+
+[data-theme="dark"] .time-slot-picker__slot--selected {
+  background: var(--color-primary-600, #9c7558);
+  border-color: var(--color-primary-600, #9c7558);
+}
+
+[data-theme="dark"] .time-slot-picker__slot--selected:hover {
+  background: var(--color-primary-700, #7f5e44);
+  border-color: var(--color-primary-700, #7f5e44);
+}
+
+[data-theme="dark"] .time-slot-picker__slot--busy {
+  background: var(--color-surface-alt, #3d2f26);
+  border-color: var(--color-border, #4a3a2a);
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 640px) {
+  .time-slot-picker__slots {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .time-slot-picker__slot {
+    padding: var(--spacing-xs, 4px) var(--spacing-sm, 8px);
+    min-height: 40px;
+  }
+
+  .time-slot-picker__date {
+    width: 70px;
+    padding: var(--spacing-xs, 4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .time-slot-picker__date,
+  .time-slot-picker__slot {
+    transition: none;
+  }
+
+  .time-slot-picker__date:hover,
+  .time-slot-picker__date--selected:hover,
+  .time-slot-picker__slot--selected:hover {
+    transform: none;
+  }
+}

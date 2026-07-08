@@ -1,0 +1,67 @@
+/**
+ * SpecialistStats.css — KPI-дашборд мастера (BEM)
+ */
+
+.specialist-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md, 16px);
+}
+
+.specialist-stats__card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md, 16px);
+  padding: var(--spacing-lg, 24px);
+  background: var(--color-surface, #ffffff);
+  border-radius: var(--radius-lg, 12px);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid transparent;
+}
+
+.specialist-stats__card--success {
+  border-left-color: var(--color-success, #5a8f7b);
+}
+
+.specialist-stats__card--highlight {
+  border-left-color: var(--color-primary, #d4a574);
+}
+
+.specialist-stats__card--accent {
+  border-left-color: var(--color-info, #7da89b);
+}
+
+.specialist-stats__icon {
+  color: var(--color-primary-600, #9c7558);
+  flex-shrink: 0;
+}
+
+.specialist-stats__label {
+  display: block;
+  font-size: var(--font-size-sm, 0.875rem);
+  color: var(--color-text-muted, #6b5d4f);
+  margin-bottom: var(--spacing-xs, 4px);
+}
+
+.specialist-stats__value {
+  font-size: var(--font-size-xl, 1.5rem);
+  color: var(--color-text, #3d2f26);
+}
+
+[data-theme='dark'] .specialist-stats__card {
+  background: var(--color-surface, #2a211b);
+}
+
+[data-theme='dark'] .specialist-stats__value {
+  color: var(--color-text, #f5ede4);
+}
+
+[data-theme='dark'] .specialist-stats__label {
+  color: var(--color-text-muted, #c9b89f);
+}
+
+@media (max-width: 640px) {
+  .specialist-stats {
+    grid-template-columns: 1fr;
+  }
+}
